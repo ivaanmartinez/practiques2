@@ -741,6 +741,9 @@
         padding-top: 2rem;
         margin: 0;
         min-height: calc(100vh - 200px);
+        max-height: calc(100vh - 100px);
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 
     #sub-view-silos-panel.active .worker-section,
@@ -752,6 +755,208 @@
         background: white;
         border-radius: 0.75rem;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Responsive para las tablas del Panel de Control */
+    #sub-view-silos-panel.active .worker-table,
+    #sub-view-maquinas-panel.active .worker-table-maquinas {
+        width: 100%;
+        min-width: 800px; /* Ancho mínimo para forzar scroll horizontal en móviles */
+        table-layout: auto;
+    }
+
+    /* Asegurar que la tabla mantenga su estructura completa en móviles */
+    @media (max-width: 768px) {
+        #sub-view-silos-panel.active .worker-table,
+        #sub-view-maquinas-panel.active .worker-table-maquinas {
+            min-width: 700px; /* Reducir un poco pero mantener scroll */
+        }
+    }
+
+    @media (max-width: 640px) {
+        #sub-view-silos-panel.active .worker-table,
+        #sub-view-maquinas-panel.active .worker-table-maquinas {
+            min-width: 600px; /* Mantener scroll horizontal */
+        }
+    }
+
+    /* Responsive design para tablas del Panel de Control */
+    @media (max-width: 1024px) {
+        #sub-view-silos-panel.active .worker-table,
+        #sub-view-maquinas-panel.active .worker-table-maquinas {
+            font-size: 12px;
+        }
+        
+        #sub-view-silos-panel.active .worker-table th,
+        #sub-view-maquinas-panel.active .worker-table-maquinas th,
+        #sub-view-silos-panel.active .worker-table td,
+        #sub-view-maquinas-panel.active .worker-table-maquinas td {
+            padding: 8px 6px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        #sub-view-silos-panel.active .worker-table,
+        #sub-view-maquinas-panel.active .worker-table-maquinas {
+            font-size: 11px;
+        }
+        
+        #sub-view-silos-panel.active .worker-table th,
+        #sub-view-maquinas-panel.active .worker-table-maquinas th,
+        #sub-view-silos-panel.active .worker-table td,
+        #sub-view-maquinas-panel.active .worker-table-maquinas td {
+            padding: 6px 4px;
+            white-space: nowrap;
+            overflow: visible; /* Cambiar para permitir ver contenido completo */
+            text-overflow: clip;
+            min-width: 80px; /* Ancho mínimo por columna */
+        }
+        
+        #sub-view-silos-panel.active .worker-table th:first-child,
+        #sub-view-maquinas-panel.active .worker-table-maquinas th:first-child,
+        #sub-view-silos-panel.active .worker-table td:first-child,
+        #sub-view-maquinas-panel.active .worker-table-maquinas td:first-child {
+            min-width: 80px;
+        }
+    }
+
+    @media (max-width: 640px) {
+        #sub-view-silos-panel.active,
+        #sub-view-maquinas-panel.active {
+            width: calc(100vw - 1rem);
+            padding: 1rem;
+            padding-top: 1.5rem;
+            max-height: calc(100vh - 80px);
+        }
+        
+        #sub-view-silos-panel.active .worker-table,
+        #sub-view-maquinas-panel.active .worker-table-maquinas {
+            font-size: 10px;
+        }
+        
+        #sub-view-silos-panel.active .worker-table th,
+        #sub-view-maquinas-panel.active .worker-table-maquinas th,
+        #sub-view-silos-panel.active .worker-table td,
+        #sub-view-maquinas-panel.active .worker-table-maquinas td {
+            padding: 4px 2px;
+            min-width: 60px; /* Ancho mínimo para mantener legibilidad */
+            white-space: nowrap;
+        }
+        
+        /* Remover la ocultación de columnas para permitir scroll */
+        /* #sub-view-silos-panel.active .worker-table th:nth-child(n+5),
+        #sub-view-maquinas-panel.active .worker-table-maquinas th:nth-child(n+5),
+        #sub-view-silos-panel.active .worker-table td:nth-child(n+5),
+        #sub-view-maquinas-panel.active .worker-table-maquinas td:nth-child(n+5) {
+            display: none;
+        } */
+    }
+
+    @media (max-width: 480px) {
+        /* En pantallas muy pequeñas, mantener todas las columnas pero con scroll */
+        #sub-view-silos-panel.active .worker-table,
+        #sub-view-maquinas-panel.active .worker-table-maquinas {
+            min-width: 500px; /* Forzar scroll horizontal */
+            font-size: 9px;
+        }
+        
+        #sub-view-silos-panel.active .worker-table th,
+        #sub-view-maquinas-panel.active .worker-table-maquinas th,
+        #sub-view-silos-panel.active .worker-table td,
+        #sub-view-maquinas-panel.active .worker-table-maquinas td {
+            padding: 3px 1px;
+            min-width: 50px;
+            font-size: 8px;
+        }
+        
+        /* Comentar la ocultación de columnas para permitir scroll completo */
+        /* #sub-view-silos-panel.active .worker-table th:nth-child(n+4),
+        #sub-view-maquinas-panel.active .worker-table-maquinas th:nth-child(n+4),
+        #sub-view-silos-panel.active .worker-table td:nth-child(n+4),
+        #sub-view-maquinas-panel.active .worker-table-maquinas td:nth-child(n+4) {
+            display: none;
+        } */
+    }
+
+    /* Responsive para el contenedor de overflow en Panel de Control */
+    #sub-view-silos-panel.active .overflow-x-auto,
+    #sub-view-maquinas-panel.active .overflow-x-auto {
+        overflow-x: auto;
+        overflow-y: visible;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        scrollbar-color: #cbd5e1 #f1f5f9;
+        max-height: calc(100vh - 300px);
+        min-height: 400px;
+    }
+
+    /* Scroll específico para móviles */
+    @media (max-width: 768px) {
+        #sub-view-silos-panel.active .overflow-x-auto,
+        #sub-view-maquinas-panel.active .overflow-x-auto {
+            overflow-x: auto;
+            overflow-y: auto;
+            max-height: calc(100vh - 250px);
+            min-height: 300px;
+        }
+    }
+
+    @media (max-width: 640px) {
+        #sub-view-silos-panel.active .overflow-x-auto,
+        #sub-view-maquinas-panel.active .overflow-x-auto {
+            overflow-x: auto;
+            overflow-y: auto;
+            max-height: calc(100vh - 200px);
+            min-height: 250px;
+        }
+    }
+
+    #sub-view-silos-panel.active .overflow-x-auto::-webkit-scrollbar,
+    #sub-view-maquinas-panel.active .overflow-x-auto::-webkit-scrollbar {
+        height: 8px;
+        width: 8px;
+    }
+
+    #sub-view-silos-panel.active .overflow-x-auto::-webkit-scrollbar-track,
+    #sub-view-maquinas-panel.active .overflow-x-auto::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 4px;
+    }
+
+    #sub-view-silos-panel.active .overflow-x-auto::-webkit-scrollbar-thumb,
+    #sub-view-maquinas-panel.active .overflow-x-auto::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+    }
+
+    #sub-view-silos-panel.active .overflow-x-auto::-webkit-scrollbar-thumb:hover,
+    #sub-view-maquinas-panel.active .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+
+    #sub-view-silos-panel.active .overflow-x-auto::-webkit-scrollbar-corner,
+    #sub-view-maquinas-panel.active .overflow-x-auto::-webkit-scrollbar-corner {
+        background: #f1f5f9;
+    }
+
+    /* Responsive para la navegación del Panel de Control */
+    @media (max-width: 640px) {
+        #sub-view-silos-panel .mb-6 nav,
+        #sub-view-maquinas-panel .mb-6 nav {
+            flex-direction: row;
+            gap: 0.25rem;
+        }
+        
+        #sub-view-silos-panel .mb-6 nav button,
+        #sub-view-maquinas-panel .mb-6 nav button {
+            font-size: 12px;
+            padding: 6px 8px;
+        }
+        
+        #sub-view-silos-panel .mb-6 nav button i,
+        #sub-view-maquinas-panel .mb-6 nav button i {
+            font-size: 11px;
+        }
     }
 
     /* Estilos de prioridad para las filas */
@@ -1601,8 +1806,8 @@
     let editingIndexMaquinas = -1;
 
     // Variables para control de limpieza automática
-    let intervalLimpiezaSilos = null;
-    let intervalLimpiezaMaquinas = null;
+    // let intervalLimpiezaSilos = null;
+    // let intervalLimpiezaMaquinas = null;
 
     // Elementos del DOM
     let elements = {};
@@ -1616,7 +1821,7 @@
         cargarRegistrosSilos();
         cargarRegistrosMaquinas();
         setupRealtimeSync();
-        iniciarLimpiezaAutomatica();
+        // iniciarLimpiezaAutomatica();
         actualizarTablaSilos();
         actualizarTablaMaquinas();
         actualizarEstadisticasSilos();
@@ -1871,7 +2076,7 @@
                         item && item.lote && item.silo && item.maquina && item.fecha && item.timestamp
                     );
                     console.log('Registros de silos cargados desde Firebase:', registrosSilos);
-                    limpiarRegistrosExpiradosSilos();
+                    // limpiarRegistrosExpiradosSilos();
                 } else {
                     console.log('No hay registros de silos en Firebase');
                     registrosSilos = [];
@@ -1906,7 +2111,7 @@
                         item && item.maquina && item.silo && item.operador && item.fecha && item.timestamp
                     );
                     console.log('Registros de máquinas cargados desde Firebase:', registrosMaquinas);
-                    limpiarRegistrosExpiradosMaquinas();
+                    // limpiarRegistrosExpiradosMaquinas();
                 } else {
                     console.log('No hay registros de máquinas en Firebase');
                     registrosMaquinas = [];
@@ -2011,81 +2216,81 @@
         });
     }
 
-    function iniciarLimpiezaAutomatica() {
-        console.log('Iniciando sistema de limpieza automática...');
+    // function iniciarLimpiezaAutomatica() {
+    //     console.log('Iniciando sistema de limpieza automática...');
         
-        // Limpiar intervalos anteriores si existen
-        if (intervalLimpiezaSilos) {
-            clearInterval(intervalLimpiezaSilos);
-        }
-        if (intervalLimpiezaMaquinas) {
-            clearInterval(intervalLimpiezaMaquinas);
-        }
+    //     // Limpiar intervalos anteriores si existen
+    //     if (intervalLimpiezaSilos) {
+    //         clearInterval(intervalLimpiezaSilos);
+    //     }
+    //     if (intervalLimpiezaMaquinas) {
+    //         clearInterval(intervalLimpiezaMaquinas);
+    //     }
 
-        // Ejecutar limpieza cada 5 minutos
-        intervalLimpiezaSilos = setInterval(() => {
-            console.log('Ejecutando limpieza automática de silos...');
-            limpiarRegistrosExpiradosSilos();
-        }, 5 * 60 * 1000);
+    //     // Ejecutar limpieza cada 5 minutos
+    //     intervalLimpiezaSilos = setInterval(() => {
+    //         console.log('Ejecutando limpieza automática de silos...');
+    //         limpiarRegistrosExpiradosSilos();
+    //     }, 5 * 60 * 1000);
 
-        intervalLimpiezaMaquinas = setInterval(() => {
-            console.log('Ejecutando limpieza automática de máquinas...');
-            limpiarRegistrosExpiradosMaquinas();
-        }, 5 * 60 * 1000);
+    //     intervalLimpiezaMaquinas = setInterval(() => {
+    //         console.log('Ejecutando limpieza automática de máquinas...');
+    //         limpiarRegistrosExpiradosMaquinas();
+    //     }, 5 * 60 * 1000);
 
-        console.log('Sistema de limpieza automática iniciado correctamente');
-    }
+    //     console.log('Sistema de limpieza automática iniciado correctamente');
+    // }
 
     function limpiarRegistrosExpiradosSilos() {
-        const ahora = new Date().getTime();
-        const registrosOriginales = registrosSilos.length;
+        // const ahora = new Date().getTime();
+        // const registrosOriginales = registrosSilos.length;
 
-        const registrosValidos = registrosSilos.filter(registro => {
-            if (!registro.timestamp) {
-                return false;
-            }
-            const tiempoTranscurrido = ahora - registro.timestamp;
-            return tiempoTranscurrido < LIMITE_TIEMPO;
-        });
+        // const registrosValidos = registrosSilos.filter(registro => {
+        //     if (!registro.timestamp) {
+        //         return false;
+        //     }
+        //     const tiempoTranscurrido = ahora - registro.timestamp;
+        //     return tiempoTranscurrido < LIMITE_TIEMPO;
+        // });
 
-        if (registrosValidos.length !== registrosOriginales) {
-            const eliminados = registrosOriginales - registrosValidos.length;
-            console.log(`Limpieza de silos completada: ${eliminados} registros eliminados`);
-            registrosSilos = registrosValidos;
-            guardarRegistrosSilos();
-            actualizarTablaSilos();
-            actualizarTablaWorkersSilos();
-            actualizarEstadisticasSilos();
-            if (eliminados > 0) {
-                mostrarAlerta(`Se eliminaron ${eliminados} registro(s) de silos expirado(s).`, 'info');
-            }
-        }
+        // if (registrosValidos.length !== registrosOriginales) {
+        //     const eliminados = registrosOriginales - registrosValidos.length;
+        //     console.log(`Limpieza de silos completada: ${eliminados} registros eliminados`);
+        //     registrosSilos = registrosValidos;
+        //     guardarRegistrosSilos();
+        //     actualizarTablaSilos();
+        //     actualizarTablaWorkersSilos();
+        //     actualizarEstadisticasSilos();
+        //     if (eliminados > 0) {
+        //         mostrarAlerta(`Se eliminaron ${eliminados} registro(s) de silos expirado(s).`, 'info');
+        //     }
+        // }
     }
 
     function limpiarRegistrosExpiradosMaquinas() {
-        const ahora = new Date().getTime();
-        const registrosOriginales = registrosMaquinas.length;
+        // const ahora = new Date().getTime();
+        // const registrosOriginales = registrosMaquinas.length;
 
-        const registrosValidos = registrosMaquinas.filter(registro => {
-            if (!registro.timestamp) {
-                return false;
-            }
-            const tiempoTranscurrido = ahora - registro.timestamp;
-            return tiempoTranscurrido < LIMITE_TIEMPO;
-        });
+        // const registrosValidos = registrosMaquinas.filter(registro => {
+        //     if (!registro.timestamp) {
+        //         return false;
+        //     }
+        //     const tiempoTranscurrido = ahora - registro.timestamp;
+        //     return tiempoTranscurrido < LIMITE_TIEMPO;
+        // });
 
-        if (registrosValidos.length !== registrosOriginales) {
-            const eliminados = registrosOriginales - registrosValidos.length;
-            console.log(`Limpieza de máquinas completada: ${eliminados} registros eliminados`);
-            registrosMaquinas = registrosValidos;
-            guardarRegistrosMaquinas();
-            actualizarTablaMaquinas();
-            actualizarTablaWorkersMaquinas();
-            actualizarEstadisticasMaquinas();
-            if (eliminados > 0) {
-                mostrarAlerta(`Se eliminaron ${eliminados} registro(s) de máquinas expirado(s).`, 'info');
-            }
-        }
+        // if (registrosValidos.length !== registrosOriginales) {
+        //     const eliminados = registrosOriginales - registrosValidos.length;
+        //     console.log(`Limpieza de máquinas completada: ${eliminados} registros eliminados`);
+        //     registrosMaquinas = registrosValidos;
+        //     guardarRegistrosMaquinas();
+        //     actualizarTablaMaquinas();
+        //     actualizarTablaWorkersMaquinas();
+        //     actualizarEstadisticasMaquinas();
+        //     if (eliminados > 0) {
+        //         mostrarAlerta(`Se eliminaron ${eliminados} registro(s) de máquinas expirado(s).`, 'info');
+        //     }
+        // }
     }
 
     function setupEventListeners() {
@@ -2135,9 +2340,9 @@
                 elements.siloForm.reset();
                 mostrarAlerta('Registro añadido correctamente.', 'success');
 
-                setTimeout(() => {
-                    limpiarRegistrosExpiradosSilos();
-                }, 1000);
+                // setTimeout(() => {
+                //     limpiarRegistrosExpiradosSilos();
+                // }, 1000);
             });
         }
 
@@ -2193,9 +2398,9 @@
                 elements.maquinaForm.reset();
                 mostrarAlerta('Operación registrada correctamente.', 'success');
 
-                setTimeout(() => {
-                    limpiarRegistrosExpiradosMaquinas();
-                }, 1000);
+                // setTimeout(() => {
+                //     limpiarRegistrosExpiradosMaquinas();
+                // }, 1000);
             });
         }
 
