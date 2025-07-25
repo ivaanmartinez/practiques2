@@ -9,6 +9,32 @@
     tailwind.config = {
         corePlugins: {
             preflight: false,
+        },
+        darkMode: 'class',
+        theme: {
+            extend: {
+                animation: {
+                    'fade-in': 'fadeIn 0.5s ease-in-out',
+                    'slide-up': 'slideUp 0.3s ease-out',
+                    'bounce-in': 'bounceIn 0.6s ease-out'
+                },
+                keyframes: {
+                    fadeIn: {
+                        '0%': { opacity: '0', transform: 'translateY(10px)' },
+                        '100%': { opacity: '1', transform: 'translateY(0)' }
+                    },
+                    slideUp: {
+                        '0%': { transform: 'translateY(100%)' },
+                        '100%': { transform: 'translateY(0)' }
+                    },
+                    bounceIn: {
+                        '0%': { transform: 'scale(0.3)', opacity: '0' },
+                        '50%': { transform: 'scale(1.05)' },
+                        '70%': { transform: 'scale(0.9)' },
+                        '100%': { transform: 'scale(1)', opacity: '1' }
+                    }
+                }
+            }
         }
     }
 </script>
@@ -415,6 +441,241 @@
         }
     }
 
+    /* Estilos móviles mejorados para tablas */
+    
+    /* Por defecto, ocultar contenedores móviles en desktop */
+    .mobile-cards-container {
+        display: none;
+    }
+    
+    @media (max-width: 768px) {
+        /* Ocultar tabla tradicional en móviles */
+        .table-desktop {
+            display: none !important;
+        }
+        
+        /* Mostrar vista de tarjetas en móviles */
+        .table-mobile {
+            display: block !important;
+        }
+        
+        /* Mostrar contenedores de tarjetas móviles */
+        .mobile-cards-container {
+            display: block !important;
+        }
+        
+        /* Estilos para las tarjetas móviles */
+        .mobile-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+        }
+        
+        .mobile-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .mobile-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .mobile-card-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: #1f2937;
+        }
+        
+        .mobile-card-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .mobile-field {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .mobile-field-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 2px;
+        }
+        
+        .mobile-field-value {
+            font-size: 14px;
+            color: #1f2937;
+            font-weight: 500;
+        }
+        
+        .mobile-field-full {
+            grid-column: 1 / -1;
+        }
+        
+        .mobile-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f3f4f6;
+        }
+        
+        .mobile-status-badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .mobile-status-badge.badge-active {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        
+        .mobile-status-badge.badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+        
+        .mobile-status-badge.badge-expired {
+            background: #fecaca;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+        
+        .mobile-actions-buttons {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .mobile-action-btn {
+            padding: 6px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .mobile-action-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .mobile-qr-code {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #3b82f6;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .mobile-qr-code:hover {
+            background: #2563eb;
+            transform: scale(1.1);
+        }
+        
+        /* Worker table específicos */
+        .worker-mobile-card {
+            border-left: 4px solid #10b981;
+        }
+        
+        .worker-mobile-card.priority-high {
+            border-left-color: #ef4444;
+            background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+        }
+        
+        .worker-mobile-card.priority-medium {
+            border-left-color: #f59e0b;
+            background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+        }
+        
+        .worker-mobile-card.priority-normal {
+            border-left-color: #10b981;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+        }
+        
+        /* Ocultar columnas en tablets también */
+        .table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Ajustes para tablets (768px - 1024px) */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .table-desktop {
+                display: table !important;
+            }
+            
+            .table-mobile {
+                display: none !important;
+            }
+        }
+    }
+
+    /* Estilos para desktop */
+    @media (min-width: 769px) {
+        .table-desktop {
+            display: table !important;
+        }
+        
+        .table-mobile {
+            display: none !important;
+        }
+    }
+
+    /* Mejoras adicionales para scroll horizontal en móviles */
+    @media (max-width: 640px) {
+        .overflow-x-auto {
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 #f1f5f9;
+        }
+        
+        .overflow-x-auto::-webkit-scrollbar {
+            height: 4px;
+        }
+        
+        .overflow-x-auto::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 2px;
+        }
+        
+        .overflow-x-auto::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 2px;
+        }
+        
+        .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    }
+
     @media (min-width: 640px) {
         .search-container {
             max-width: 220px;
@@ -726,24 +987,36 @@
         overflow-x: visible;
     }
 
-    /* Hacer que el Panel Control se vea del mismo tamaño que Registros Actuales */
+    /* Hacer que el Panel Control se adapte mejor a todos los tamaños */
     #sub-view-silos-panel.active,
     #sub-view-maquinas-panel.active {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        width: calc(100vw - 2rem);
+        width: 100%;
         max-width: none;
-        z-index: 10;
         background: #f9fafb;
-        padding: 1.5rem;
-        padding-top: 2rem;
+        padding: 1rem;
         margin: 0;
-        min-height: calc(100vh - 200px);
-        max-height: calc(100vh - 100px);
-        overflow-y: auto;
+        min-height: auto;
+        overflow-y: visible;
         overflow-x: hidden;
+        position: relative;
+    }
+
+    /* Desktop específico */
+    @media (min-width: 1024px) {
+        #sub-view-silos-panel.active,
+        #sub-view-maquinas-panel.active {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: calc(100vw - 2rem);
+            z-index: 10;
+            padding: 1.5rem;
+            padding-top: 1rem;
+            min-height: calc(100vh - 200px);
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
     }
 
     #sub-view-silos-panel.active .worker-section,
@@ -751,25 +1024,149 @@
         width: 100%;
         max-width: none;
         margin: 0;
-        margin-top: 1rem;
         background: white;
         border-radius: 0.75rem;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Mobile específico para panel */
+    @media (max-width: 768px) {
+        #sub-view-silos-panel.active,
+        #sub-view-maquinas-panel.active {
+            position: relative !important;
+            width: 100% !important;
+            padding: 0.75rem !important;
+            background: transparent !important;
+            min-height: auto !important;
+            max-height: none !important;
+            overflow: visible !important;
+            z-index: 1 !important;
+        }
+        
+        #sub-view-silos-panel.active .worker-section,
+        #sub-view-maquinas-panel.active .worker-section-maquinas {
+            margin-top: 0 !important;
+            border-radius: 0.5rem !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+        }
     }
 
     /* Responsive para las tablas del Panel de Control */
     #sub-view-silos-panel.active .worker-table,
     #sub-view-maquinas-panel.active .worker-table-maquinas {
         width: 100%;
-        min-width: 800px; /* Ancho mínimo para forzar scroll horizontal en móviles */
+        min-width: 100%; /* Cambiar para mobile */
         table-layout: auto;
     }
 
-    /* Asegurar que la tabla mantenga su estructura completa en móviles */
+    /* Desktop - tabla completa */
+    @media (min-width: 1024px) {
+        #sub-view-silos-panel.active .worker-table,
+        #sub-view-maquinas-panel.active .worker-table-maquinas {
+            min-width: 800px; /* Ancho mínimo para forzar scroll horizontal solo en desktop */
+        }
+    }
+
+    /* Tablet - tabla adaptada */
+    @media (min-width: 769px) and (max-width: 1023px) {
+        #sub-view-silos-panel.active .worker-table,
+        #sub-view-maquinas-panel.active .worker-table-maquinas {
+            min-width: 600px;
+            font-size: 12px;
+        }
+        
+        #sub-view-silos-panel.active .worker-table th,
+        #sub-view-maquinas-panel.active .worker-table-maquinas th,
+        #sub-view-silos-panel.active .worker-table td,
+        #sub-view-maquinas-panel.active .worker-table-maquinas td {
+            padding: 8px 6px;
+        }
+    }
+
+    /* Móvil - usar tarjetas en lugar de tabla */
     @media (max-width: 768px) {
         #sub-view-silos-panel.active .worker-table,
         #sub-view-maquinas-panel.active .worker-table-maquinas {
-            min-width: 700px; /* Reducir un poco pero mantener scroll */
+            display: none !important; /* Ocultar tabla en móvil */
+        }
+        
+        #sub-view-silos-panel.active .overflow-x-auto,
+        #sub-view-maquinas-panel.active .overflow-x-auto {
+            display: none !important; /* Ocultar contenedor de tabla en móvil */
+        }
+        
+        /* Mostrar tarjetas móviles en el panel */
+        #sub-view-silos-panel.active #workerCardsSilos,
+        #sub-view-maquinas-panel.active #workerCardsMaquinas {
+            display: block !important;
+        }
+        
+        /* Asegurar que las tarjetas móviles no estén ocultas en los paneles */
+        #sub-view-silos-panel.active .mobile-cards-container,
+        #sub-view-maquinas-panel.active .mobile-cards-container {
+            display: block !important;
+        }
+        
+        /* Responsive headers para los paneles en móvil */
+        #sub-view-silos-panel.active .worker-header,
+        #sub-view-maquinas-panel.active .worker-header-maquinas {
+            padding: 12px !important;
+            border-radius: 8px !important;
+        }
+        
+        #sub-view-silos-panel.active .worker-header h2,
+        #sub-view-maquinas-panel.active .worker-header-maquinas h2 {
+            font-size: 16px !important;
+            line-height: 1.2 !important;
+        }
+        
+        #sub-view-silos-panel.active .worker-header p,
+        #sub-view-maquinas-panel.active .worker-header-maquinas p {
+            font-size: 11px !important;
+        }
+        
+        /* Ajustar información del panel en móvil */
+        #sub-view-silos-panel.active .worker-section,
+        #sub-view-maquinas-panel.active .worker-section-maquinas {
+            margin-top: 0 !important;
+        }
+        
+        /* Botones de regreso responsive */
+        #back-to-form-silos,
+        #back-to-form-maquinas {
+            font-size: 12px !important;
+            padding: 8px 12px !important;
+        }
+        
+        #back-to-form-silos i,
+        #back-to-form-maquinas i {
+            font-size: 11px !important;
+        }
+        
+        /* Estilo específico para tarjetas móviles en paneles */
+        #sub-view-silos-panel.active .mobile-cards-container .mobile-card,
+        #sub-view-maquinas-panel.active .mobile-cards-container .mobile-card {
+            background: white !important;
+            border: 1px solid #e5e7eb !important;
+            border-radius: 8px !important;
+            padding: 12px !important;
+            margin-bottom: 12px !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        #sub-view-silos-panel.active .mobile-card-header,
+        #sub-view-maquinas-panel.active .mobile-card-header {
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            margin-bottom: 8px !important;
+            color: #374151 !important;
+        }
+        
+        #sub-view-silos-panel.active .mobile-card-content,
+        #sub-view-maquinas-panel.active .mobile-card-content {
+            font-size: 12px !important;
+            color: #6b7280 !important;
+            line-height: 1.4 !important;
         }
     }
 
@@ -939,37 +1336,283 @@
         background: #f1f5f9;
     }
 
-    /* Responsive para la navegación del Panel de Control */
+    /* Responsive improvements */
+    @media (max-width: 1024px) {
+        .container {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        
+        .grid-cols-1.lg\\:grid-cols-3 {
+            grid-template-columns: 1fr;
+        }
+        
+        .lg\\:col-span-2 {
+            grid-column: span 1;
+        }
+        
+        .lg\\:col-span-1 {
+            grid-column: span 1;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .nav-tab {
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .nav-tab span {
+            display: none;
+        }
+        
+        .nav-tab i {
+            margin-right: 0;
+            font-size: 1.25rem;
+        }
+        
+        .card {
+            padding: 1rem;
+        }
+        
+        .grid.grid-cols-2 {
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+        
+        .grid.grid-cols-2 .col-span-2 {
+            grid-column: span 1;
+        }
+        
+        .text-2xl {
+            font-size: 1.5rem;
+        }
+        
+        .text-xl {
+            font-size: 1.25rem;
+        }
+    }
+
     @media (max-width: 640px) {
-        #sub-view-silos-panel .mb-6 nav,
-        #sub-view-maquinas-panel .mb-6 nav {
-            flex-direction: row;
-            gap: 0.25rem;
+        .container {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
         }
         
-        #sub-view-silos-panel .mb-6 nav button,
-        #sub-view-maquinas-panel .mb-6 nav button {
-            font-size: 12px;
-            padding: 6px 8px;
+        header .container {
+            padding-left: 1rem;
+            padding-right: 1rem;
         }
         
-        #sub-view-silos-panel .mb-6 nav button i,
-        #sub-view-maquinas-panel .mb-6 nav button i {
-            font-size: 11px;
+        .nav-tab {
+            padding: 0.5rem 0.75rem;
+            min-width: 60px;
+        }
+        
+        .sub-nav-btn {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.75rem;
+        }
+        
+        .sub-nav-btn i {
+            font-size: 0.875rem;
+        }
+        
+        .form-compact {
+            gap: 0.75rem;
+        }
+        
+        .card {
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Table responsive improvements */
+        .overflow-x-auto {
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        table {
+            min-width: 600px;
+        }
+        
+        th, td {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .worker-table th,
+        .worker-table-maquinas th {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.75rem;
+        }
+        
+        .worker-table td,
+        .worker-table-maquinas td {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8125rem;
+        }
+        
+        .action-btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+        
+        .action-btn i {
+            font-size: 0.75rem;
+        }
+        
+        .export-btn {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.75rem;
+        }
+        
+        /* Stats cards responsive */
+        .bg-blue-50, .bg-green-50, .bg-purple-50, 
+        .bg-indigo-50, .bg-yellow-50, .bg-red-50 {
+            padding: 0.75rem;
+        }
+        
+        /* Input and form improvements */
+        input, select, textarea {
+            font-size: 16px; /* Prevents zoom on iOS */
+        }
+        
+        .btn-primary, .btn-secondary {
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+        }
+        
+        /* Search container */
+        .search-container {
+            max-width: 100%;
+            min-width: 150px;
+        }
+        
+        /* Modal improvements */
+        .modal-content {
+            margin: 1rem;
+            max-height: calc(100vh - 2rem);
+            overflow-y: auto;
         }
     }
 
-    /* Estilos de prioridad para las filas */
-    .priority-high {
-        border-left: 4px solid #ef4444;
+    /* Ultra small screens */
+    @media (max-width: 480px) {
+        .text-2xl {
+            font-size: 1.25rem;
+        }
+        
+        .text-xl {
+            font-size: 1.125rem;
+        }
+        
+        .text-lg {
+            font-size: 1rem;
+        }
+        
+        .nav-tab {
+            padding: 0.5rem;
+            min-width: 50px;
+        }
+        
+        .sub-nav-btn {
+            padding: 0.375rem 0.5rem;
+            font-size: 0.6875rem;
+        }
+        
+        .card {
+            padding: 0.5rem;
+        }
+        
+        .worker-header,
+        .worker-header-maquinas {
+            padding: 0.75rem 1rem;
+        }
+        
+        .worker-section,
+        .worker-section-maquinas {
+            padding: 0.75rem;
+        }
+        
+        /* Compact table for very small screens */
+        table {
+            min-width: 500px;
+        }
+        
+        th, td {
+            padding: 0.375rem 0.5rem;
+            font-size: 0.75rem;
+        }
+        
+        .worker-table th,
+        .worker-table-maquinas th {
+            padding: 0.375rem 0.5rem;
+            font-size: 0.6875rem;
+        }
+        
+        .worker-table td,
+        .worker-table-maquinas td {
+            padding: 0.375rem 0.5rem;
+            font-size: 0.75rem;
+        }
     }
 
-    .priority-medium {
-        border-left: 4px solid #f59e0b;
+    /* Landscape orientation on mobile */
+    @media (max-height: 500px) and (orientation: landscape) {
+        .min-h-screen {
+            min-height: 100vh;
+        }
+        
+        header {
+            padding: 0.5rem 0;
+        }
+        
+        .py-8 {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+        
+        .py-6 {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
     }
 
-    .priority-normal {
-        border-left: 4px solid #10b981;
+    /* Print styles */
+    @media print {
+        .nav-tab, .sub-nav-btn, .action-btn, .export-btn,
+        .search-container, button {
+            display: none !important;
+        }
+        
+        .overflow-x-auto {
+            overflow: visible !important;
+        }
+        
+        table {
+            min-width: auto !important;
+        }
+        
+        .card {
+            box-shadow: none !important;
+            border: 1px solid #e5e7eb !important;
+        }
+    }
+
+    /* Touch improvements */
+    @media (hover: none) and (pointer: coarse) {
+        .action-btn, .nav-tab, .sub-nav-btn, .export-btn,
+        button, select, input[type="button"] {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        
+        .worker-code-btn,
+        .worker-code-btn-maquinas {
+            min-height: 36px;
+            min-width: 60px;
+        }
     }
 </style>
 </head>
@@ -977,36 +1620,49 @@
 <div class="min-h-screen flex flex-col">
     <!-- Header con Navegación -->
     <header class="bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-lg">
-        <div class="container mx-auto px-4 py-6">
-            <div class="flex flex-col md:flex-row md:justify-between md:items-center">
-                <div class="flex items-center mb-4 md:mb-0">
-                    <div class="bg-white bg-opacity-20 p-3 rounded-xl mr-4">
-                        <i class="fas fa-industry text-white text-2xl"></i>
+        <div class="container mx-auto px-2 sm:px-4 py-3 sm:py-6">
+            <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center">
+                <div class="flex items-center mb-3 lg:mb-0">
+                    <div class="bg-white bg-opacity-20 p-2 sm:p-3 rounded-xl mr-3 sm:mr-4">
+                        <i class="fas fa-industry text-white text-xl sm:text-2xl"></i>
                     </div>
                     <div>
-                        <h1 class="text-2xl font-bold">Sistema de Gestión Industrial Integrado</h1>
-                        <p class="text-slate-100 mt-1 text-sm">Control completo de silos, lotes y operaciones</p>
+                        <h1 class="text-lg sm:text-2xl font-bold leading-tight">Sistema de Gestión Industrial Integrado</h1>
+                        <p class="text-slate-100 mt-1 text-xs sm:text-sm">Control completo de silos, lotes y operaciones</p>
                     </div>
                 </div>
-                <div class="text-right">
-                    <div class="inline-flex items-center bg-white bg-opacity-10 px-3 py-1 rounded-full">
-                        <span class="text-slate-100 text-sm mr-2">Versión 2.3.0</span>
-                        <span class="h-2 w-2 bg-green-400 rounded-full animate-pulse"></span>
+                <div class="text-left lg:text-right">
+                    <div class="flex items-center justify-between lg:justify-end mb-2">
+                        <button id="theme-toggle" class="bg-white bg-opacity-10 hover:bg-opacity-20 px-3 py-1 rounded-full text-xs transition-all duration-200 flex items-center mr-3"
+                                aria-label="Cambiar tema claro/oscuro">
+                            <i class="fas fa-sun mr-1" id="theme-icon"></i>
+                            <span id="theme-text">Claro</span>
+                        </button>
+                        <div class="inline-flex items-center bg-white bg-opacity-10 px-2 sm:px-3 py-1 rounded-full">
+                            <span class="text-slate-100 text-xs sm:text-sm mr-2">Versión 2.3.0</span>
+                            <span class="h-2 w-2 bg-green-400 rounded-full animate-pulse"></span>
+                        </div>
                     </div>
                     <p class="text-xs text-slate-200 mt-1">Última actualización: <span id="current-time" class="font-medium"></span></p>
                 </div>
             </div>
             
             <!-- Navegación por pestañas mejorada -->
-            <div class="mt-6 border-t border-slate-700 pt-4">
-                <nav class="flex space-x-2">
-                    <button id="tab-silos-lotes" class="nav-tab active flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-300">
-                        <i class="fas fa-warehouse mr-2"></i>
-                        <span class="hidden sm:inline">Gestión de Silos y Lotes
+            <div class="mt-4 sm:mt-6 border-t border-slate-700 pt-3 sm:pt-4">
+                <nav class="flex space-x-1 sm:space-x-2">
+                    <button id="tab-silos-lotes" class="nav-tab active flex items-center px-3 sm:px-6 py-2 sm:py-3 rounded-lg font-medium transition-all duration-300" 
+                            role="tab" aria-selected="true" aria-controls="view-silos-lotes" tabindex="0"
+                            aria-label="Navegar a gestión de silos y lotes">
+                        <i class="fas fa-warehouse mr-0 sm:mr-2" aria-hidden="true"></i>
+                        <span class="hidden sm:inline">Gestión de Silos y Lotes</span>
+                        <span class="sm:hidden ml-2 text-xs">Silos</span>
                     </button>
-                    <button id="tab-maquinas-silos" class="nav-tab flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-300">
-                        <i class="fas fa-cogs mr-2"></i>
-                        <span class="hidden sm:inline">Gestión de Máquinas y Silos
+                    <button id="tab-maquinas-silos" class="nav-tab flex items-center px-3 sm:px-6 py-2 sm:py-3 rounded-lg font-medium transition-all duration-300"
+                            role="tab" aria-selected="false" aria-controls="view-maquinas-silos" tabindex="-1"
+                            aria-label="Navegar a gestión de máquinas y silos">
+                        <i class="fas fa-cogs mr-0 sm:mr-2" aria-hidden="true"></i>
+                        <span class="hidden sm:inline">Gestión de Máquinas y Silos</span>
+                        <span class="sm:hidden ml-2 text-xs">Máquinas</span>
                     </button>
                 </nav>
             </div>
@@ -1015,41 +1671,43 @@
 
     <!-- Vista 1: Silos y Lotes -->
     <div id="view-silos-lotes" class="view-container active flex-grow">
-        <main class="container mx-auto px-4 py-8">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <main class="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-8">
                 <!-- Form Section con Sub-navegación -->
-                <div class="lg:col-span-1">
+                <div class="xl:col-span-1">
                     <!-- Sub-navegación para Silos y Lotes -->
-                    <div class="mb-6">
-                        <nav class="flex space-x-2 p-1 bg-gray-100 rounded-lg">
-                            <button id="sub-tab-silos-form" class="sub-nav-btn active flex items-center px-4 py-2 rounded-md font-medium text-sm transition-all duration-300 flex-1 justify-center">
-                                <i class="fas fa-plus-circle mr-2"></i>
-                                Registro
+                    <div class="mb-4 sm:mb-6">
+                        <nav class="flex space-x-1 sm:space-x-2 p-1 bg-gray-100 rounded-lg">
+                            <button id="sub-tab-silos-form" class="sub-nav-btn active flex items-center px-2 sm:px-4 py-2 rounded-md font-medium text-xs sm:text-sm transition-all duration-300 flex-1 justify-center">
+                                <i class="fas fa-plus-circle mr-1 sm:mr-2 text-xs sm:text-sm"></i>
+                                <span class="hidden xs:inline">Registro</span>
+                                <span class="xs:hidden">Registro</span>
                             </button>
-                            <button id="sub-tab-silos-panel" class="sub-nav-btn flex items-center px-4 py-2 rounded-md font-medium text-sm transition-all duration-300 flex-1 justify-center">
-                                <i class="fas fa-hard-hat mr-2"></i>
-                                Panel Control
+                            <button id="sub-tab-silos-panel" class="sub-nav-btn flex items-center px-2 sm:px-4 py-2 rounded-md font-medium text-xs sm:text-sm transition-all duration-300 flex-1 justify-center">
+                                <i class="fas fa-hard-hat mr-1 sm:mr-2 text-xs sm:text-sm"></i>
+                                <span class="hidden xs:inline">Panel Control</span>
+                                <span class="xs:hidden">Panel</span>
                             </button>
                         </nav>
                     </div>
 
                     <!-- Sub-vista: Formulario de Registro -->
                     <div id="sub-view-silos-form" class="sub-view-container active">
-                        <div class="card bg-white rounded-xl shadow-sm p-6">
-                            <div class="flex items-center mb-6">
-                                <div class="bg-blue-100 p-3 rounded-xl mr-4">
-                                    <i class="fas fa-plus-circle text-blue-600 text-xl"></i>
+                        <div class="card bg-white rounded-xl shadow-sm p-3 sm:p-6">
+                            <div class="flex items-center mb-4 sm:mb-6">
+                                <div class="bg-blue-100 p-2 sm:p-3 rounded-xl mr-3 sm:mr-4">
+                                    <i class="fas fa-plus-circle text-blue-600 text-lg sm:text-xl"></i>
                                 </div>
-                                <h2 class="text-xl font-semibold text-gray-800">Nuevo Registro</h2>
+                                <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Nuevo Registro</h2>
                             </div>
-                            <form id="siloForm" class="space-y-4">
+                            <form id="siloForm" class="space-y-3 sm:space-y-4">
                                 <!-- Número de Lote -->
                                 <div>
                                     <label for="lote" class="block text-sm font-medium text-gray-700 mb-2">Número de Lote</label>
                                     <div class="input-with-scan">
                                         <div class="relative">
                                             <i class="fas fa-barcode input-icon"></i>
-                                            <input type="text" id="lote" class="w-full pl-10 p-2.5 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 rounded-lg" placeholder="Ej: LOTE2023-001 o escanee código" required>
+                                            <input type="text" id="lote" class="w-full pl-10 p-2.5 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 rounded-lg text-base" placeholder="Ej: LOTE2023-001 o escanee código" required>
                                         </div>
                                     </div>
                                     <p class="text-xs text-gray-500 mt-1">
@@ -1062,7 +1720,7 @@
                                     <label for="silo" class="block text-sm font-medium text-gray-700 mb-2">Silo</label>
                                     <div class="relative">
                                         <i class="fas fa-archive input-icon"></i>
-                                        <select id="silo" class="w-full pl-10 p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none transition-all duration-200" required>
+                                        <select id="silo" class="w-full pl-10 p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none transition-all duration-200 text-base" required>
                                             <option value="">Seleccione un silo</option>
                                             <option value="Silo 1">Silo 1</option>
                                             <option value="Silo 2">Silo 2</option>
@@ -1079,7 +1737,7 @@
                                     <label for="maquina" class="block text-sm font-medium text-gray-700 mb-2">Máquina</label>
                                     <div class="relative">
                                         <i class="fas fa-cogs input-icon"></i>
-                                        <select id="maquina" class="w-full pl-10 p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none transition-all duration-200" required>
+                                        <select id="maquina" class="w-full pl-10 p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none transition-all duration-200 text-base" required>
                                             <option value="">Seleccione una máquina</option>
                                             <option value="Máquina 1">Máquina 1</option>
                                             <option value="Máquina 2">Máquina 2</option>
@@ -1098,7 +1756,7 @@
                                     <label for="tubo" class="block text-sm font-medium text-gray-700 mb-2">Tubo</label>
                                     <div class="relative">
                                         <i class="fas fa-circle input-icon"></i>
-                                        <select id="tubo" class="w-full pl-10 p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none transition-all duration-200" required>
+                                        <select id="tubo" class="w-full pl-10 p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none transition-all duration-200 text-base" required>
                                             <option value="">Seleccione un tubo</option>
                                             <option value="Tubo 1">Tubo 1</option>
                                             <option value="Tubo 2">Tubo 2</option>
@@ -1111,28 +1769,31 @@
                                         <i class="fas fa-chevron-down select-icon"></i>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn-primary text-white w-full py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center">
-                                    <i class="fas fa-save mr-2"></i> Registrar Lote
+                                <button type="submit" class="btn-primary text-white w-full py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center text-base" 
+                                        id="submit-btn-silos" aria-label="Registrar nuevo lote en el sistema">
+                                    <i class="fas fa-save mr-2" aria-hidden="true"></i> 
+                                    <span class="submit-text">Registrar Lote</span>
+                                    <i class="fas fa-spinner fa-spin mr-2 hidden loading-spinner" aria-hidden="true"></i>
                                 </button>
                             </form>
                         </div>
                         <!-- Stats Card -->
-                        <div class="card bg-white rounded-xl shadow-sm p-6 mt-6">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <div class="card bg-white rounded-xl shadow-sm p-3 sm:p-6 mt-4 sm:mt-6">
+                            <h3 class="text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4 flex items-center">
                                 <i class="fas fa-chart-pie mr-2 text-blue-600"></i> Métricas Clave
                             </h3>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                                    <div class="text-blue-600 text-sm font-medium mb-1">Registros Activos</div>
-                                    <div class="text-2xl font-bold text-gray-800" id="active-count-silos">0</div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                                <div class="bg-blue-50 p-3 sm:p-4 rounded-lg border border-blue-100">
+                                    <div class="text-blue-600 text-xs sm:text-sm font-medium mb-1">Registros Activos</div>
+                                    <div class="text-xl sm:text-2xl font-bold text-gray-800" id="active-count-silos">0</div>
                                 </div>
-                                <div class="bg-green-50 p-4 rounded-lg border border-green-100">
-                                    <div class="text-green-600 text-sm font-medium mb-1">Silos en Uso</div>
-                                    <div class="text-2xl font-bold text-gray-800" id="silos-in-use">0/6</div>
+                                <div class="bg-green-50 p-3 sm:p-4 rounded-lg border border-green-100">
+                                    <div class="text-green-600 text-xs sm:text-sm font-medium mb-1">Silos en Uso</div>
+                                    <div class="text-xl sm:text-2xl font-bold text-gray-800" id="silos-in-use">0/6</div>
                                 </div>
-                                <div class="bg-purple-50 p-4 rounded-lg border border-purple-100 col-span-2">
-                                    <div class="text-purple-600 text-sm font-medium mb-1">Último Registro</div>
-                                    <div class="text-md font-medium text-gray-800 truncate" id="last-record-silos">N/A</div>
+                                <div class="bg-purple-50 p-3 sm:p-4 rounded-lg border border-purple-100 col-span-1 sm:col-span-2">
+                                    <div class="text-purple-600 text-xs sm:text-sm font-medium mb-1">Último Registro</div>
+                                    <div class="text-sm sm:text-md font-medium text-gray-800 truncate" id="last-record-silos">N/A</div>
                                 </div>
                             </div>
                         </div>
@@ -1140,50 +1801,38 @@
 
                     <!-- Sub-vista: Panel de Control -->
                     <div id="sub-view-silos-panel" class="sub-view-container">
-                        <!-- Navegación para Panel de Control -->
-                        <div class="mb-6">
-                            <nav class="flex space-x-2 p-1 bg-gray-100 rounded-lg">
-                                <button id="sub-tab-silos-form-panel" class="sub-nav-btn flex items-center px-4 py-2 rounded-md font-medium text-sm transition-all duration-300 flex-1 justify-center">
-                                    <i class="fas fa-plus-circle mr-2"></i>
-                                    Registro
-                                </button>
-                                <button id="sub-tab-silos-panel-active" class="sub-nav-btn active flex items-center px-4 py-2 rounded-md font-medium text-sm transition-all duration-300 flex-1 justify-center">
-                                    <i class="fas fa-hard-hat mr-2"></i>
-                                    Panel Control
-                                </button>
-                            </nav>
-                        </div>
+
                         
                         <div class="worker-section">
                             <div class="worker-header">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center">
+                                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                                    <div class="flex items-center mb-2 sm:mb-0">
                                         <div class="bg-white bg-opacity-20 p-2 rounded-lg mr-3">
-                                            <i class="fas fa-hard-hat text-white text-lg"></i>
+                                            <i class="fas fa-hard-hat text-white text-base sm:text-lg"></i>
                                         </div>
                                         <div>
-                                            <h2 class="text-lg font-bold">Panel de Control - Personal de Planta</h2>
+                                            <h2 class="text-base sm:text-lg font-bold">Panel de Control - Personal de Planta</h2>
                                             <p class="text-gray-300 text-xs mt-1">Información operativa para trabajadores</p>
                                         </div>
                                     </div>
-                                    <div class="text-right">
+                                    <div class="text-left sm:text-right">
                                         <div class="text-xs text-gray-300">Turno Actual</div>
-                                        <div class="text-md font-bold" id="current-shift">Mañana</div>
+                                        <div class="text-sm sm:text-md font-bold" id="current-shift">Mañana</div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="overflow-x-auto rounded-lg">
+                            <div class="overflow-x-auto rounded-lg hidden md:block">
                                 <table class="w-full worker-table">
                                     <thead>
                                         <tr>
-                                            <th class="text-left">Estado Operativo</th>
-                                            <th class="text-left">Código de Lote</th>
+                                            <th class="text-left">Estado</th>
+                                            <th class="text-left">Lote</th>
                                             <th class="text-left">Ubicación</th>
-                                            <th class="text-left">Equipo Asignado</th>
-                                            <th class="text-left">Línea de Producción</th>
-                                            <th class="text-left">Hora de Registro</th>
-                                            <th class="text-center">Código QR</th>
+                                            <th class="text-left hidden sm:table-cell">Equipo</th>
+                                            <th class="text-left hidden md:table-cell">Línea</th>
+                                            <th class="text-left">Hora</th>
+                                            <th class="text-center">QR</th>
                                         </tr>
                                     </thead>
                                     <tbody id="workerTableSilos">
@@ -1191,10 +1840,15 @@
                                     </tbody>
                                 </table>
                             </div>
+                            
+                            <!-- Contenedor móvil para tarjetas de workers silos -->
+                            <div id="workerCardsSilos" class="mobile-cards-container space-y-3">
+                                <!-- Las tarjetas móviles se añadirán aquí dinámicamente -->
+                            </div>
 
-                            <div class="mt-4 bg-white rounded-lg p-3 border border-gray-200">
-                                <div class="flex flex-col md:flex-row justify-between items-center">
-                                    <div class="flex items-center mb-2 md:mb-0">
+                            <div class="mt-4 bg-white rounded-lg p-2 sm:p-3 border border-gray-200">
+                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-2 sm:space-y-0">
+                                    <div class="flex items-center">
                                         <i class="fas fa-info-circle text-blue-600 mr-2 text-sm"></i>
                                         <span class="text-xs font-medium text-gray-700" id="worker-table-info-silos">Mostrando 0 operaciones activas</span>
                                     </div>
@@ -1216,35 +1870,36 @@
                 <div class="lg:col-span-2">
                     <div class="bg-white rounded-xl shadow-sm overflow-hidden">
                         <div class="p-6">
-                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                                <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                                <h2 class="text-lg sm:text-xl font-semibold text-gray-800 flex items-center">
                                     <i class="fas fa-table mr-2 text-blue-600"></i> Registros Actuales
                                 </h2>
-                                <div class="mt-4 md:mt-0 search-actions">
-                                    <div class="search-container flex-shrink-0">
+                                <div class="search-actions flex flex-col sm:flex-row gap-3">
+                                    <div class="search-container flex-grow sm:flex-grow-0 sm:w-64">
                                         <i class="fas fa-search search-icon"></i>
-                                        <input type="text" id="searchInputSilos" class="search-input w-full p-2.5 pl-10 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" placeholder="Buscar por lote, silo, máquina...">
+                                        <input type="text" id="searchInputSilos" class="search-input w-full p-2.5 pl-10 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base" placeholder="Buscar...">
                                         <button id="clearSearchSilos" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 hidden">
                                             <i class="fas fa-times"></i>
                                         </button>
                                     </div>
-                                    <button id="clearStorageSilos" class="btn-danger text-white py-2.5 px-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center whitespace-nowrap flex-shrink-0">
-                                        <i class="fas fa-trash-alt mr-2"></i> Limpiar todo
+                                    <button id="clearStorageSilos" class="btn-danger text-white py-2.5 px-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center whitespace-nowrap text-sm">
+                                        <i class="fas fa-trash-alt mr-2"></i> 
+                                        <span class="hidden sm:inline">Limpiar </span>Todo
                                     </button>
                                 </div>
                             </div>
-                            <div class="overflow-x-auto rounded-lg border border-gray-200">
+                            <div class="overflow-x-auto rounded-lg border border-gray-200 hidden md:block">
                                 <table class="w-full text-left">
                                     <thead class="bg-gray-50">
                                         <tr class="text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            <th class="px-6 py-3">Estado</th>
-                                            <th class="px-6 py-3">Lote</th>
-                                            <th class="px-6 py-3">Silo</th>
-                                            <th class="px-6 py-3">Máquina</th>
-                                            <th class="px-6 py-3">Tubo</th>
-                                            <th class="px-6 py-3">Fecha/Hora</th>
-                                            <th class="px-6 py-3">Código</th>
-                                            <th class="px-6 py-3 text-right">Acciones</th>
+                                            <th class="px-3 sm:px-6 py-3">Estado</th>
+                                            <th class="px-3 sm:px-6 py-3">Lote</th>
+                                            <th class="px-3 sm:px-6 py-3 hidden sm:table-cell">Silo</th>
+                                            <th class="px-3 sm:px-6 py-3 hidden md:table-cell">Máquina</th>
+                                            <th class="px-3 sm:px-6 py-3 hidden lg:table-cell">Tubo</th>
+                                            <th class="px-3 sm:px-6 py-3 hidden lg:table-cell">Fecha/Hora</th>
+                                            <th class="px-3 sm:px-6 py-3 hidden sm:table-cell">Código</th>
+                                            <th class="px-3 sm:px-6 py-3 text-right">Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody id="registrosTableSilos" class="divide-y divide-gray-200 bg-white">
@@ -1252,14 +1907,22 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="mt-4 flex justify-between items-center text-sm text-gray-600">
+                            
+                            <!-- Contenedor móvil para tarjetas de silos -->
+                            <div id="registrosCardsSilos" class="mobile-cards-container space-y-3">
+                                <!-- Las tarjetas móviles se añadirán aquí dinámicamente -->
+                            </div>
+                            
+                            <div class="mt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-sm text-gray-600">
                                 <div id="table-info-silos">Mostrando 0 registros</div>
-                                <div class="flex space-x-4">
-                                    <button id="export-csv-silos" class="export-btn">
-                                        <i class="fas fa-file-csv"></i> Exportar CSV
+                                <div class="flex flex-wrap gap-2">
+                                    <button id="export-csv-silos" class="export-btn text-xs px-3 py-2">
+                                        <i class="fas fa-file-csv"></i> 
+                                        <span class="hidden sm:inline">Exportar </span>CSV
                                     </button>
-                                    <button id="print-report-silos" class="export-btn">
-                                        <i class="fas fa-print"></i> Imprimir
+                                    <button id="print-report-silos" class="export-btn text-xs px-3 py-2">
+                                        <i class="fas fa-print"></i> 
+                                        <span class="hidden sm:inline">Imprimir</span>
                                     </button>
                                 </div>
                             </div>
@@ -1382,18 +2045,18 @@
                             <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
                                 <i class="fas fa-chart-pie mr-2 text-green-600"></i> Métricas Clave
                             </h3>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="bg-green-50 p-4 rounded-lg border border-green-100">
-                                    <div class="text-green-600 text-sm font-medium mb-1">Operaciones Activas</div>
-                                    <div class="text-2xl font-bold text-gray-800" id="active-count-maquinas">0</div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                                <div class="bg-green-50 p-3 sm:p-4 rounded-lg border border-green-100">
+                                    <div class="text-green-600 text-xs sm:text-sm font-medium mb-1">Operaciones Activas</div>
+                                    <div class="text-xl sm:text-2xl font-bold text-gray-800" id="active-count-maquinas">0</div>
                                 </div>
-                                <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                                    <div class="text-blue-600 text-sm font-medium mb-1">Máquinas en Uso</div>
-                                    <div class="text-2xl font-bold text-gray-800" id="machines-in-use">0/8</div>
+                                <div class="bg-blue-50 p-3 sm:p-4 rounded-lg border border-blue-100">
+                                    <div class="text-blue-600 text-xs sm:text-sm font-medium mb-1">Máquinas en Uso</div>
+                                    <div class="text-xl sm:text-2xl font-bold text-gray-800" id="machines-in-use">0/8</div>
                                 </div>
-                                <div class="bg-purple-50 p-4 rounded-lg border border-purple-100 col-span-2">
-                                    <div class="text-purple-600 text-sm font-medium mb-1">Última Operación</div>
-                                    <div class="text-md font-medium text-gray-800 truncate" id="last-record-maquinas">N/A</div>
+                                <div class="bg-purple-50 p-3 sm:p-4 rounded-lg border border-purple-100 col-span-1 sm:col-span-2">
+                                    <div class="text-purple-600 text-xs sm:text-sm font-medium mb-1">Última Operación</div>
+                                    <div class="text-sm sm:text-md font-medium text-gray-800 truncate" id="last-record-maquinas">N/A</div>
                                 </div>
                             </div>
                         </div>
@@ -1401,20 +2064,6 @@
 
                     <!-- Sub-vista: Panel de Control -->
                     <div id="sub-view-maquinas-panel" class="sub-view-container">
-                        <!-- Navegación para Panel de Control -->
-                        <div class="mb-6">
-                            <nav class="flex space-x-2 p-1 bg-gray-100 rounded-lg">
-                                <button id="sub-tab-maquinas-form-panel" class="sub-nav-btn-green flex items-center px-4 py-2 rounded-md font-medium text-sm transition-all duration-300 flex-1 justify-center">
-                                    <i class="fas fa-plus-circle mr-2"></i>
-                                    Registro
-                                </button>
-                                <button id="sub-tab-maquinas-panel-active" class="sub-nav-btn-green active flex items-center px-4 py-2 rounded-md font-medium text-sm transition-all duration-300 flex-1 justify-center">
-                                    <i class="fas fa-users-cog mr-2"></i>
-                                    Panel Control
-                                </button>
-                            </nav>
-                        </div>
-                        
                         <div class="worker-section-maquinas">
                             <div class="worker-header-maquinas">
                                 <div class="flex items-center justify-between">
@@ -1434,7 +2083,7 @@
                                 </div>
                             </div>
 
-                            <div class="overflow-x-auto rounded-lg">
+                            <div class="overflow-x-auto rounded-lg hidden md:block">
                                 <table class="w-full worker-table-maquinas">
                                     <thead>
                                         <tr>
@@ -1452,6 +2101,11 @@
                                         <!-- Los registros se añadirán aquí dinámicamente -->
                                     </tbody>
                                 </table>
+                            </div>
+                            
+                            <!-- Contenedor móvil para tarjetas de workers máquinas -->
+                            <div id="workerCardsMaquinas" class="mobile-cards-container space-y-3">
+                                <!-- Las tarjetas móviles se añadirán aquí dinámicamente -->
                             </div>
 
                             <div class="mt-4 bg-white rounded-lg p-3 border border-green-200">
@@ -1478,36 +2132,37 @@
                 <div class="lg:col-span-2">
                     <div class="bg-white rounded-xl shadow-sm overflow-hidden">
                         <div class="p-6">
-                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                                <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                                <h2 class="text-lg sm:text-xl font-semibold text-gray-800 flex items-center">
                                     <i class="fas fa-table mr-2 text-green-600"></i> Operaciones Actuales
                                 </h2>
-                                <div class="mt-4 md:mt-0 search-actions">
-                                    <div class="search-container flex-shrink-0">
+                                <div class="search-actions flex flex-col sm:flex-row gap-3">
+                                    <div class="search-container flex-grow sm:flex-grow-0 sm:w-64">
                                         <i class="fas fa-search search-icon"></i>
-                                        <input type="text" id="searchInputMaquinas" class="search-input w-full p-2.5 pl-10 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200" placeholder="Buscar por máquina, silo, operador...">
+                                        <input type="text" id="searchInputMaquinas" class="search-input w-full p-2.5 pl-10 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 text-base" placeholder="Buscar...">
                                         <button id="clearSearchMaquinas" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 hidden">
                                             <i class="fas fa-times"></i>
                                         </button>
                                     </div>
-                                    <button id="clearStorageMaquinas" class="btn-danger text-white py-2.5 px-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center whitespace-nowrap flex-shrink-0">
-                                        <i class="fas fa-trash-alt mr-2"></i> Limpiar todo
+                                    <button id="clearStorageMaquinas" class="btn-danger text-white py-2.5 px-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center whitespace-nowrap text-sm">
+                                        <i class="fas fa-trash-alt mr-2"></i> 
+                                        <span class="hidden sm:inline">Limpiar </span>Todo
                                     </button>
                                 </div>
                             </div>
-                            <div class="overflow-x-auto rounded-lg border border-gray-200">
+                            <div class="overflow-x-auto rounded-lg border border-gray-200 hidden md:block">
                                 <table class="w-full text-left">
                                     <thead class="bg-gray-50">
                                         <tr class="text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            <th class="px-6 py-3">Estado</th>
-                                            <th class="px-6 py-3">Máquina</th>
-                                            <th class="px-6 py-3">Silo</th>
-                                            <th class="px-6 py-3">Operador</th>
-                                            <th class="px-6 py-3">Turno</th>
-                                            <th class="px-6 py-3">Producto</th>
-                                            <th class="px-6 py-3">Fecha/Hora</th>
-                                            <th class="px-6 py-3">Código</th>
-                                            <th class="px-6 py-3 text-right">Acciones</th>
+                                            <th class="px-3 sm:px-6 py-3">Estado</th>
+                                            <th class="px-3 sm:px-6 py-3">Máquina</th>
+                                            <th class="px-3 sm:px-6 py-3 hidden sm:table-cell">Silo</th>
+                                            <th class="px-3 sm:px-6 py-3 hidden md:table-cell">Operador</th>
+                                            <th class="px-3 sm:px-6 py-3 hidden lg:table-cell">Turno</th>
+                                            <th class="px-3 sm:px-6 py-3 hidden lg:table-cell">Producto</th>
+                                            <th class="px-3 sm:px-6 py-3 hidden lg:table-cell">Fecha/Hora</th>
+                                            <th class="px-3 sm:px-6 py-3 hidden sm:table-cell">Código</th>
+                                            <th class="px-3 sm:px-6 py-3 text-right">Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody id="registrosTableMaquinas" class="divide-y divide-gray-200 bg-white">
@@ -1515,14 +2170,22 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="mt-4 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-600 gap-4">
+                            
+                            <!-- Contenedor móvil para tarjetas de máquinas -->
+                            <div id="registrosCardsMaquinas" class="mobile-cards-container space-y-3">
+                                <!-- Las tarjetas móviles se añadirán aquí dinámicamente -->
+                            </div>
+                            
+                            <div class="mt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-sm text-gray-600">
                                 <div id="table-info-maquinas">Mostrando 0 registros</div>
-                                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
-                                    <button id="export-csv-maquinas" class="export-btn w-full sm:w-auto">
-                                        <i class="fas fa-file-csv"></i> Exportar CSV
+                                <div class="flex flex-wrap gap-2">
+                                    <button id="export-csv-maquinas" class="export-btn text-xs px-3 py-2">
+                                        <i class="fas fa-file-csv"></i> 
+                                        <span class="hidden sm:inline">Exportar </span>CSV
                                     </button>
-                                    <button id="print-report-maquinas" class="export-btn w-full sm:w-auto">
-                                        <i class="fas fa-print"></i> Imprimir
+                                    <button id="print-report-maquinas" class="export-btn text-xs px-3 py-2">
+                                        <i class="fas fa-print"></i> 
+                                        <span class="hidden sm:inline">Imprimir</span>
                                     </button>
                                 </div>
                             </div>
@@ -1796,7 +2459,7 @@
     const LIMITE_TIEMPO = 24 * 60 * 60 * 1000; // 24 horas en milisegundos
     const WARNING_TIME = 12 * 60 * 60 * 1000; // 12 horas para mostrar advertencia
 
-    // Variables globales
+    // Variables globales optimizadas
     let currentView = 'silos-lotes';
     let currentSubViewSilos = 'form';
     let currentSubViewMaquinas = 'form';
@@ -1809,6 +2472,11 @@
     // let intervalLimpiezaSilos = null;
     // let intervalLimpiezaMaquinas = null;
 
+    // Cache para optimización de performance
+    const qrCodeCache = new Map();
+    let searchTimeoutSilos = null;
+    let searchTimeoutMaquinas = null;
+
     // Elementos del DOM
     let elements = {};
 
@@ -1816,6 +2484,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         console.log('Sistema Integrado iniciado v2.3.0');
         initializeElements();
+        initializeTheme();
         setupNavigation();
         setupSubNavigation();
         cargarRegistrosSilos();
@@ -1910,6 +2579,43 @@
         console.log('Elementos DOM inicializados');
     }
 
+    // Función para inicializar el tema
+    function initializeTheme() {
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const themeText = document.getElementById('theme-text');
+        
+        // Obtener tema guardado o usar claro por defecto
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        applyTheme(savedTheme);
+        
+        // Event listener para el botón de tema
+        if (themeToggle) {
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                applyTheme(newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                // Animación del botón
+                themeToggle.classList.add('animate-bounce-in');
+                setTimeout(() => themeToggle.classList.remove('animate-bounce-in'), 600);
+            });
+        }
+        
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                if (themeIcon) themeIcon.className = 'fas fa-moon mr-1';
+                if (themeText) themeText.textContent = 'Oscuro';
+            } else {
+                document.documentElement.classList.remove('dark');
+                if (themeIcon) themeIcon.className = 'fas fa-sun mr-1';
+                if (themeText) themeText.textContent = 'Claro';
+            }
+        }
+    }
+
     function setupNavigation() {
         elements.tabSilosLotes.addEventListener('click', function() {
             switchView('silos-lotes');
@@ -1934,14 +2640,6 @@
             });
         }
 
-        // Navegación flotante en Panel Control - Silos
-        const subTabSilosFormPanel = document.getElementById('sub-tab-silos-form-panel');
-        if (subTabSilosFormPanel) {
-            subTabSilosFormPanel.addEventListener('click', function() {
-                switchSubView('silos', 'form');
-            });
-        }
-
         // Sub-navegación para Máquinas y Silos
         if (elements.subTabMaquinasForm) {
             elements.subTabMaquinasForm.addEventListener('click', function() {
@@ -1955,10 +2653,17 @@
             });
         }
 
-        // Navegación flotante en Panel Control - Máquinas
-        const subTabMaquinasFormPanel = document.getElementById('sub-tab-maquinas-form-panel');
-        if (subTabMaquinasFormPanel) {
-            subTabMaquinasFormPanel.addEventListener('click', function() {
+        // Botones de regreso en paneles
+        const backToFormSilos = document.getElementById('back-to-form-silos');
+        if (backToFormSilos) {
+            backToFormSilos.addEventListener('click', function() {
+                switchSubView('silos', 'form');
+            });
+        }
+
+        const backToFormMaquinas = document.getElementById('back-to-form-maquinas');
+        if (backToFormMaquinas) {
+            backToFormMaquinas.addEventListener('click', function() {
                 switchSubView('maquinas', 'form');
             });
         }
@@ -2338,7 +3043,7 @@
                 actualizarTablaWorkersSilos();
                 actualizarEstadisticasSilos();
                 elements.siloForm.reset();
-                mostrarAlerta('Registro añadido correctamente.', 'success');
+                mostrarAlerta('Lote registrado correctamente', 'success');
 
                 // setTimeout(() => {
                 //     limpiarRegistrosExpiradosSilos();
@@ -2404,15 +3109,34 @@
             });
         }
 
-        // Búsqueda para silos
+        // Búsqueda para silos con debounce
         if (elements.searchInputSilos) {
             elements.searchInputSilos.addEventListener('input', function() {
+                // Limpiar timeout anterior
+                if (searchTimeoutSilos) {
+                    clearTimeout(searchTimeoutSilos);
+                }
+                
                 if (elements.searchInputSilos.value.length > 0) {
                     elements.clearSearchSilos.classList.remove('hidden');
                 } else {
                     elements.clearSearchSilos.classList.add('hidden');
                 }
-                actualizarTablaSilos();
+                
+                // Aplicar debounce para mejor performance
+                searchTimeoutSilos = setTimeout(() => {
+                    actualizarTablaSilos();
+                }, 300);
+            });
+            
+            // Búsqueda inmediata con Enter
+            elements.searchInputSilos.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    if (searchTimeoutSilos) {
+                        clearTimeout(searchTimeoutSilos);
+                    }
+                    actualizarTablaSilos();
+                }
             });
         }
 
@@ -2425,15 +3149,34 @@
             });
         }
 
-        // Búsqueda para máquinas
+        // Búsqueda para máquinas con debounce
         if (elements.searchInputMaquinas) {
             elements.searchInputMaquinas.addEventListener('input', function() {
+                // Limpiar timeout anterior
+                if (searchTimeoutMaquinas) {
+                    clearTimeout(searchTimeoutMaquinas);
+                }
+                
                 if (elements.searchInputMaquinas.value.length > 0) {
                     elements.clearSearchMaquinas.classList.remove('hidden');
                 } else {
                     elements.clearSearchMaquinas.classList.add('hidden');
                 }
-                actualizarTablaMaquinas();
+                
+                // Aplicar debounce para mejor performance
+                searchTimeoutMaquinas = setTimeout(() => {
+                    actualizarTablaMaquinas();
+                }, 300);
+            });
+            
+            // Búsqueda inmediata con Enter
+            elements.searchInputMaquinas.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    if (searchTimeoutMaquinas) {
+                        clearTimeout(searchTimeoutMaquinas);
+                    }
+                    actualizarTablaMaquinas();
+                }
             });
         }
 
@@ -2573,7 +3316,6 @@
                         second: '2-digit'
                     });
                     registrosSilos[editingIndexSilos].timestamp = new Date().getTime();
-
                     guardarRegistrosSilos();
                     actualizarTablaSilos();
                     actualizarTablaWorkersSilos();
@@ -2731,6 +3473,7 @@
     // Por brevedad, incluyo solo las funciones principales
 
     function mostrarRegistroSilo(registro, index) {
+        // Mostrar en tabla desktop
         if (!elements.registrosTableSilos) {
             console.error('registrosTableSilos no está disponible');
             return;
@@ -2759,31 +3502,38 @@
         const row = document.createElement('tr');
         row.className = 'hover:bg-gray-50';
         row.innerHTML = `
-            <td class="px-6 py-4 whitespace-nowrap">
-                <span class="${estadoBadge} badge">
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
+                <span class="${estadoBadge} badge text-xs">
                     <span class="status-indicator ${estadoClase}"></span>
-                    ${estado}
+                    <span class="hidden sm:inline">${estado}</span>
+                    <span class="sm:hidden">${estado.charAt(0)}</span>
                 </span>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">${registro.lote}</td>
-            <td class="px-6 py-4 whitespace-nowrap">${registro.silo}</td>
-            <td class="px-6 py-4 whitespace-nowrap">${registro.maquina}</td>
-            <td class="px-6 py-4 whitespace-nowrap">${registro.tubo || 'N/A'}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${registro.fecha}</td>
-            <td class="px-6 py-4 whitespace-nowrap">
-                <button class="view-barcode action-btn action-btn-view">
-                    <i class="fas fa-eye"></i> Ver
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap font-medium text-gray-900">
+                <div class="text-sm">${registro.lote}</div>
+                <div class="text-xs text-gray-500 sm:hidden">${registro.silo} • ${registro.maquina}</div>
+            </td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap hidden sm:table-cell">${registro.silo}</td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap hidden md:table-cell">${registro.maquina}</td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap hidden lg:table-cell">${registro.tubo || 'N/A'}</td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-600 hidden lg:table-cell">${registro.fecha}</td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap hidden sm:table-cell">
+                <button class="view-barcode action-btn action-btn-view text-xs">
+                    <i class="fas fa-eye"></i> <span class="hidden md:inline">Ver</span>
                 </button>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <div class="flex justify-end gap-2">
-                    <button class="edit-btn action-btn action-btn-edit" title="Editar registro">
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <div class="flex justify-end gap-1 sm:gap-2">
+                    <button class="view-barcode action-btn action-btn-view sm:hidden text-xs p-2" title="Ver código">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="edit-btn action-btn action-btn-edit text-xs p-2" title="Editar">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="delete-btn action-btn action-btn-delete" title="Eliminar registro">
+                    <button class="delete-btn action-btn action-btn-delete text-xs p-2" title="Eliminar">
                         <i class="fas fa-trash-alt"></i>
                     </button>
-                    <button class="print-btn action-btn action-btn-print" title="Imprimir código">
+                    <button class="print-btn action-btn action-btn-print hidden sm:inline-flex text-xs p-2" title="Imprimir">
                         <i class="fas fa-print"></i>
                     </button>
                 </div>
@@ -2792,7 +3542,118 @@
 
         elements.registrosTableSilos.appendChild(row);
 
-        // Eventos para los botones de la fila
+        // Crear tarjeta móvil
+        const mobileCardsContainer = document.getElementById('registrosCardsSilos');
+        if (mobileCardsContainer) {
+            const card = document.createElement('div');
+            card.className = 'mobile-card';
+            
+            const codigo = registro.lote + '-' + registro.silo;
+            
+            card.innerHTML = `
+                <div class="mobile-card-header">
+                    <div class="mobile-card-title">${registro.lote}</div>
+                    <span class="mobile-status-badge ${estadoBadge}">${estado}</span>
+                </div>
+                <div class="mobile-card-body">
+                    <div class="mobile-field">
+                        <div class="mobile-field-label">Silo</div>
+                        <div class="mobile-field-value">${registro.silo}</div>
+                    </div>
+                    <div class="mobile-field">
+                        <div class="mobile-field-label">Máquina</div>
+                        <div class="mobile-field-value">${registro.maquina}</div>
+                    </div>
+                    <div class="mobile-field">
+                        <div class="mobile-field-label">Tubo</div>
+                        <div class="mobile-field-value">${registro.tubo || 'N/A'}</div>
+                    </div>
+                    <div class="mobile-field">
+                        <div class="mobile-field-label">Hora</div>
+                        <div class="mobile-field-value">${new Date(registro.timestamp).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</div>
+                    </div>
+                    <div class="mobile-field">
+                        <div class="mobile-field-label">Fecha</div>
+                        <div class="mobile-field-value">${registro.fecha}</div>
+                    </div>
+                    <div class="mobile-field mobile-field-full">
+                        <div class="mobile-field-label">Código</div>
+                        <div class="mobile-field-value" style="font-family: monospace;">${codigo}</div>
+                    </div>
+                </div>
+                <div class="mobile-actions">
+                    <div class="mobile-qr-code mobile-view-barcode" data-codigo="${codigo}" title="Ver QR">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <div class="mobile-actions-buttons">
+                        <button class="mobile-action-btn mobile-edit-btn" style="background: #3b82f6; color: white;" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="mobile-action-btn mobile-delete-btn" style="background: #ef4444; color: white;" title="Eliminar">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="mobile-action-btn mobile-print-btn" style="background: #10b981; color: white;" title="Imprimir">
+                            <i class="fas fa-print"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            mobileCardsContainer.appendChild(card);
+            
+            // Eventos para la tarjeta móvil
+            card.querySelector('.mobile-view-barcode').addEventListener('click', function() {
+                const codigo = this.getAttribute('data-codigo');
+                try {
+                    JsBarcode(elements.modalBarcode, codigo, {
+                        format: "CODE128",
+                        width: 2,
+                        height: 60,
+                        displayValue: false,
+                        fontSize: 14,
+                        margin: 15,
+                        background: "#ffffff",
+                        lineColor: "#000000"
+                    });
+                    document.getElementById('barcodeText').textContent = codigo;
+                    document.getElementById('generationTime').textContent = new Date().toLocaleTimeString('es-ES');
+                    elements.barcodeModal.classList.remove('hidden');
+                } catch (error) {
+                    console.error('Error generando código de barras:', error);
+                    mostrarAlerta('Error al generar el código de barras.', 'error');
+                }
+            });
+            
+            card.querySelector('.mobile-edit-btn').addEventListener('click', function() {
+                editingIndexSilos = index;
+                document.getElementById('editLote').value = registro.lote;
+                document.getElementById('editSilo').value = registro.silo;
+                document.getElementById('editMaquina').value = registro.maquina;
+                document.getElementById('editTubo').value = registro.tubo;
+                elements.editModalSilos.classList.remove('hidden');
+            });
+            
+            card.querySelector('.mobile-delete-btn').addEventListener('click', function() {
+                mostrarConfirmacion(
+                    '¿Está seguro de eliminar este registro?',
+                    `Se eliminará el registro del lote "${registro.lote}" en "${registro.silo}".`,
+                    function() {
+                        registrosSilos.splice(index, 1);
+                        guardarRegistrosSilos();
+                        actualizarTablaSilos();
+                        actualizarTablaWorkersSilos();
+                        actualizarEstadisticasSilos();
+                        mostrarAlerta('Registro eliminado correctamente.', 'success');
+                    }
+                );
+            });
+            
+            card.querySelector('.mobile-print-btn').addEventListener('click', function() {
+                imprimirCodigoIndividualSilo(registro);
+            });
+        }
+
+        // Eventos para los botones de la fila desktop
         row.querySelector('.view-barcode').addEventListener('click', function() {
             try {
                 if (typeof JsBarcode !== 'undefined' && elements.modalBarcode) {
@@ -2812,7 +3673,7 @@
                     document.getElementById('generationTime').textContent = new Date().toLocaleTimeString('es-ES');
                     elements.barcodeModal.classList.remove('hidden');
                 } else {
-                                        console.error('JsBarcode no está disponible o modalBarcode no existe');
+                    console.error('JsBarcode no está disponible o modalBarcode no existe');
                     mostrarAlerta('Error al generar el código de barras', 'error');
                 }
             } catch (error) {
@@ -2851,6 +3712,7 @@
     }
 
     function mostrarRegistroMaquina(registro, index) {
+        // Mostrar en tabla desktop
         if (!elements.registrosTableMaquinas) {
             console.error('registrosTableMaquinas no está disponible');
             return;
@@ -2913,7 +3775,123 @@
 
         elements.registrosTableMaquinas.appendChild(row);
 
-        // Eventos para los botones de la fila
+        // Crear tarjeta móvil
+        const mobileCardsContainer = document.getElementById('registrosCardsMaquinas');
+        if (mobileCardsContainer) {
+            const card = document.createElement('div');
+            card.className = 'mobile-card';
+            
+            const codigo = registro.maquina + '-' + registro.silo + '-' + registro.operador;
+            
+            card.innerHTML = `
+                <div class="mobile-card-header">
+                    <div class="mobile-card-title">${registro.maquina}</div>
+                    <span class="mobile-status-badge ${estadoBadge}">${estado}</span>
+                </div>
+                <div class="mobile-card-body">
+                    <div class="mobile-field">
+                        <div class="mobile-field-label">Silo</div>
+                        <div class="mobile-field-value">${registro.silo}</div>
+                    </div>
+                    <div class="mobile-field">
+                        <div class="mobile-field-label">Operador</div>
+                        <div class="mobile-field-value">${registro.operador}</div>
+                    </div>
+                    <div class="mobile-field">
+                        <div class="mobile-field-label">Turno</div>
+                        <div class="mobile-field-value">${registro.turno}</div>
+                    </div>
+                    <div class="mobile-field">
+                        <div class="mobile-field-label">Producto</div>
+                        <div class="mobile-field-value">${registro.producto}</div>
+                    </div>
+                    <div class="mobile-field mobile-field-full">
+                        <div class="mobile-field-label">Hora</div>
+                        <div class="mobile-field-value">${new Date(registro.timestamp).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</div>
+                    </div>
+                    <div class="mobile-field">
+                        <div class="mobile-field-label">Fecha</div>
+                        <div class="mobile-field-value">${registro.fecha}</div>
+                    </div>
+                    <div class="mobile-field mobile-field-full">
+                        <div class="mobile-field-label">Código</div>
+                        <div class="mobile-field-value" style="font-family: monospace; font-size: 12px;">${codigo}</div>
+                    </div>
+                </div>
+                <div class="mobile-actions">
+                    <div class="mobile-qr-code mobile-view-barcode" data-codigo="${codigo}" title="Ver QR">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <div class="mobile-actions-buttons">
+                        <button class="mobile-action-btn mobile-edit-btn" style="background: #3b82f6; color: white;" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="mobile-action-btn mobile-delete-btn" style="background: #ef4444; color: white;" title="Eliminar">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="mobile-action-btn mobile-print-btn" style="background: #10b981; color: white;" title="Imprimir">
+                            <i class="fas fa-print"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            mobileCardsContainer.appendChild(card);
+            
+            // Eventos para la tarjeta móvil
+            card.querySelector('.mobile-view-barcode').addEventListener('click', function() {
+                const codigo = this.getAttribute('data-codigo');
+                try {
+                    JsBarcode(elements.modalBarcode, codigo, {
+                        format: "CODE128",
+                        width: 2,
+                        height: 60,
+                        displayValue: false,
+                        fontSize: 14,
+                        margin: 15,
+                        background: "#ffffff",
+                        lineColor: "#000000"
+                    });
+                    document.getElementById('barcodeText').textContent = codigo;
+                    document.getElementById('generationTime').textContent = new Date().toLocaleTimeString('es-ES');
+                    elements.barcodeModal.classList.remove('hidden');
+                } catch (error) {
+                    console.error('Error generando código de barras:', error);
+                    mostrarAlerta('Error al generar el código de barras.', 'error');
+                }
+            });
+            
+            card.querySelector('.mobile-edit-btn').addEventListener('click', function() {
+                editingIndexMaquinas = index;
+                document.getElementById('editMaquinaMaq').value = registro.maquina;
+                document.getElementById('editSiloMaq').value = registro.silo;
+                document.getElementById('editOperador').value = registro.operador;
+                document.getElementById('editTurno').value = registro.turno;
+                document.getElementById('editProducto').value = registro.producto;
+                elements.editModalMaquinas.classList.remove('hidden');
+            });
+            
+            card.querySelector('.mobile-delete-btn').addEventListener('click', function() {
+                mostrarConfirmacion(
+                    '¿Está seguro de eliminar este registro?',
+                    `Se eliminará la operación de "${registro.maquina}" con operador "${registro.operador}".`,
+                    function() {
+                        registrosMaquinas.splice(index, 1);
+                        guardarRegistrosMaquinas();
+                        actualizarTablaMaquinas();
+                        actualizarTablaWorkersMaquinas();
+                        actualizarEstadisticasMaquinas();
+                        mostrarAlerta('Registro eliminado correctamente.', 'success');
+                    }
+                );
+            });
+            
+            card.querySelector('.mobile-print-btn').addEventListener('click', function() {
+                imprimirCodigoIndividualMaquina(registro);
+            });
+        }
+
+        // Eventos para los botones de la fila desktop
         row.querySelector('.view-barcode').addEventListener('click', function() {
             try {
                 if (typeof JsBarcode !== 'undefined' && elements.modalBarcode) {
@@ -2973,6 +3951,7 @@
     }
 
     function mostrarRegistroWorkerSilo(registro, index) {
+        // Mostrar en tabla desktop
         if (!elements.workerTableSilos) {
             console.error('workerTableSilos no está disponible');
             return;
@@ -3024,7 +4003,76 @@
 
         elements.workerTableSilos.appendChild(row);
 
-        // Evento para ver código QR
+        // Crear tarjeta móvil
+        const mobileCardsContainer = document.getElementById('workerCardsSilos');
+        if (mobileCardsContainer) {
+            const card = document.createElement('div');
+            card.className = `mobile-card worker-mobile-card ${prioridad}`;
+            
+            const codigo = registro.lote + '-' + registro.silo;
+            
+            card.innerHTML = `
+                <div class="mobile-card-header">
+                    <div class="mobile-card-title">${registro.lote}</div>
+                    <span class="mobile-status-badge worker-badge ${estadoClase}">${estado}</span>
+                </div>
+                <div class="mobile-card-body">
+                    <div class="mobile-field">
+                        <div class="mobile-field-label">Ubicación</div>
+                        <div class="mobile-field-value">${registro.silo}</div>
+                    </div>
+                    <div class="mobile-field">
+                        <div class="mobile-field-label">Equipo</div>
+                        <div class="mobile-field-value">${registro.maquina}</div>
+                    </div>
+                    <div class="mobile-field">
+                        <div class="mobile-field-label">Línea</div>
+                        <div class="mobile-field-value">${registro.tubo || 'N/A'}</div>
+                    </div>
+                    <div class="mobile-field">
+                        <div class="mobile-field-label">Hora</div>
+                        <div class="mobile-field-value">${horaRegistro}</div>
+                    </div>
+                </div>
+                <div class="mobile-actions">
+                    <div class="mobile-qr-code mobile-worker-view-qr" data-codigo="${codigo}" title="Ver QR">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <div style="color: #64748b; font-size: 12px; font-weight: 500;">
+                        Código: ${codigo}
+                    </div>
+                </div>
+            `;
+            
+            mobileCardsContainer.appendChild(card);
+            
+            // Evento para la tarjeta móvil
+            card.querySelector('.mobile-worker-view-qr').addEventListener('click', function() {
+                const codigo = this.getAttribute('data-codigo');
+                try {
+                    if (typeof JsBarcode !== 'undefined' && elements.modalBarcode) {
+                        JsBarcode(elements.modalBarcode, codigo, {
+                            format: "CODE128",
+                            width: 2,
+                            height: 60,
+                            displayValue: false,
+                            fontSize: 14,
+                            margin: 15,
+                            background: "#ffffff",
+                            lineColor: "#000000"
+                        });
+                        document.getElementById('barcodeText').textContent = codigo;
+                        document.getElementById('generationTime').textContent = new Date().toLocaleTimeString('es-ES');
+                        elements.barcodeModal.classList.remove('hidden');
+                    }
+                } catch (error) {
+                    console.error("Error mostrando código de barras:", error);
+                    mostrarAlerta('Error al generar el código de barras', 'error');
+                }
+            });
+        }
+
+        // Evento para ver código QR en tabla desktop
         row.querySelector('.worker-view-code').addEventListener('click', function() {
             const codigo = this.getAttribute('data-codigo');
             try {
@@ -3103,7 +4151,84 @@
 
         elements.workerTableMaquinas.appendChild(row);
 
-        // Evento para ver código QR
+        // Crear tarjeta móvil
+        const mobileCardsContainer = document.getElementById('workerCardsMaquinas');
+        if (mobileCardsContainer) {
+            const card = document.createElement('div');
+            card.className = `mobile-card worker-mobile-card ${prioridad}`;
+            
+            const codigo = registro.maquina + '-' + registro.silo + '-' + registro.operador;
+            
+            card.innerHTML = `
+                <div class="mobile-card-header">
+                    <div class="mobile-card-title">${registro.maquina}</div>
+                    <span class="mobile-status-badge worker-badge ${estadoClase}">${estado}</span>
+                </div>
+                <div class="mobile-card-body">
+                    <div class="mobile-field">
+                        <div class="mobile-field-label">Ubicación</div>
+                        <div class="mobile-field-value">${registro.silo}</div>
+                    </div>
+                    <div class="mobile-field">
+                        <div class="mobile-field-label">Operador</div>
+                        <div class="mobile-field-value">${registro.operador}</div>
+                    </div>
+                    <div class="mobile-field">
+                        <div class="mobile-field-label">Turno</div>
+                        <div class="mobile-field-value">${registro.turno}</div>
+                    </div>
+                    <div class="mobile-field">
+                        <div class="mobile-field-label">Producto</div>
+                        <div class="mobile-field-value">${registro.producto}</div>
+                    </div>
+                    <div class="mobile-field">
+                        <div class="mobile-field-label">Hora</div>
+                        <div class="mobile-field-value">${horaRegistro}</div>
+                    </div>
+                    <div class="mobile-field">
+                        <div class="mobile-field-label">Fecha</div>
+                        <div class="mobile-field-value">${registro.fecha}</div>
+                    </div>
+                </div>
+                <div class="mobile-actions">
+                    <div class="mobile-qr-code mobile-worker-view-qr" data-codigo="${codigo}" title="Ver QR">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <div style="color: #64748b; font-size: 12px; font-weight: 500;">
+                        Código: ${codigo}
+                    </div>
+                </div>
+            `;
+            
+            mobileCardsContainer.appendChild(card);
+            
+            // Evento para la tarjeta móvil
+            card.querySelector('.mobile-worker-view-qr').addEventListener('click', function() {
+                const codigo = this.getAttribute('data-codigo');
+                try {
+                    if (typeof JsBarcode !== 'undefined' && elements.modalBarcode) {
+                        JsBarcode(elements.modalBarcode, codigo, {
+                            format: "CODE128",
+                            width: 2,
+                            height: 60,
+                            displayValue: false,
+                            fontSize: 14,
+                            margin: 15,
+                            background: "#ffffff",
+                            lineColor: "#000000"
+                        });
+                        document.getElementById('barcodeText').textContent = codigo;
+                        document.getElementById('generationTime').textContent = new Date().toLocaleTimeString('es-ES');
+                        elements.barcodeModal.classList.remove('hidden');
+                    }
+                } catch (error) {
+                    console.error("Error mostrando código de barras:", error);
+                    mostrarAlerta('Error al generar el código de barras', 'error');
+                }
+            });
+        }
+
+        // Evento para ver código QR en tabla desktop
         row.querySelector('.worker-view-code').addEventListener('click', function() {
             const codigo = this.getAttribute('data-codigo');
             try {
@@ -3137,7 +4262,14 @@
             return;
         }
 
+        // Limpiar tabla desktop
         elements.registrosTableSilos.innerHTML = '';
+        
+        // Limpiar tarjetas móviles
+        const mobileCardsContainer = document.getElementById('registrosCardsSilos');
+        if (mobileCardsContainer) {
+            mobileCardsContainer.innerHTML = '';
+        }
 
         const searchTerm = elements.searchInputSilos ? elements.searchInputSilos.value.toLowerCase().trim() : '';
         let registrosFiltrados = registrosSilos;
@@ -3152,6 +4284,7 @@
         }
 
         if (registrosFiltrados.length === 0) {
+            // Mensaje para tabla desktop
             elements.registrosTableSilos.innerHTML = `
                 <tr>
                     <td colspan="8" class="text-center py-8">
@@ -3163,6 +4296,17 @@
                     </td>
                 </tr>
             `;
+            
+            // Mensaje para vista móvil
+            if (mobileCardsContainer) {
+                mobileCardsContainer.innerHTML = `
+                    <div class="text-center py-8 text-gray-400">
+                        <i class="fas fa-search fa-2x mb-4"></i>
+                        <p class="font-medium">No se encontraron registros</p>
+                        <p class="text-sm mt-1">"${elements.searchInputSilos.value}"</p>
+                    </div>
+                `;
+            }
         } else {
             registrosFiltrados.forEach((registro, index) => {
                 const originalIndex = registrosSilos.findIndex(r => r.timestamp === registro.timestamp);
@@ -3187,7 +4331,14 @@
             return;
         }
 
+        // Limpiar tabla desktop
         elements.registrosTableMaquinas.innerHTML = '';
+        
+        // Limpiar tarjetas móviles
+        const mobileCardsContainer = document.getElementById('registrosCardsMaquinas');
+        if (mobileCardsContainer) {
+            mobileCardsContainer.innerHTML = '';
+        }
 
         const searchTerm = elements.searchInputMaquinas ? elements.searchInputMaquinas.value.toLowerCase().trim() : '';
         let registrosFiltrados = registrosMaquinas;
@@ -3203,6 +4354,7 @@
         }
 
         if (registrosFiltrados.length === 0) {
+            // Mensaje para tabla desktop
             elements.registrosTableMaquinas.innerHTML = `
                 <tr>
                     <td colspan="9" class="text-center py-8">
@@ -3214,6 +4366,17 @@
                     </td>
                 </tr>
             `;
+            
+            // Mensaje para vista móvil
+            if (mobileCardsContainer) {
+                mobileCardsContainer.innerHTML = `
+                    <div class="text-center py-8 text-gray-400">
+                        <i class="fas fa-search fa-2x mb-4"></i>
+                        <p class="font-medium">No se encontraron registros</p>
+                        <p class="text-sm mt-1">"${elements.searchInputMaquinas.value}"</p>
+                    </div>
+                `;
+            }
         } else {
             registrosFiltrados.forEach((registro, index) => {
                 const originalIndex = registrosMaquinas.findIndex(r => r.timestamp === registro.timestamp);
@@ -3238,9 +4401,17 @@
             return;
         }
 
+        // Limpiar tabla desktop
         elements.workerTableSilos.innerHTML = '';
+        
+        // Limpiar contenedor móvil
+        const mobileCardsContainer = document.getElementById('workerCardsSilos');
+        if (mobileCardsContainer) {
+            mobileCardsContainer.innerHTML = '';
+        }
 
         if (registrosSilos.length === 0) {
+            // Mensaje para tabla desktop
             elements.workerTableSilos.innerHTML = `
                 <tr>
                     <td colspan="7" class="text-center py-8">
@@ -3252,6 +4423,20 @@
                     </td>
                 </tr>
             `;
+            
+            // Mensaje para móvil
+            if (mobileCardsContainer) {
+                const emptyMessage = document.createElement('div');
+                emptyMessage.className = 'text-center py-8';
+                emptyMessage.innerHTML = `
+                    <div class="text-gray-400">
+                        <i class="fas fa-hard-hat fa-2x mb-2"></i>
+                        <p class="font-medium text-sm">No hay operaciones activas</p>
+                        <p class="text-xs mt-1">Los registros aparecerán aquí cuando se agreguen</p>
+                    </div>
+                `;
+                mobileCardsContainer.appendChild(emptyMessage);
+            }
 
             if (elements.workerTableInfoSilos) {
                 elements.workerTableInfoSilos.textContent = 'Mostrando 0 operaciones activas';
@@ -3279,9 +4464,17 @@
             return;
         }
 
+        // Limpiar tabla desktop
         elements.workerTableMaquinas.innerHTML = '';
+        
+        // Limpiar contenedor móvil
+        const mobileCardsContainer = document.getElementById('workerCardsMaquinas');
+        if (mobileCardsContainer) {
+            mobileCardsContainer.innerHTML = '';
+        }
 
         if (registrosMaquinas.length === 0) {
+            // Mensaje para tabla desktop
             elements.workerTableMaquinas.innerHTML = `
                 <tr>
                     <td colspan="8" class="text-center py-8">
@@ -3293,6 +4486,20 @@
                     </td>
                 </tr>
             `;
+            
+            // Mensaje para móvil
+            if (mobileCardsContainer) {
+                const emptyMessage = document.createElement('div');
+                emptyMessage.className = 'text-center py-8';
+                emptyMessage.innerHTML = `
+                    <div class="text-gray-400">
+                        <i class="fas fa-users-cog fa-2x mb-2"></i>
+                        <p class="font-medium text-sm">No hay operaciones activas</p>
+                        <p class="text-xs mt-1">Las operaciones aparecerán aquí cuando se agreguen</p>
+                    </div>
+                `;
+                mobileCardsContainer.appendChild(emptyMessage);
+            }
 
             if (elements.workerTableInfoMaquinas) {
                 elements.workerTableInfoMaquinas.textContent = 'Mostrando 0 operaciones activas';
@@ -4327,13 +5534,6 @@
             return 'Noche';
         }
     }
-
-    // Manejo de errores globales
-    window.addEventListener('error', function(e) {
-        console.error('Error global capturado:', e.error);
-        mostrarAlerta('Se produjo un error inesperado. Por favor, recargue la página.', 'error');
-    });
-
     // Manejo de errores de promesas no capturadas
     window.addEventListener('unhandledrejection', function(e) {
         console.error('Promesa rechazada no manejada:', e.reason);
@@ -4344,8 +5544,7 @@
     window.addEventListener('beforeunload', function() {
         if (intervalLimpiezaSilos) {
             clearInterval(intervalLimpiezaSilos);
-        }
-        if (intervalLimpiezaMaquinas) {
+        }    if (intervalLimpiezaMaquinas) {
             clearInterval(intervalLimpiezaMaquinas);
         }
     });
