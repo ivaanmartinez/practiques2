@@ -1131,18 +1131,6 @@
             margin-top: 0 !important;
         }
         
-        /* Botones de regreso responsive */
-        #back-to-form-silos,
-        #back-to-form-maquinas {
-            font-size: 12px !important;
-            padding: 8px 12px !important;
-        }
-        
-        #back-to-form-silos i,
-        #back-to-form-maquinas i {
-            font-size: 11px !important;
-        }
-        
         /* Estilo específico para tarjetas móviles en paneles */
         #sub-view-silos-panel.active .mobile-cards-container .mobile-card,
         #sub-view-maquinas-panel.active .mobile-cards-container .mobile-card {
@@ -1801,7 +1789,21 @@
 
                     <!-- Sub-vista: Panel de Control -->
                     <div id="sub-view-silos-panel" class="sub-view-container">
-
+                        <!-- Navegación específica para desktop dentro del panel -->
+                        <div class="mb-4 sm:mb-6 hidden lg:block">
+                            <nav class="flex space-x-1 sm:space-x-2 p-1 bg-gray-100 rounded-lg">
+                                <button id="panel-nav-silos-form" class="sub-nav-btn flex items-center px-2 sm:px-4 py-2 rounded-md font-medium text-xs sm:text-sm transition-all duration-300 flex-1 justify-center">
+                                    <i class="fas fa-plus-circle mr-1 sm:mr-2 text-xs sm:text-sm"></i>
+                                    <span class="hidden xs:inline">Registro</span>
+                                    <span class="xs:hidden">Registro</span>
+                                </button>
+                                <button id="panel-nav-silos-panel" class="sub-nav-btn active flex items-center px-2 sm:px-4 py-2 rounded-md font-medium text-xs sm:text-sm transition-all duration-300 flex-1 justify-center">
+                                    <i class="fas fa-hard-hat mr-1 sm:mr-2 text-xs sm:text-sm"></i>
+                                    <span class="hidden xs:inline">Panel Control</span>
+                                    <span class="xs:hidden">Panel</span>
+                                </button>
+                            </nav>
+                        </div>
                         
                         <div class="worker-section">
                             <div class="worker-header">
@@ -2064,6 +2066,20 @@
 
                     <!-- Sub-vista: Panel de Control -->
                     <div id="sub-view-maquinas-panel" class="sub-view-container">
+                        <!-- Navegación específica para desktop dentro del panel -->
+                        <div class="mb-6 hidden lg:block">
+                            <nav class="flex space-x-2 p-1 bg-gray-100 rounded-lg">
+                                <button id="panel-nav-maquinas-form" class="sub-nav-btn-green flex items-center px-4 py-2 rounded-md font-medium text-sm transition-all duration-300 flex-1 justify-center">
+                                    <i class="fas fa-plus-circle mr-2"></i>
+                                    Registro
+                                </button>
+                                <button id="panel-nav-maquinas-panel" class="sub-nav-btn-green active flex items-center px-4 py-2 rounded-md font-medium text-sm transition-all duration-300 flex-1 justify-center">
+                                    <i class="fas fa-users-cog mr-2"></i>
+                                    Panel Control
+                                </button>
+                            </nav>
+                        </div>
+                        
                         <div class="worker-section-maquinas">
                             <div class="worker-header-maquinas">
                                 <div class="flex items-center justify-between">
@@ -2653,18 +2669,32 @@
             });
         }
 
-        // Botones de regreso en paneles
-        const backToFormSilos = document.getElementById('back-to-form-silos');
-        if (backToFormSilos) {
-            backToFormSilos.addEventListener('click', function() {
+        // Navegación específica dentro de los paneles (solo desktop)
+        const panelNavSilosForm = document.getElementById('panel-nav-silos-form');
+        if (panelNavSilosForm) {
+            panelNavSilosForm.addEventListener('click', function() {
                 switchSubView('silos', 'form');
             });
         }
 
-        const backToFormMaquinas = document.getElementById('back-to-form-maquinas');
-        if (backToFormMaquinas) {
-            backToFormMaquinas.addEventListener('click', function() {
+        const panelNavSilosPanel = document.getElementById('panel-nav-silos-panel');
+        if (panelNavSilosPanel) {
+            panelNavSilosPanel.addEventListener('click', function() {
+                switchSubView('silos', 'panel');
+            });
+        }
+
+        const panelNavMaquinasForm = document.getElementById('panel-nav-maquinas-form');
+        if (panelNavMaquinasForm) {
+            panelNavMaquinasForm.addEventListener('click', function() {
                 switchSubView('maquinas', 'form');
+            });
+        }
+
+        const panelNavMaquinasPanel = document.getElementById('panel-nav-maquinas-panel');
+        if (panelNavMaquinasPanel) {
+            panelNavMaquinasPanel.addEventListener('click', function() {
+                switchSubView('maquinas', 'panel');
             });
         }
     }
@@ -2701,8 +2731,13 @@
 
     function switchSubView(section, subView) {
         if (section === 'silos') {
-            // Actualizar pestañas de sub-navegación
+            // Actualizar pestañas de sub-navegación principal
             document.querySelectorAll('#sub-tab-silos-form, #sub-tab-silos-panel').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Actualizar pestañas de navegación interna del panel (desktop)
+            document.querySelectorAll('#panel-nav-silos-form, #panel-nav-silos-panel').forEach(tab => {
                 tab.classList.remove('active');
             });
 
@@ -2718,6 +2753,9 @@
             if (subView === 'form') {
                 elements.subTabSilosForm.classList.add('active');
                 elements.subViewSilosForm.classList.add('active');
+                // Activar navegación interna del panel si existe
+                const panelNavForm = document.getElementById('panel-nav-silos-form');
+                if (panelNavForm) panelNavForm.classList.add('active');
                 currentSubViewSilos = 'form';
                 // Mostrar tabla de registros en modo formulario
                 if (mainTableSection) {
@@ -2726,6 +2764,9 @@
             } else if (subView === 'panel') {
                 elements.subTabSilosPanel.classList.add('active');
                 elements.subViewSilosPanel.classList.add('active');
+                // Activar navegación interna del panel si existe
+                const panelNavPanel = document.getElementById('panel-nav-silos-panel');
+                if (panelNavPanel) panelNavPanel.classList.add('active');
                 currentSubViewSilos = 'panel';
                 // Ocultar tabla de registros en modo panel
                 if (mainTableSection) {
@@ -2735,8 +2776,13 @@
                 actualizarTablaWorkersSilos();
             }
         } else if (section === 'maquinas') {
-            // Actualizar pestañas de sub-navegación
+            // Actualizar pestañas de sub-navegación principal
             document.querySelectorAll('#sub-tab-maquinas-form, #sub-tab-maquinas-panel').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Actualizar pestañas de navegación interna del panel (desktop)
+            document.querySelectorAll('#panel-nav-maquinas-form, #panel-nav-maquinas-panel').forEach(tab => {
                 tab.classList.remove('active');
             });
 
@@ -2752,6 +2798,9 @@
             if (subView === 'form') {
                 elements.subTabMaquinasForm.classList.add('active');
                 elements.subViewMaquinasForm.classList.add('active');
+                // Activar navegación interna del panel si existe
+                const panelNavForm = document.getElementById('panel-nav-maquinas-form');
+                if (panelNavForm) panelNavForm.classList.add('active');
                 currentSubViewMaquinas = 'form';
                 // Mostrar tabla de registros en modo formulario
                 if (mainTableSection) {
@@ -2760,6 +2809,9 @@
             } else if (subView === 'panel') {
                 elements.subTabMaquinasPanel.classList.add('active');
                 elements.subViewMaquinasPanel.classList.add('active');
+                // Activar navegación interna del panel si existe
+                const panelNavPanel = document.getElementById('panel-nav-maquinas-panel');
+                if (panelNavPanel) panelNavPanel.classList.add('active');
                 currentSubViewMaquinas = 'panel';
                 // Ocultar tabla de registros en modo panel
                 if (mainTableSection) {
