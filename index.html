@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+ <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,6 +43,8 @@
 <!-- Firebase SDK v9 compat -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<!-- Sistema API REST -->
+<script src="api-rest-system.js"></script>
 <style>
     *, *::before, *::after {
         margin: 0;
@@ -1602,6 +1604,132 @@
             min-width: 60px;
         }
     }
+
+    /* ===== MODO OSCURO ESTILOS ===== */
+    .dark-mode body,
+    [data-theme="dark"] body {
+        background-color: #1a1a1a !important;
+        color: #e5e5e5 !important;
+    }
+
+    .dark-mode .bg-gray-50,
+    [data-theme="dark"] .bg-gray-50 {
+        background-color: #2d2d2d !important;
+    }
+
+    .dark-mode .bg-white,
+    [data-theme="dark"] .bg-white {
+        background-color: #3d3d3d !important;
+    }
+
+    .dark-mode .text-gray-800,
+    [data-theme="dark"] .text-gray-800 {
+        color: #e5e5e5 !important;
+    }
+
+    .dark-mode .text-gray-900,
+    [data-theme="dark"] .text-gray-900 {
+        color: #f5f5f5 !important;
+    }
+
+    .dark-mode .text-gray-600,
+    [data-theme="dark"] .text-gray-600 {
+        color: #b0b0b0 !important;
+    }
+
+    .dark-mode .border-gray-200,
+    [data-theme="dark"] .border-gray-200 {
+        border-color: #4d4d4d !important;
+    }
+
+    .dark-mode .bg-gray-100,
+    [data-theme="dark"] .bg-gray-100 {
+        background-color: #2a2a2a !important;
+    }
+
+    .dark-mode .hover\\:bg-gray-50:hover,
+    [data-theme="dark"] .hover\\:bg-gray-50:hover {
+        background-color: #404040 !important;
+    }
+
+    .dark-mode .shadow-lg,
+    [data-theme="dark"] .shadow-lg {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    .dark-mode .barcode-container,
+    [data-theme="dark"] .barcode-container {
+        background-color: #2a2a2a !important;
+        border-color: #4d4d4d !important;
+    }
+
+    .dark-mode input,
+    .dark-mode select,
+    .dark-mode textarea,
+    [data-theme="dark"] input,
+    [data-theme="dark"] select,
+    [data-theme="dark"] textarea {
+        background-color: #3d3d3d !important;
+        color: #e5e5e5 !important;
+        border-color: #4d4d4d !important;
+    }
+
+    .dark-mode .modal-content,
+    [data-theme="dark"] .modal-content {
+        background-color: #2d2d2d !important;
+        color: #e5e5e5 !important;
+    }
+
+    /* Cards y estadísticas en modo oscuro */
+    .dark-mode .bg-blue-50,
+    [data-theme="dark"] .bg-blue-50 {
+        background-color: #1e3a5f !important;
+    }
+
+    .dark-mode .bg-green-50,
+    [data-theme="dark"] .bg-green-50 {
+        background-color: #1e5f4a !important;
+    }
+
+    .dark-mode .bg-purple-50,
+    [data-theme="dark"] .bg-purple-50 {
+        background-color: #4a1e5f !important;
+    }
+
+    .dark-mode .bg-indigo-50,
+    [data-theme="dark"] .bg-indigo-50 {
+        background-color: #2d1e5f !important;
+    }
+
+    .dark-mode .bg-yellow-50,
+    [data-theme="dark"] .bg-yellow-50 {
+        background-color: #5f4a1e !important;
+    }
+
+    .dark-mode .bg-red-50,
+    [data-theme="dark"] .bg-red-50 {
+        background-color: #5f1e1e !important;
+    }
+
+    /* Mobile cards en modo oscuro */
+    .dark-mode .mobile-card,
+    [data-theme="dark"] .mobile-card {
+        background-color: #3d3d3d !important;
+        border-color: #4d4d4d !important;
+    }
+
+    /* Transición suave para el cambio de tema */
+    body {
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .bg-white, .bg-gray-50, .bg-gray-100 {
+        transition: background-color 0.3s ease;
+    }
+
+    .text-gray-800, .text-gray-900, .text-gray-600 {
+        transition: color 0.3s ease;
+    }
 </style>
 </head>
 <body class="font-sans bg-gray-50 text-gray-800">
@@ -2496,6 +2624,25 @@
     // Elementos del DOM
     let elements = {};
 
+    // Función helper para limpiar códigos QR - Versión mejorada
+    function limpiarCodigoParaQR(codigo) {
+        if (!codigo || typeof codigo !== 'string') {
+            return 'CODIGO-VACIO';
+        }
+        
+        return codigo
+            .replace(/\s+/g, '') // Eliminar todos los espacios
+            .replace(/ñ/gi, 'n') // Reemplazar ñ por n
+            .replace(/[áàäâ]/gi, 'a') // Reemplazar acentos a
+            .replace(/[éèëê]/gi, 'e') // Reemplazar acentos e
+            .replace(/[íìïî]/gi, 'i') // Reemplazar acentos i
+            .replace(/[óòöô]/gi, 'o') // Reemplazar acentos o
+            .replace(/[úùüû]/gi, 'u') // Reemplazar acentos u
+            .replace(/[^A-Za-z0-9\-_]/g, '') // Mantener solo letras, números, guiones y guiones bajos
+            .substring(0, 50) // Limitar longitud máxima
+            .toUpperCase(); // Convertir a mayúsculas para consistencia
+    }
+
     // Inicializar la aplicación
     document.addEventListener('DOMContentLoaded', function() {
         console.log('Sistema Integrado iniciado v2.3.0');
@@ -2608,8 +2755,11 @@
         // Event listener para el botón de tema
         if (themeToggle) {
             themeToggle.addEventListener('click', function() {
-                const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+                console.log('🎨 Toggle tema clickeado');
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
                 const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                console.log('Cambiando de', currentTheme, 'a', newTheme);
                 applyTheme(newTheme);
                 localStorage.setItem('theme', newTheme);
                 
@@ -2617,18 +2767,34 @@
                 themeToggle.classList.add('animate-bounce-in');
                 setTimeout(() => themeToggle.classList.remove('animate-bounce-in'), 600);
             });
+        } else {
+            console.error('❌ Elemento theme-toggle no encontrado');
         }
         
         function applyTheme(theme) {
+            console.log('🎨 Aplicando tema:', theme);
+            
+            // Aplicar tema al documento
+            document.documentElement.setAttribute('data-theme', theme);
+            
             if (theme === 'dark') {
                 document.documentElement.classList.add('dark');
+                document.body.classList.add('dark-mode');
                 if (themeIcon) themeIcon.className = 'fas fa-moon mr-1';
                 if (themeText) themeText.textContent = 'Oscuro';
             } else {
                 document.documentElement.classList.remove('dark');
+                document.body.classList.remove('dark-mode');
                 if (themeIcon) themeIcon.className = 'fas fa-sun mr-1';
                 if (themeText) themeText.textContent = 'Claro';
             }
+            
+            // Forzar re-renderizado
+            document.body.style.display = 'none';
+            document.body.offsetHeight; // Trigger reflow
+            document.body.style.display = '';
+            
+            console.log('✅ Tema aplicado correctamente');
         }
     }
 
@@ -2901,7 +3067,7 @@
                 registrosObj[index] = registro;
             });
             registrosRef.set(registrosObj, (error) => {
-                if (error) {
+            if (error) {
                     console.error('Error al guardar registros de silos:', error);
                     mostrarAlerta('Error al guardar los datos de silos.', 'error');
                 } else {
@@ -3303,11 +3469,28 @@
             });
         }
 
+        // Funciones para limpiar formularios de edición
+        function clearEditFormSilos() {
+            document.getElementById('editLote').value = '';
+            document.getElementById('editSilo').value = '';
+            document.getElementById('editMaquina').value = '';
+            document.getElementById('editTubo').value = '';
+        }
+
+        function clearEditFormMaquinas() {
+            document.getElementById('editMaquinaMaq').value = '';
+            document.getElementById('editSiloMaq').value = '';
+            document.getElementById('editOperador').value = '';
+            document.getElementById('editTurno').value = '';
+            document.getElementById('editProducto').value = '';
+        }
+
         // Modales de edición para silos
         if (elements.closeEditModalSilos) {
             elements.closeEditModalSilos.addEventListener('click', function() {
                 elements.editModalSilos.classList.add('hidden');
                 editingIndexSilos = -1;
+                clearEditFormSilos();
             });
         }
 
@@ -3315,6 +3498,7 @@
             elements.cancelEditSilos.addEventListener('click', function() {
                 elements.editModalSilos.classList.add('hidden');
                 editingIndexSilos = -1;
+                clearEditFormSilos();
             });
         }
 
@@ -3323,6 +3507,7 @@
                 if (e.target === elements.editModalSilos) {
                     elements.editModalSilos.classList.add('hidden');
                     editingIndexSilos = -1;
+                    clearEditFormSilos();
                 }
             });
         }
@@ -3375,6 +3560,7 @@
 
                     elements.editModalSilos.classList.add('hidden');
                     editingIndexSilos = -1;
+                    clearEditFormSilos();
                     mostrarAlerta('Registro actualizado correctamente.', 'success');
                 }
             });
@@ -3385,6 +3571,7 @@
             elements.closeEditModalMaquinas.addEventListener('click', function() {
                 elements.editModalMaquinas.classList.add('hidden');
                 editingIndexMaquinas = -1;
+                clearEditFormMaquinas();
             });
         }
 
@@ -3392,6 +3579,7 @@
             elements.cancelEditMaquinas.addEventListener('click', function() {
                 elements.editModalMaquinas.classList.add('hidden');
                 editingIndexMaquinas = -1;
+                clearEditFormMaquinas();
             });
         }
 
@@ -3400,6 +3588,7 @@
                 if (e.target === elements.editModalMaquinas) {
                     elements.editModalMaquinas.classList.add('hidden');
                     editingIndexMaquinas = -1;
+                    clearEditFormMaquinas();
                 }
             });
         }
@@ -3460,6 +3649,7 @@
 
                     elements.editModalMaquinas.classList.add('hidden');
                     editingIndexMaquinas = -1;
+                    clearEditFormMaquinas();
                     mostrarAlerta('Registro actualizado correctamente.', 'success');
                 }
             });
@@ -3553,7 +3743,7 @@
 
         const row = document.createElement('tr');
         row.className = 'hover:bg-gray-50';
-        row.innerHTML = `
+        row.innerHTML =  `
             <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
                 <span class="${estadoBadge} badge text-xs">
                     <span class="status-indicator ${estadoClase}"></span>
@@ -3683,6 +3873,15 @@
                 document.getElementById('editMaquina').value = registro.maquina;
                 document.getElementById('editTubo').value = registro.tubo;
                 elements.editModalSilos.classList.remove('hidden');
+                
+                // Seleccionar automáticamente el texto del campo lote para facilitar el escaneo
+                setTimeout(() => {
+                    const editLoteField = document.getElementById('editLote');
+                    if (editLoteField) {
+                        editLoteField.focus();
+                        editLoteField.select();
+                    }
+                }, 100);
             });
             
             card.querySelector('.mobile-delete-btn').addEventListener('click', function() {
@@ -3741,6 +3940,15 @@
             document.getElementById('editMaquina').value = registro.maquina;
             document.getElementById('editTubo').value = registro.tubo;
             elements.editModalSilos.classList.remove('hidden');
+            
+            // Seleccionar automáticamente el texto del campo lote para facilitar el escaneo
+            setTimeout(() => {
+                const editLoteField = document.getElementById('editLote');
+                if (editLoteField) {
+                    editLoteField.focus();
+                    editLoteField.select();
+                }
+            }, 100);
         });
 
         row.querySelector('.delete-btn').addEventListener('click', function() {
@@ -3761,6 +3969,100 @@
         row.querySelector('.print-btn').addEventListener('click', function() {
             imprimirCodigoIndividualSilo(registro);
         });
+    }
+
+    // Función específica para generar QR de máquinas
+    function generarQRMaquina(registro) {
+        console.log('=== GENERANDO QR MÁQUINA ===');
+        console.log('Registro:', registro);
+        
+        // Verificaciones básicas
+        if (!registro) {
+            console.error('No se proporcionó registro');
+            mostrarAlerta('Error: No se encontraron datos del registro', 'error');
+            return;
+        }
+        
+        // Esperar a que JsBarcode esté disponible
+        function intentarGenerarQR(intentos = 0) {
+            const maxIntentos = 10;
+            
+            if (typeof window.JsBarcode === 'undefined') {
+                if (intentos < maxIntentos) {
+                    console.log(`Esperando JsBarcode... intento ${intentos + 1}/${maxIntentos}`);
+                    setTimeout(() => intentarGenerarQR(intentos + 1), 200);
+                    return;
+                } else {
+                    console.error('JsBarcode no está disponible después de múltiples intentos');
+                    mostrarAlerta('Error: Librería de códigos QR no disponible. Recarga la página.', 'error');
+                    return;
+                }
+            }
+            
+            // Verificar elementos del DOM
+            const modalBarcode = document.getElementById('modalBarcode');
+            const barcodeModal = document.getElementById('barcodeModal');
+            const barcodeText = document.getElementById('barcodeText');
+            const generationTime = document.getElementById('generationTime');
+            
+            if (!modalBarcode) {
+                console.error('Elemento modalBarcode no encontrado');
+                mostrarAlerta('Error: Elemento de código QR no encontrado', 'error');
+                return;
+            }
+            
+            if (!barcodeModal) {
+                console.error('Elemento barcodeModal no encontrado');
+                mostrarAlerta('Error: Modal de código QR no encontrado', 'error');
+                return;
+            }
+            
+            try {
+                // Generar código
+                const codigoOriginal = `${registro.maquina}-${registro.silo}-${registro.operador}`;
+                const codigoLimpio = limpiarCodigoParaQR(codigoOriginal);
+                
+                console.log('Código original:', codigoOriginal);
+                console.log('Código limpio:', codigoLimpio);
+                
+                // Limpiar SVG anterior
+                modalBarcode.innerHTML = '';
+                
+                // Generar código QR
+                window.JsBarcode(modalBarcode, codigoLimpio, {
+                    format: "CODE128",
+                    width: 2,
+                    height: 60,
+                    displayValue: false,
+                    fontSize: 14,
+                    margin: 15,
+                    background: "#ffffff",
+                    lineColor: "#000000"
+                });
+                
+                // Actualizar textos
+                if (barcodeText) {
+                    barcodeText.textContent = codigoOriginal;
+                }
+                
+                if (generationTime) {
+                    generationTime.textContent = new Date().toLocaleTimeString('es-ES');
+                }
+                
+                // Mostrar modal
+                barcodeModal.classList.remove('hidden');
+                
+                console.log('✅ QR generado exitosamente');
+                mostrarAlerta('Código QR generado correctamente', 'success');
+                
+            } catch (error) {
+                console.error('Error generando QR:', error);
+                mostrarAlerta(`Error al generar código QR: ${error.message}`, 'error');
+            }
+        }
+        
+        // Iniciar proceso
+        intentarGenerarQR();
     }
 
     function mostrarRegistroMaquina(registro, index) {
@@ -3892,25 +4194,7 @@
             
             // Eventos para la tarjeta móvil
             card.querySelector('.mobile-view-barcode').addEventListener('click', function() {
-                const codigo = this.getAttribute('data-codigo');
-                try {
-                    JsBarcode(elements.modalBarcode, codigo, {
-                        format: "CODE128",
-                        width: 2,
-                        height: 60,
-                        displayValue: false,
-                        fontSize: 14,
-                        margin: 15,
-                        background: "#ffffff",
-                        lineColor: "#000000"
-                    });
-                    document.getElementById('barcodeText').textContent = codigo;
-                    document.getElementById('generationTime').textContent = new Date().toLocaleTimeString('es-ES');
-                    elements.barcodeModal.classList.remove('hidden');
-                } catch (error) {
-                    console.error('Error generando código de barras:', error);
-                    mostrarAlerta('Error al generar el código de barras.', 'error');
-                }
+                generarQRMaquina(registro);
             });
             
             card.querySelector('.mobile-edit-btn').addEventListener('click', function() {
@@ -3945,31 +4229,7 @@
 
         // Eventos para los botones de la fila desktop
         row.querySelector('.view-barcode').addEventListener('click', function() {
-            try {
-                if (typeof JsBarcode !== 'undefined' && elements.modalBarcode) {
-                    const codigo = registro.maquina + '-' + registro.silo + '-' + registro.operador;
-                    JsBarcode(elements.modalBarcode, codigo, {
-                        format: "CODE128",
-                        width: 2,
-                        height: 60,
-                        displayValue: false,
-                        fontSize: 14,
-                        margin: 15,
-                        background: "#ffffff",
-                        lineColor: "#000000"
-                    });
-
-                    document.getElementById('barcodeText').textContent = codigo;
-                    document.getElementById('generationTime').textContent = new Date().toLocaleTimeString('es-ES');
-                    elements.barcodeModal.classList.remove('hidden');
-                } else {
-                    console.error('JsBarcode no está disponible o modalBarcode no existe');
-                    mostrarAlerta('Error al generar el código de barras', 'error');
-                }
-            } catch (error) {
-                console.error("Error mostrando código de barras:", error);
-                mostrarAlerta('Error al generar el código de barras', 'error');
-            }
+            generarQRMaquina(registro);
         });
 
         row.querySelector('.edit-btn').addEventListener('click', function() {
@@ -4256,53 +4516,13 @@
             
             // Evento para la tarjeta móvil
             card.querySelector('.mobile-worker-view-qr').addEventListener('click', function() {
-                const codigo = this.getAttribute('data-codigo');
-                try {
-                    if (typeof JsBarcode !== 'undefined' && elements.modalBarcode) {
-                        JsBarcode(elements.modalBarcode, codigo, {
-                            format: "CODE128",
-                            width: 2,
-                            height: 60,
-                            displayValue: false,
-                            fontSize: 14,
-                            margin: 15,
-                            background: "#ffffff",
-                            lineColor: "#000000"
-                        });
-                        document.getElementById('barcodeText').textContent = codigo;
-                        document.getElementById('generationTime').textContent = new Date().toLocaleTimeString('es-ES');
-                        elements.barcodeModal.classList.remove('hidden');
-                    }
-                } catch (error) {
-                    console.error("Error mostrando código de barras:", error);
-                    mostrarAlerta('Error al generar el código de barras', 'error');
-                }
+                generarQRMaquina(registro);
             });
         }
 
         // Evento para ver código QR en tabla desktop
         row.querySelector('.worker-view-code').addEventListener('click', function() {
-            const codigo = this.getAttribute('data-codigo');
-            try {
-                if (typeof JsBarcode !== 'undefined' && elements.modalBarcode) {
-                    JsBarcode(elements.modalBarcode, codigo, {
-                        format: "CODE128",
-                        width: 2,
-                        height: 60,
-                        displayValue: false,
-                        fontSize: 14,
-                        margin: 15,
-                        background: "#ffffff",
-                        lineColor: "#000000"
-                    });
-                    document.getElementById('barcodeText').textContent = codigo;
-                    document.getElementById('generationTime').textContent = new Date().toLocaleTimeString('es-ES');
-                    elements.barcodeModal.classList.remove('hidden');
-                }
-            } catch (error) {
-                console.error("Error mostrando código de barras:", error);
-                mostrarAlerta('Error al generar el código de barras', 'error');
-            }
+            generarQRMaquina(registro);
         });
     }
 
@@ -5397,9 +5617,12 @@
     function imprimirCodigoIndividualMaquina(registro) {
         const codigo = registro.maquina + '-' + registro.silo + '-' + registro.operador;
         
+        // Limpiar el código para que sea compatible con CODE128
+        const codigoLimpio = limpiarCodigoParaQR(codigo);
+        
         try {
             const tempSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            JsBarcode(tempSvg, codigo, {
+            JsBarcode(tempSvg, codigoLimpio, {
                 format: "CODE128",
                 width: 2,
                 height: 60,
@@ -5526,7 +5749,7 @@
                             <i class="fas fa-times mr-2"></i> Cancelar
                         </button>
                         <button id="confirmar" class="btn-danger text-white py-3 px-6 rounded-lg font-medium transition-all duration-200 inline-flex items-center justify-center">
-                            <i class="fas fa-check mr-2"></i> Confirmar
+                            <i class="fas fa-check mr-2"></i> Confirmarlo
                         </button>
                     </div>
                 </div>
@@ -5536,7 +5759,7 @@
         document.body.appendChild(modal);
 
         modal.querySelector('#cancelar').addEventListener('click', function() {
-            modal.remove();
+            modal.remove()
         });
 
         modal.querySelector('#confirmar').addEventListener('click', function() {
@@ -5576,8 +5799,7 @@
 
     function getCurrentShiftText() {
         const now = new Date();
-        const hour = now.getHours();
-        
+        const hour = now.getHours();  
         if (hour >= 6 && hour < 14) {
             return 'Mañana';
         } else if (hour >= 14 && hour < 22) {
