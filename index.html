@@ -46,6 +46,203 @@
 <!-- Sistema API REST -->
 <script src="api-rest-system.js"></script>
 <style>
+    /* Estilos para el login especial */
+    .login-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .login-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        max-width: 500px;
+        width: 100%;
+        text-align: center;
+        animation: bounceIn 0.8s ease-out;
+    }
+
+    .user-option {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        border: 3px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 24px;
+        margin: 16px 0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .user-option:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        border-color: #3b82f6;
+    }
+
+    .user-option.selected {
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        border-color: #2563eb;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+    }
+
+    .user-option::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        transition: left 0.5s;
+    }
+
+    .user-option:hover::before {
+        left: 100%;
+    }
+
+    .user-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px;
+        color: white;
+        font-size: 24px;
+        transition: all 0.3s ease;
+    }
+
+    .user-option:hover .user-icon {
+        transform: scale(1.1);
+        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    }
+
+    .user-option.selected .user-icon {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        transform: scale(1.05);
+    }
+
+    .login-btn {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 16px 32px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 24px;
+        width: 100%;
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    .login-btn.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .login-btn.active:hover {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .login-loading {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .spinner {
+        width: 24px;
+        height: 24px;
+        border: 3px solid #e2e8f0;
+        border-top: 3px solid #3b82f6;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-right: 12px;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .main-system {
+        display: none;
+    }
+
+    .main-system.active {
+        display: block;
+    }
+
+    /* Login container */
+    .login-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex; /* Mostrar por defecto */
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .login-container.show {
+        display: flex; /* Solo se muestra cuando se añade la clase 'show' */
+    }
+
+    /* Header de usuario logueado */
+    .user-info {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 8px 16px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        margin-left: 16px;
+    }
+
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 8px;
+        color: white;
+        font-size: 14px;
+    }
+
+    .logout-btn {
+        background: rgba(239, 68, 68, 0.2);
+        color: white;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-left: 12px;
+    }
+
+    .logout-btn:hover {
+        background: rgba(239, 68, 68, 0.3);
+        border-color: rgba(239, 68, 68, 0.5);
+    }
+
     *, *::before, *::after {
         margin: 0;
         padding: 0;
@@ -1733,6 +1930,70 @@
 </style>
 </head>
 <body class="font-sans bg-gray-50 text-gray-800">
+
+<!-- Pantalla de Login -->
+<div id="loginScreen" class="login-container">
+    <div class="login-card">
+        <div class="mb-8">
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-industry text-white text-3xl"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Sistema de Gestión Industrial</h1>
+            <p class="text-gray-600">Selecciona tu tipo de usuario para continuar</p>
+        </div>
+
+        <div class="space-y-4">
+            <div class="user-option" data-user="administrador">
+                <div class="user-icon">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Administrador</h3>
+                <p class="text-gray-600 text-sm">Acceso completo al sistema de gestión</p>
+                <div class="mt-3 flex items-center justify-center text-sm text-gray-500">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    Control total de operaciones
+                </div>
+            </div>
+
+            <div class="user-option" data-user="trabajador">
+                <div class="user-icon">
+                    <i class="fas fa-hard-hat"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Trabajador</h3>
+                <p class="text-gray-600 text-sm">Acceso a operaciones de planta</p>
+                <div class="mt-3 flex items-center justify-center text-sm text-gray-500">
+                    <i class="fas fa-cogs mr-2"></i>
+                    Gestión de silos y máquinas
+                </div>
+            </div>
+        </div>
+
+        <button id="loginBtn" class="login-btn">
+            <i class="fas fa-sign-in-alt mr-2"></i>
+            Iniciar Sesión
+        </button>
+
+        <div id="loginLoading" class="login-loading">
+            <div class="spinner"></div>
+            <span class="text-gray-600">Iniciando sesión...</span>
+        </div>
+
+        <!-- Botón para limpiar datos del localStorage -->
+        <button id="clearDataBtn" class="mt-4 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm transition-all duration-300 w-full">
+            <i class="fas fa-trash mr-2"></i>
+            Limpiar Datos Guardados
+        </button>
+
+        <div class="mt-8 text-xs text-gray-500">
+            <p>Sistema de Gestión Industrial Integrado v2.3.0</p>
+            <p class="mt-1">Control completo de silos, lotes y operaciones</p>
+        </div>
+    </div>
+</div>
+
+<!-- Sistema Principal -->
+<div id="mainSystem" class="main-system min-h-screen flex flex-col">
+
 <div class="min-h-screen flex flex-col">
     <!-- Header con Navegación -->
     <header class="bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-lg">
@@ -1749,6 +2010,21 @@
                 </div>
                 <div class="text-left lg:text-right">
                     <div class="flex items-center justify-between lg:justify-end mb-2">
+                        <!-- Información del usuario logueado -->
+                        <div id="userInfo" class="user-info">
+                            <div class="user-avatar">
+                                <i id="userIcon" class="fas fa-user"></i>
+                            </div>
+                            <div class="text-left">
+                                <div id="userName" class="text-sm font-medium">Usuario</div>
+                                <div id="userRole" class="text-xs text-slate-300">Rol</div>
+                            </div>
+                            <button id="logoutBtn" class="logout-btn">
+                                <i class="fas fa-sign-out-alt mr-1"></i>
+                                Salir
+                            </button>
+                        </div>
+                        
                         <button id="theme-toggle" class="bg-white bg-opacity-10 hover:bg-opacity-20 px-3 py-1 rounded-full text-xs transition-all duration-200 flex items-center mr-3"
                                 aria-label="Cambiar tema claro/oscuro">
                             <i class="fas fa-sun mr-1" id="theme-icon"></i>
@@ -2643,27 +2919,27 @@
             .toUpperCase(); // Convertir a mayúsculas para consistencia
     }
 
-    // Inicializar la aplicación
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('Sistema Integrado iniciado v2.3.0');
-        initializeElements();
-        initializeTheme();
-        setupNavigation();
-        setupSubNavigation();
-        cargarRegistrosSilos();
-        cargarRegistrosMaquinas();
-        setupRealtimeSync();
-        // iniciarLimpiezaAutomatica();
-        actualizarTablaSilos();
-        actualizarTablaMaquinas();
-        actualizarEstadisticasSilos();
-        actualizarEstadisticasMaquinas();
-        setupEventListeners();
-        updateCurrentTime();
-        updateCurrentShift();
-        setInterval(updateCurrentTime, 1000);
-        setInterval(updateCurrentShift, 60000);
-    });
+    // Inicializar la aplicación - AHORA SE MANEJA EN EL SISTEMA DE LOGIN
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     console.log('Sistema Integrado iniciado v2.3.0');
+    //     initializeElements();
+    //     initializeTheme();
+    //     setupNavigation();
+    //     setupSubNavigation();
+    //     cargarRegistrosSilos();
+    //     cargarRegistrosMaquinas();
+    //     setupRealtimeSync();
+    //     // iniciarLimpiezaAutomatica();
+    //     actualizarTablaSilos();
+    //     actualizarTablaMaquinas();
+    //     actualizarEstadisticasSilos();
+    //     actualizarEstadisticasMaquinas();
+    //     setupEventListeners();
+    //     updateCurrentTime();
+    //     updateCurrentShift();
+    //     setInterval(updateCurrentTime, 1000);
+    //     setInterval(updateCurrentShift, 60000);
+    // });
 
     function initializeElements() {
         // Elementos de navegación principal
@@ -3658,12 +3934,16 @@
         // Exportar CSV
         if (elements.exportCsvSilos) {
             elements.exportCsvSilos.addEventListener('click', function() {
+                console.log('[EVENT] Botón exportar CSV silos clickeado');
+                console.log('[EVENT] Registros silos disponibles:', registrosSilos ? registrosSilos.length : 'undefined');
                 exportarCSVSilos();
             });
         }
 
         if (elements.exportCsvMaquinas) {
             elements.exportCsvMaquinas.addEventListener('click', function() {
+                console.log('[EVENT] Botón exportar CSV máquinas clickeado');
+                console.log('[EVENT] Registros máquinas disponibles:', registrosMaquinas ? registrosMaquinas.length : 'undefined');
                 exportarCSVMaquinas();
             });
         }
@@ -4840,103 +5120,167 @@
     }
 
     function exportarCSVSilos() {
-        if (registrosSilos.length === 0) {
+        console.log('[EXPORT] Iniciando exportación CSV de silos...');
+        console.log('[EXPORT] Registros disponibles:', registrosSilos.length);
+        
+        if (!registrosSilos || registrosSilos.length === 0) {
             mostrarAlerta('No hay registros para exportar.', 'warning');
+            console.log('[EXPORT] No hay registros de silos para exportar');
             return;
         }
 
-        const headers = ['Estado', 'Lote', 'Silo', 'Máquina', 'Tubo', 'Fecha/Hora', 'Código'];
-        const csvContent = [headers.join(',')];
+        try {
+            const headers = ['Estado', 'Lote', 'Silo', 'Máquina', 'Tubo', 'Fecha/Hora', 'Código'];
+            const csvContent = [headers.join(',')];
 
-        const ahora = new Date().getTime();
-        registrosSilos.forEach(registro => {
-            const tiempoTranscurrido = ahora - registro.timestamp;
-            let estado = 'Activo';
-            if (tiempoTranscurrido >= LIMITE_TIEMPO) {
-                estado = 'Expirado';
-            } else if (tiempoTranscurrido >= WARNING_TIME) {
-                estado = 'Próximo a expirar';
+            const ahora = new Date().getTime();
+            registrosSilos.forEach((registro, index) => {
+                console.log(`[EXPORT] Procesando registro ${index + 1}:`, registro);
+                
+                const tiempoTranscurrido = ahora - registro.timestamp;
+                let estado = 'Activo';
+                if (tiempoTranscurrido >= LIMITE_TIEMPO) {
+                    estado = 'Expirado';
+                } else if (tiempoTranscurrido >= WARNING_TIME) {
+                    estado = 'Próximo a expirar';
+                }
+
+                const codigo = registro.lote + '-' + registro.silo;
+                const row = [
+                    estado,
+                    `"${registro.lote || 'N/A'}"`,
+                    `"${registro.silo || 'N/A'}"`,
+                    `"${registro.maquina || 'N/A'}"`,
+                    `"${registro.tubo || 'N/A'}"`,
+                    `"${registro.fecha || 'N/A'}"`,
+                    `"${codigo}"`
+                ];
+                csvContent.push(row.join(','));
+            });
+
+            const csvString = csvContent.join('\n');
+            console.log('[EXPORT] CSV generado, tamaño:', csvString.length, 'caracteres');
+            
+            // Añadir BOM para compatibilidad con Excel
+            const BOM = '\uFEFF';
+            const blob = new Blob([BOM + csvString], { type: 'text/csv;charset=utf-8;' });
+            
+            console.log('[EXPORT] Blob creado, tamaño:', blob.size, 'bytes');
+            
+            const link = document.createElement('a');
+            
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                const fileName = `registros_silos_${new Date().toISOString().split('T')[0]}.csv`;
+                
+                link.setAttribute('href', url);
+                link.setAttribute('download', fileName);
+                link.style.visibility = 'hidden';
+                
+                document.body.appendChild(link);
+                
+                console.log('[EXPORT] Iniciando descarga del archivo:', fileName);
+                link.click();
+                
+                // Limpiar después de un pequeño delay
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                    console.log('[EXPORT] Limpieza completada');
+                }, 100);
+                
+                mostrarAlerta(`✅ Archivo CSV exportado: ${fileName}`, 'success');
+                console.log('[EXPORT] Exportación de silos completada exitosamente');
+            } else {
+                console.error('[EXPORT] El navegador no soporta la descarga de archivos');
+                mostrarAlerta('Su navegador no soporta la descarga de archivos.', 'error');
             }
-
-            const codigo = registro.lote + '-' + registro.silo;
-            const row = [
-                estado,
-                `"${registro.lote}"`,
-                `"${registro.silo}"`,
-                `"${registro.maquina}"`,
-                `"${registro.tubo || 'N/A'}"`,
-                `"${registro.fecha}"`,
-                `"${codigo}"`
-            ];
-            csvContent.push(row.join(','));
-        });
-
-        const csvString = csvContent.join('\n');
-        const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        
-        if (link.download !== undefined) {
-            const url = URL.createObjectURL(blob);
-            link.setAttribute('href', url);
-            link.setAttribute('download', `registros_silos_${new Date().toISOString().split('T')[0]}.csv`);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            mostrarAlerta('Archivo CSV exportado correctamente.', 'success');
-        } else {
-            mostrarAlerta('Su navegador no soporta la descarga de archivos.', 'error');
+        } catch (error) {
+            console.error('[EXPORT] Error durante la exportación de silos:', error);
+            mostrarAlerta('Error al exportar el archivo CSV.', 'error');
         }
     }
 
     function exportarCSVMaquinas() {
-        if (registrosMaquinas.length === 0) {
+        console.log('[EXPORT] Iniciando exportación CSV de máquinas...');
+        console.log('[EXPORT] Registros disponibles:', registrosMaquinas.length);
+        
+        if (!registrosMaquinas || registrosMaquinas.length === 0) {
             mostrarAlerta('No hay registros para exportar.', 'warning');
+            console.log('[EXPORT] No hay registros de máquinas para exportar');
             return;
         }
 
-        const headers = ['Estado', 'Máquina', 'Silo', 'Operador', 'Turno', 'Producto', 'Fecha/Hora', 'Código'];
-        const csvContent = [headers.join(',')];
+        try {
+            const headers = ['Estado', 'Máquina', 'Silo', 'Operador', 'Turno', 'Producto', 'Fecha/Hora', 'Código'];
+            const csvContent = [headers.join(',')];
 
-        const ahora = new Date().getTime();
-        registrosMaquinas.forEach(registro => {
-            const tiempoTranscurrido = ahora - registro.timestamp;
-            let estado = 'Activo';
-            if (tiempoTranscurrido >= LIMITE_TIEMPO) {
-                estado = 'Expirado';
-            } else if (tiempoTranscurrido >= WARNING_TIME) {
-                estado = 'Próximo a expirar';
+            const ahora = new Date().getTime();
+            registrosMaquinas.forEach((registro, index) => {
+                console.log(`[EXPORT] Procesando registro de máquina ${index + 1}:`, registro);
+                
+                const tiempoTranscurrido = ahora - registro.timestamp;
+                let estado = 'Activo';
+                if (tiempoTranscurrido >= LIMITE_TIEMPO) {
+                    estado = 'Expirado';
+                } else if (tiempoTranscurrido >= WARNING_TIME) {
+                    estado = 'Próximo a expirar';
+                }
+
+                const codigo = registro.maquina + '-' + registro.silo + '-' + registro.operador;
+                const row = [
+                    estado,
+                    `"${registro.maquina || 'N/A'}"`,
+                    `"${registro.silo || 'N/A'}"`,
+                    `"${registro.operador || 'N/A'}"`,
+                    `"${registro.turno || 'N/A'}"`,
+                    `"${registro.producto || 'N/A'}"`,
+                    `"${registro.fecha || 'N/A'}"`,
+                    `"${codigo}"`
+                ];
+                csvContent.push(row.join(','));
+            });
+
+            const csvString = csvContent.join('\n');
+            console.log('[EXPORT] CSV de máquinas generado, tamaño:', csvString.length, 'caracteres');
+            
+            // Añadir BOM para compatibilidad con Excel
+            const BOM = '\uFEFF';
+            const blob = new Blob([BOM + csvString], { type: 'text/csv;charset=utf-8;' });
+            
+            console.log('[EXPORT] Blob de máquinas creado, tamaño:', blob.size, 'bytes');
+            
+            const link = document.createElement('a');
+            
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                const fileName = `registros_maquinas_${new Date().toISOString().split('T')[0]}.csv`;
+                
+                link.setAttribute('href', url);
+                link.setAttribute('download', fileName);
+                link.style.visibility = 'hidden';
+                
+                document.body.appendChild(link);
+                
+                console.log('[EXPORT] Iniciando descarga del archivo de máquinas:', fileName);
+                link.click();
+                
+                // Limpiar después de un pequeño delay
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                    console.log('[EXPORT] Limpieza de máquinas completada');
+                }, 100);
+                
+                mostrarAlerta(`✅ Archivo CSV exportado: ${fileName}`, 'success');
+                console.log('[EXPORT] Exportación de máquinas completada exitosamente');
+            } else {
+                console.error('[EXPORT] El navegador no soporta la descarga de archivos');
+                mostrarAlerta('Su navegador no soporta la descarga de archivos.', 'error');
             }
-
-            const codigo = registro.maquina + '-' + registro.silo + '-' + registro.operador;
-            const row = [
-                estado,
-                `"${registro.maquina}"`,
-                `"${registro.silo}"`,
-                `"${registro.operador}"`,
-                `"${registro.turno}"`,
-                `"${registro.producto}"`,
-                `"${registro.fecha}"`,
-                `"${codigo}"`
-            ];
-            csvContent.push(row.join(','));
-        });
-
-        const csvString = csvContent.join('\n');
-        const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        
-        if (link.download !== undefined) {
-            const url = URL.createObjectURL(blob);
-            link.setAttribute('href', url);
-            link.setAttribute('download', `registros_maquinas_${new Date().toISOString().split('T')[0]}.csv`);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            mostrarAlerta('Archivo CSV exportado correctamente.', 'success');
-        } else {
-            mostrarAlerta('Su navegador no soporta la descarga de archivos.', 'error');
+        } catch (error) {
+            console.error('[EXPORT] Error durante la exportación de máquinas:', error);
+            mostrarAlerta('Error al exportar el archivo CSV.', 'error');
         }
     }
 
@@ -5824,6 +6168,512 @@
     });
 
     console.log('Sistema de Gestión Industrial Integrado v2.3.0 cargado correctamente');
+    
+    // Variables globales para el login
+    let selectedUser = null;
+    let currentUser = null;
+    let loginInitialized = false; // Prevenir inicialización múltiple
+    let mainSystemInitialized = false; // Prevenir inicialización múltiple del sistema principal
+
+    // Función de depuración para mostrar el estado del localStorage
+    function debugLocalStorage() {
+        console.log('=== DEPURACIÓN LOCALSTORAGE ===');
+        console.log('Número total de elementos:', localStorage.length);
+        
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            const value = localStorage.getItem(key);
+            console.log(`${key}:`, value);
+        }
+        
+        const currentUserData = localStorage.getItem('currentUser');
+        if (currentUserData) {
+            console.log('🚨 USUARIO ENCONTRADO EN LOCALSTORAGE:');
+            try {
+                const user = JSON.parse(currentUserData);
+                console.log('- Tipo:', user.type);
+                console.log('- Nombre:', user.name);
+                console.log('- Login Time:', user.loginTime);
+                console.log('- Tiempo transcurrido (horas):', user.loginTime ? (new Date() - new Date(user.loginTime)) / (1000 * 60 * 60) : 'No disponible');
+            } catch (e) {
+                console.log('- ERROR AL PARSEAR:', e);
+            }
+        } else {
+            console.log('✅ No hay usuario guardado en localStorage');
+        }
+        console.log('================================');
+    }
+
+    // Función para limpiar todos los event listeners duplicados
+    function cleanupEventListeners() {
+        // Clonar elementos para eliminar todos los event listeners
+        const elementsToClean = [
+            'loginBtn', 'clearDataBtn', 'logoutBtn'
+        ];
+        
+        elementsToClean.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                const newElement = element.cloneNode(true);
+                element.parentNode.replaceChild(newElement, element);
+            }
+        });
+        
+        // Limpiar event listeners de las opciones de usuario
+        const userOptions = document.querySelectorAll('.user-option');
+        userOptions.forEach(option => {
+            const newOption = option.cloneNode(true);
+            option.parentNode.replaceChild(newOption, option);
+        });
+    }
+
+    // Inicializar el sistema de login
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('[INIT] Iniciando aplicación...');
+        
+        // Mostrar información de depuración
+        debugLocalStorage();
+        
+        // Limpiar event listeners duplicados
+        cleanupEventListeners();
+        
+        // Reset de variables de estado
+        loginInitialized = false;
+        mainSystemInitialized = false;
+        
+        // Verificar si hay sesión guardada antes de mostrar login
+        checkSavedSession();
+    });
+
+    function loadMainSystemDirectly() {
+        console.log('[LOGIN] Cargando sistema principal directamente...');
+        
+        // Verificar que los elementos existen
+        const userNameEl = document.getElementById('userName');
+        const userRoleEl = document.getElementById('userRole');
+        const userIconEl = document.getElementById('userIcon');
+        const loginScreen = document.getElementById('loginScreen');
+        const mainSystem = document.getElementById('mainSystem');
+        
+        if (!userNameEl || !userRoleEl || !userIconEl) {
+            console.error('[LOGIN] Elementos de usuario no encontrados, reiniciando...');
+            localStorage.removeItem('currentUser');
+            location.reload();
+            return;
+        }
+        
+        // Actualizar información del usuario en el header
+        userNameEl.textContent = currentUser.name;
+        userRoleEl.textContent = currentUser.role;
+        userIconEl.className = `fas ${currentUser.icon}`;
+
+        // Ocultar login y mostrar sistema principal sin animación
+        if (loginScreen) loginScreen.style.display = 'none';
+        if (mainSystem) {
+            mainSystem.classList.add('active');
+            mainSystem.style.display = 'block';
+        }
+
+        // Inicializar el sistema principal solo una vez
+        if (!mainSystemInitialized) {
+            initializeMainSystem();
+            mainSystemInitialized = true;
+        }
+
+        // Configurar el botón de logout
+        setupLogoutButton();
+
+        console.log('[LOGIN] Sesión restaurada automáticamente para:', currentUser.name);
+    }
+
+    function checkSavedSession() {
+        const savedUser = localStorage.getItem('currentUser');
+        console.log('[LOGIN] Verificando sesión guardada...', savedUser ? 'Encontrada' : 'No encontrada');
+        
+        if (savedUser) {
+            try {
+                currentUser = JSON.parse(savedUser);
+                console.log('[LOGIN] Datos de usuario encontrados:', currentUser);
+                
+                // Verificar que los datos son válidos
+                if (currentUser.type && currentUser.name && currentUser.loginTime) {
+                    // Verificar si la sesión no ha expirado (24 horas)
+                    const loginTime = new Date(currentUser.loginTime);
+                    const now = new Date();
+                    const hoursDiff = (now - loginTime) / (1000 * 60 * 60);
+                    
+                    if (hoursDiff < 24) {
+                        console.log('[LOGIN] Sesión válida, cargando sistema principal...');
+                        // Cargar directamente el sistema principal
+                        loadMainSystemDirectly();
+                        return;
+                    } else {
+                        console.log('[LOGIN] Sesión expirada, limpiando datos...');
+                        localStorage.removeItem('currentUser');
+                    }
+                } else {
+                    console.log('[LOGIN] Datos de usuario incompletos, limpiando...');
+                    localStorage.removeItem('currentUser');
+                }
+            } catch (error) {
+                console.error('[LOGIN] Error al parsear datos guardados:', error);
+                // Si hay error al parsear, limpiar localStorage y mostrar login
+                localStorage.removeItem('currentUser');
+            }
+        }
+        
+        console.log('[LOGIN] Mostrando pantalla de login...');
+        // No hay sesión guardada válida, mostrar login
+        initializeLogin();
+    }
+
+    function initializeLogin() {
+        if (loginInitialized) {
+            console.log('[LOGIN] Login ya inicializado, saltando...');
+            return;
+        }
+        
+        console.log('[LOGIN] Inicializando pantalla de login...');
+        
+        const userOptions = document.querySelectorAll('.user-option');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginLoading = document.getElementById('loginLoading');
+        const clearDataBtn = document.getElementById('clearDataBtn');
+        const loginScreen = document.getElementById('loginScreen');
+        const mainSystem = document.getElementById('mainSystem');
+
+        // Asegurar que la pantalla de login esté visible
+        if (loginScreen) loginScreen.style.display = 'flex';
+        if (mainSystem) {
+            mainSystem.classList.remove('active');
+            mainSystem.style.display = 'none';
+        }
+
+        // Reset del estado del login
+        selectedUser = null;
+        if (loginBtn) {
+            loginBtn.classList.remove('active');
+            loginBtn.style.display = 'block';
+        }
+        if (loginLoading) loginLoading.style.display = 'none';
+
+        // Manejar selección de usuario
+        userOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                console.log('[LOGIN] Opción de usuario clickeada');
+                
+                // Remover selección anterior
+                userOptions.forEach(opt => opt.classList.remove('selected'));
+                
+                // Seleccionar nuevo usuario
+                this.classList.add('selected');
+                selectedUser = this.getAttribute('data-user');
+                console.log('[LOGIN] Usuario seleccionado:', selectedUser);
+                
+                // Activar botón de login
+                if (loginBtn) loginBtn.classList.add('active');
+            }, { once: false }); // Permitir múltiples clicks
+        });
+
+        // Manejar login
+        if (loginBtn) {
+            loginBtn.addEventListener('click', function() {
+                if (!selectedUser) {
+                    console.log('[LOGIN] No hay usuario seleccionado');
+                    return;
+                }
+                console.log('[LOGIN] Iniciando proceso de login para:', selectedUser);
+
+                // Mostrar loading
+                loginBtn.style.display = 'none';
+                if (loginLoading) loginLoading.style.display = 'flex';
+
+                // Simular proceso de login
+                setTimeout(() => {
+                    performLogin(selectedUser);
+                }, 1500);
+            }, { once: true }); // Solo un click
+        }
+
+        // Manejar botón de limpiar datos
+        if (clearDataBtn) {
+            clearDataBtn.addEventListener('click', function() {
+                console.log('[LOGIN] Limpiando todos los datos del localStorage...');
+                
+                // Mostrar confirmación antes de limpiar
+                if (confirm('¿Estás seguro de que quieres limpiar todos los datos guardados?\n\nEsto cerrará tu sesión y eliminará todas las preferencias.')) {
+                    // Limpiar todo el localStorage relacionado con la aplicación
+                    localStorage.clear();
+                    
+                    // Mostrar mensaje de confirmación
+                    alert('✅ Todos los datos han sido limpiados.\n\nLa página se recargará automáticamente.');
+                    
+                    // Recargar la página para un estado completamente limpio
+                    location.reload();
+                }
+            }, { once: false }); // Permitir múltiples clicks
+        }
+
+        loginInitialized = true;
+        console.log('[LOGIN] Pantalla de login inicializada correctamente');
+    }
+
+    function setupLogoutButton() {
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            // Limpiar event listeners previos clonando el elemento
+            const newLogoutBtn = logoutBtn.cloneNode(true);
+            logoutBtn.parentNode.replaceChild(newLogoutBtn, logoutBtn);
+            
+            // Añadir nuevo event listener
+            newLogoutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('[LOGIN] Botón logout clickeado');
+                
+                if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                    performLogout();
+                }
+            }, { once: false });
+            
+            console.log('[LOGIN] Botón de logout configurado correctamente');
+        } else {
+            console.warn('[LOGIN] Botón de logout no encontrado');
+        }
+    }
+
+    function performLogin(userType) {
+        console.log('[LOGIN] Ejecutando login para:', userType);
+        
+        currentUser = {
+            type: userType,
+            name: userType === 'administrador' ? 'Administrador' : 'Trabajador',
+            role: userType === 'administrador' ? 'Administrador del Sistema' : 'Operador de Planta',
+            icon: userType === 'administrador' ? 'fa-user-shield' : 'fa-hard-hat',
+            loginTime: new Date().toISOString() // Agregar timestamp del login
+        };
+
+        // Guardar sesión en localStorage
+        try {
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            console.log('[LOGIN] Sesión guardada en localStorage');
+        } catch (error) {
+            console.error('[LOGIN] Error al guardar en localStorage:', error);
+        }
+
+        // Verificar que los elementos existen antes de actualizar
+        const userNameEl = document.getElementById('userName');
+        const userRoleEl = document.getElementById('userRole');
+        const userIconEl = document.getElementById('userIcon');
+        const loginScreen = document.getElementById('loginScreen');
+        const mainSystem = document.getElementById('mainSystem');
+        
+        if (userNameEl && userRoleEl && userIconEl) {
+            // Actualizar información del usuario en el header
+            userNameEl.textContent = currentUser.name;
+            userRoleEl.textContent = currentUser.role;
+            userIconEl.className = `fas ${currentUser.icon}`;
+        }
+
+        // Ocultar login y mostrar sistema principal
+        if (loginScreen) loginScreen.style.display = 'none';
+        if (mainSystem) {
+            mainSystem.classList.add('active');
+            mainSystem.style.display = 'block';
+        }
+
+        // Configurar el botón de logout
+        setupLogoutButton();
+
+        // Inicializar el sistema principal solo una vez
+        if (!mainSystemInitialized) {
+            initializeMainSystem();
+            mainSystemInitialized = true;
+        }
+
+        // Mostrar mensaje de bienvenida
+        setTimeout(() => {
+            if (typeof mostrarAlerta === 'function') {
+                mostrarAlerta(`¡Bienvenido, ${currentUser.name}!`, 'success');
+            }
+        }, 500);
+
+        console.log('[LOGIN] Login completado para:', currentUser.name);
+    }
+
+    function performLogout() {
+        console.log('[LOGIN] Ejecutando logout...');
+        
+        // Limpiar localStorage al hacer logout
+        try {
+            localStorage.removeItem('currentUser');
+            console.log('[LOGIN] Usuario removido del localStorage');
+        } catch (error) {
+            console.error('[LOGIN] Error al limpiar localStorage:', error);
+        }
+        
+        // Limpiar datos del usuario
+        currentUser = null;
+        selectedUser = null;
+        
+        // Reset de las variables de estado
+        loginInitialized = false;
+        mainSystemInitialized = false;
+
+        // Obtener elementos
+        const loginScreen = document.getElementById('loginScreen');
+        const mainSystem = document.getElementById('mainSystem');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginLoading = document.getElementById('loginLoading');
+        
+        // Resetear interfaz de login
+        document.querySelectorAll('.user-option').forEach(opt => opt.classList.remove('selected'));
+        
+        if (loginBtn) {
+            loginBtn.classList.remove('active');
+            loginBtn.style.display = 'block';
+        }
+        
+        if (loginLoading) {
+            loginLoading.style.display = 'none';
+        }
+
+        // Mostrar login y ocultar sistema principal
+        if (mainSystem) {
+            mainSystem.classList.remove('active');
+            mainSystem.style.display = 'none';
+        }
+        
+        if (loginScreen) {
+            loginScreen.style.display = 'flex';
+        }
+
+        // Reinicializar el sistema de login
+        setTimeout(() => {
+            initializeLogin();
+        }, 100);
+
+        // Mostrar mensaje
+        if (typeof mostrarAlerta === 'function') {
+            mostrarAlerta('Sesión cerrada correctamente', 'info');
+        }
+        
+        console.log('[LOGIN] Logout completado, localStorage limpiado');
+    }
+
+    // Función opcional para limpiar sesiones expiradas (24 horas)
+    function checkSessionExpiry() {
+        const savedUser = localStorage.getItem('currentUser');
+        if (savedUser) {
+            try {
+                const user = JSON.parse(savedUser);
+                const loginTime = new Date(user.loginTime);
+                const now = new Date();
+                const hoursDiff = (now - loginTime) / (1000 * 60 * 60);
+                
+                // Si han pasado más de 24 horas, cerrar sesión automáticamente
+                if (hoursDiff > 24) {
+                    localStorage.removeItem('currentUser');
+                    location.reload(); // Recargar para mostrar login
+                }
+            } catch (error) {
+                localStorage.removeItem('currentUser');
+            }
+        }
+    }
+
+    // Verificar expiración cada hora
+    setInterval(checkSessionExpiry, 3600000); // 1 hora en milisegundos
+
+    // Función para manejar errores globales
+    window.addEventListener('error', function(e) {
+        console.error('[ERROR GLOBAL]', e.error);
+        
+        // Si hay errores críticos relacionados con el login, limpiar y recargar
+        if (e.error && e.error.message && e.error.message.includes('currentUser')) {
+            console.log('[ERROR] Error relacionado con usuario, limpiando localStorage...');
+            localStorage.removeItem('currentUser');
+            location.reload();
+        }
+    });
+
+    // Prevenir múltiples recargas
+    let reloadInProgress = false;
+    
+    // Función para recargar de forma segura
+    function safeReload() {
+        if (!reloadInProgress) {
+            reloadInProgress = true;
+            console.log('[SYSTEM] Recargando aplicación de forma segura...');
+            setTimeout(() => {
+                location.reload();
+            }, 100);
+        }
+    }
+
+    // Verificar integridad del DOM cada 5 segundos cuando esté logueado
+    setInterval(() => {
+        if (currentUser && mainSystemInitialized) {
+            const criticalElements = [
+                'userName', 'userRole', 'userIcon', 'logoutBtn', 
+                'loginScreen', 'mainSystem'
+            ];
+            
+            let missingElements = [];
+            criticalElements.forEach(id => {
+                if (!document.getElementById(id)) {
+                    missingElements.push(id);
+                }
+            });
+            
+            if (missingElements.length > 0) {
+                console.warn('[INTEGRITY] Elementos críticos faltantes:', missingElements);
+                // No recargar automáticamente, solo logear para depuración
+            }
+        }
+    }, 5000);
+
+    function initializeMainSystem() {
+        if (mainSystemInitialized) {
+            console.log('[MAIN] Sistema principal ya inicializado, saltando...');
+            return;
+        }
+        
+        console.log('[MAIN] Inicializando sistema principal v2.3.0...');
+        
+        try {
+            // Verificar que las funciones existen antes de llamarlas
+            if (typeof initializeElements === 'function') initializeElements();
+            if (typeof initializeTheme === 'function') initializeTheme();
+            if (typeof setupNavigation === 'function') setupNavigation();
+            if (typeof setupSubNavigation === 'function') setupSubNavigation();
+            if (typeof cargarRegistrosSilos === 'function') cargarRegistrosSilos();
+            if (typeof cargarRegistrosMaquinas === 'function') cargarRegistrosMaquinas();
+            if (typeof setupRealtimeSync === 'function') setupRealtimeSync();
+            if (typeof actualizarTablaSilos === 'function') actualizarTablaSilos();
+            if (typeof actualizarTablaMaquinas === 'function') actualizarTablaMaquinas();
+            if (typeof actualizarEstadisticasSilos === 'function') actualizarEstadisticasSilos();
+            if (typeof actualizarEstadisticasMaquinas === 'function') actualizarEstadisticasMaquinas();
+            if (typeof setupEventListeners === 'function') setupEventListeners();
+            if (typeof updateCurrentTime === 'function') {
+                updateCurrentTime();
+                setInterval(updateCurrentTime, 1000);
+            }
+            if (typeof updateCurrentShift === 'function') {
+                updateCurrentShift();
+                setInterval(updateCurrentShift, 60000);
+            }
+            
+            mainSystemInitialized = true;
+            console.log('[MAIN] Sistema principal inicializado correctamente');
+            
+        } catch (error) {
+            console.error('[MAIN] Error al inicializar sistema principal:', error);
+        }
+    }
 </script>
+
+</div> <!-- Cierre del mainSystem -->
+
 </body>
 </html>
