@@ -2143,24 +2143,6 @@
                                         <i class="fas fa-chevron-down select-icon"></i>
                                     </div>
                                 </div>
-                                <!-- Tubo -->
-                                <div>
-                                    <label for="tubo" class="block text-sm font-medium text-gray-700 mb-2">Tubo</label>
-                                    <div class="relative">
-                                        <i class="fas fa-circle input-icon"></i>
-                                        <select id="tubo" class="w-full pl-10 p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none transition-all duration-200 text-base" required>
-                                            <option value="">Seleccione un tubo</option>
-                                            <option value="Tubo 1">Tubo 1</option>
-                                            <option value="Tubo 2">Tubo 2</option>
-                                            <option value="Tubo 3">Tubo 3</option>
-                                            <option value="Tubo 4">Tubo 4</option>
-                                            <option value="Tubo 5">Tubo 5</option>
-                                            <option value="Tubo 6">Tubo 6</option>
-                                            <option value="Tubo 7">Tubo 7</option>
-                                        </select>
-                                        <i class="fas fa-chevron-down select-icon"></i>
-                                    </div>
-                                </div>
                                 <button type="submit" class="btn-primary text-white w-full py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center text-base" 
                                         id="submit-btn-silos" aria-label="Registrar nuevo lote en el sistema">
                                     <i class="fas fa-save mr-2" aria-hidden="true"></i> 
@@ -2302,7 +2284,6 @@
                                             <th class="px-3 sm:px-6 py-3">Lote</th>
                                             <th class="px-3 sm:px-6 py-3 hidden sm:table-cell">Silo</th>
                                             <th class="px-3 sm:px-6 py-3 hidden md:table-cell">Máquina</th>
-                                            <th class="px-3 sm:px-6 py-3 hidden lg:table-cell">Tubo</th>
                                             <th class="px-3 sm:px-6 py-3 hidden lg:table-cell">Fecha/Hora</th>
                                             <th class="px-3 sm:px-6 py-3 hidden sm:table-cell">Código</th>
                                             <th class="px-3 sm:px-6 py-3 text-right">Acciones</th>
@@ -2723,24 +2704,6 @@
                             <option value="Máquina 6">Máquina 6</option>
                             <option value="Máquina 7">Máquina 7</option>
                             <option value="Máquina 8">Máquina 8</option>
-                        </select>
-                        <i class="fas fa-chevron-down select-icon"></i>
-                    </div>
-                </div>
-                <!-- Tubo -->
-                <div>
-                    <label for="editTubo" class="block text-sm font-medium text-gray-700 mb-2">Tubo</label>
-                    <div class="relative">
-                        <i class="fas fa-circle input-icon"></i>
-                        <select id="editTubo" class="w-full pl-10 p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 appearance-none transition-all duration-200" required>
-                            <option value="">Seleccione un tubo</option>
-                            <option value="Tubo 1">Tubo 1</option>
-                            <option value="Tubo 2">Tubo 2</option>
-                            <option value="Tubo 3">Tubo 3</option>
-                            <option value="Tubo 4">Tubo 4</option>
-                            <option value="Tubo 5">Tubo 5</option>
-                            <option value="Tubo 6">Tubo 6</option>
-                            <option value="Tubo 7">Tubo 7</option>
                         </select>
                         <i class="fas fa-chevron-down select-icon"></i>
                     </div>
@@ -3501,9 +3464,8 @@
                 const lote = document.getElementById('lote').value.trim();
                 const silo = document.getElementById('silo').value;
                 const maquina = document.getElementById('maquina').value;
-                const tubo = document.getElementById('tubo').value;
 
-                if (!lote || !silo || !maquina || !tubo) {
+                if (!lote || !silo || !maquina) {
                     mostrarAlerta('Por favor complete todos los campos', 'warning');
                     return;
                 }
@@ -3529,7 +3491,7 @@
                 });
                 const timestamp = new Date().getTime();
 
-                const registro = { lote, silo, maquina, tubo, fecha, timestamp };
+                const registro = { lote, silo, maquina, fecha, timestamp };
                 registrosSilos.push(registro);
 
                 guardarRegistrosSilos();
@@ -3750,7 +3712,6 @@
             document.getElementById('editLote').value = '';
             document.getElementById('editSilo').value = '';
             document.getElementById('editMaquina').value = '';
-            document.getElementById('editTubo').value = '';
         }
 
         function clearEditFormMaquinas() {
@@ -3794,9 +3755,8 @@
                 const lote = document.getElementById('editLote').value.trim();
                 const silo = document.getElementById('editSilo').value;
                 const maquina = document.getElementById('editMaquina').value;
-                const tubo = document.getElementById('editTubo').value;
 
-                if (!lote || !silo || !maquina || !tubo) {
+                if (!lote || !silo || !maquina) {
                     mostrarAlerta('Por favor complete todos los campos', 'warning');
                     return;
                 }
@@ -3818,7 +3778,6 @@
                     registrosSilos[editingIndexSilos].lote = lote;
                     registrosSilos[editingIndexSilos].silo = silo;
                     registrosSilos[editingIndexSilos].maquina = maquina;
-                    registrosSilos[editingIndexSilos].tubo = tubo;
                     
                     registrosSilos[editingIndexSilos].fecha = new Date().toLocaleString('es-ES', {
                         day: '2-digit',
@@ -4037,7 +3996,6 @@
             </td>
             <td class="px-3 sm:px-6 py-4 whitespace-nowrap hidden sm:table-cell">${registro.silo}</td>
             <td class="px-3 sm:px-6 py-4 whitespace-nowrap hidden md:table-cell">${registro.maquina}</td>
-            <td class="px-3 sm:px-6 py-4 whitespace-nowrap hidden lg:table-cell">${registro.tubo || 'N/A'}</td>
             <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-600 hidden lg:table-cell">${registro.fecha}</td>
             <td class="px-3 sm:px-6 py-4 whitespace-nowrap hidden sm:table-cell">
                 <button class="view-barcode action-btn action-btn-view text-xs">
@@ -4085,10 +4043,6 @@
                     <div class="mobile-field">
                         <div class="mobile-field-label">Máquina</div>
                         <div class="mobile-field-value">${registro.maquina}</div>
-                    </div>
-                    <div class="mobile-field">
-                        <div class="mobile-field-label">Tubo</div>
-                        <div class="mobile-field-value">${registro.tubo || 'N/A'}</div>
                     </div>
                     <div class="mobile-field">
                         <div class="mobile-field-label">Hora</div>
@@ -4151,7 +4105,6 @@
                 document.getElementById('editLote').value = registro.lote;
                 document.getElementById('editSilo').value = registro.silo;
                 document.getElementById('editMaquina').value = registro.maquina;
-                document.getElementById('editTubo').value = registro.tubo;
                 elements.editModalSilos.classList.remove('hidden');
                 
                 // Seleccionar automáticamente el texto del campo lote para facilitar el escaneo
@@ -4218,7 +4171,6 @@
             document.getElementById('editLote').value = registro.lote;
             document.getElementById('editSilo').value = registro.silo;
             document.getElementById('editMaquina').value = registro.maquina;
-            document.getElementById('editTubo').value = registro.tubo;
             elements.editModalSilos.classList.remove('hidden');
             
             // Seleccionar automáticamente el texto del campo lote para facilitar el escaneo
@@ -4584,7 +4536,6 @@
             <td class="font-bold text-gray-900">${registro.lote}</td>
             <td>${registro.silo}</td>
             <td>${registro.maquina}</td>
-            <td>${registro.tubo || 'N/A'}</td>
             <td>${horaRegistro}</td>
             <td class="text-center">
                 <button class="worker-code-btn worker-view-code" data-codigo="${registro.lote}-${registro.silo}">
@@ -4617,10 +4568,7 @@
                         <div class="mobile-field-label">Equipo</div>
                         <div class="mobile-field-value">${registro.maquina}</div>
                     </div>
-                    <div class="mobile-field">
-                        <div class="mobile-field-label">Línea</div>
-                        <div class="mobile-field-value">${registro.tubo || 'N/A'}</div>
-                    </div>
+
                     <div class="mobile-field">
                         <div class="mobile-field-label">Hora</div>
                         <div class="mobile-field-value">${horaRegistro}</div>
@@ -4830,8 +4778,7 @@
             registrosFiltrados = registrosSilos.filter(registro => 
                 registro.lote.toLowerCase().includes(searchTerm) ||
                 registro.silo.toLowerCase().includes(searchTerm) ||
-                registro.maquina.toLowerCase().includes(searchTerm) ||
-                (registro.tubo && registro.tubo.toLowerCase().includes(searchTerm))
+                registro.maquina.toLowerCase().includes(searchTerm)
             );
         }
 
@@ -4839,7 +4786,7 @@
             // Mensaje para tabla desktop
             elements.registrosTableSilos.innerHTML = `
                 <tr>
-                    <td colspan="8" class="text-center py-8">
+                    <td colspan="7" class="text-center py-8">
                         <div class="text-gray-400">
                             <i class="fas fa-search fa-2x mb-2"></i>
                             <p class="font-medium text-sm">No se encontraron registros</p>
@@ -4860,7 +4807,12 @@
                 `;
             }
         } else {
-            registrosFiltrados.forEach((registro, index) => {
+            // Ordenar registros por timestamp descendente (más nuevos primero)
+            const registrosOrdenados = registrosFiltrados.sort((a, b) => {
+                return (b.timestamp || 0) - (a.timestamp || 0);
+            });
+            
+            registrosOrdenados.forEach((registro, index) => {
                 const originalIndex = registrosSilos.findIndex(r => r.timestamp === registro.timestamp);
                 mostrarRegistroSilo(registro, originalIndex);
             });
@@ -4930,7 +4882,12 @@
                 `;
             }
         } else {
-            registrosFiltrados.forEach((registro, index) => {
+            // Ordenar registros por timestamp descendente (más nuevos primero)
+            const registrosOrdenados = registrosFiltrados.sort((a, b) => {
+                return (b.timestamp || 0) - (a.timestamp || 0);
+            });
+            
+            registrosOrdenados.forEach((registro, index) => {
                 const originalIndex = registrosMaquinas.findIndex(r => r.timestamp === registro.timestamp);
                 mostrarRegistroMaquina(registro, originalIndex);
             });
@@ -5130,7 +5087,7 @@
         }
 
         try {
-            const headers = ['Estado', 'Lote', 'Silo', 'Máquina', 'Tubo', 'Fecha/Hora', 'Código'];
+            const headers = ['Estado', 'Lote', 'Silo', 'Máquina', 'Fecha/Hora', 'Código'];
             const csvContent = [headers.join(',')];
 
             const ahora = new Date().getTime();
@@ -5151,7 +5108,6 @@
                     `"${registro.lote || 'N/A'}"`,
                     `"${registro.silo || 'N/A'}"`,
                     `"${registro.maquina || 'N/A'}"`,
-                    `"${registro.tubo || 'N/A'}"`,
                     `"${registro.fecha || 'N/A'}"`,
                     `"${codigo}"`
                 ];
@@ -5324,7 +5280,6 @@
                             <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Lote</th>
                             <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Silo</th>
                             <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Máquina</th>
-                            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Tubo</th>
                             <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Fecha/Hora</th>
                             <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Código</th>
                         </tr>
@@ -5354,7 +5309,6 @@
                     <td style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">${registro.lote}</td>
                     <td style="border: 1px solid #ddd; padding: 8px;">${registro.silo}</td>
                     <td style="border: 1px solid #ddd; padding: 8px;">${registro.maquina}</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">${registro.tubo || 'N/A'}</td>
                     <td style="border: 1px solid #ddd; padding: 8px;">${registro.fecha}</td>
                     <td style="border: 1px solid #ddd; padding: 8px; font-family: monospace;">${codigo}</td>
                 </tr>
@@ -5612,7 +5566,6 @@
                     <td style="padding: 8px; border-bottom: 1px solid #cbd5e1; font-weight: bold; color: #1f2937;">${registro.lote}</td>
                     <td style="padding: 8px; border-bottom: 1px solid #cbd5e1; font-weight: 500;">${registro.silo}</td>
                     <td style="padding: 8px; border-bottom: 1px solid #cbd5e1; font-weight: 500;">${registro.maquina}</td>
-                    <td style="padding: 8px; border-bottom: 1px solid #cbd5e1; font-weight: 500;">${registro.tubo || 'N/A'}</td>
                     <td style="padding: 8px; border-bottom: 1px solid #cbd5e1; font-weight: 500;">${horaRegistro}</td>
                     <td style="padding: 8px; border-bottom: 1px solid #cbd5e1; text-align: center;">
                         <span style="background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%); color: white; padding: 2px 6px; border-radius: 4px; font-size: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">${codigo}</span>
@@ -5923,7 +5876,6 @@
                         <p><strong>Lote:</strong> ${registro.lote}</p>
                         <p><strong>Silo:</strong> ${registro.silo}</p>
                         <p><strong>Máquina:</strong> ${registro.maquina}</p>
-                        <p><strong>Tubo:</strong> ${registro.tubo || 'N/A'}</p>
                         <p><strong>Fecha/Hora:</strong> ${registro.fecha}</p>
                     </div>
                     <p style="margin-top: 20px; font-size: 12px; color: #666;">
@@ -6156,6 +6108,7 @@
     window.addEventListener('unhandledrejection', function(e) {
         console.error('Promesa rechazada no manejada:', e.reason);
         mostrarAlerta('Error de conexión. Verifique su conexión a internet.', 'error');
+    
     });
 
     // Cleanup al cerrar la página
