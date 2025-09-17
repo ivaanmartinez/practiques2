@@ -3475,9 +3475,9 @@
                     return;
                 }
 
-                const existe = registrosSilos.some(r => r.lote === lote && r.silo === silo);
+                const existe = registrosSilos.some(r => r.lote === lote && r.silo === silo && r.maquina === maquina);
                 if (existe) {
-                    mostrarAlerta('Este lote ya está registrado en el silo seleccionado.', 'warning');
+                    mostrarAlerta('Esta combinación de lote, silo y máquina ya está registrada.', 'warning');
                     return;
                 }
 
@@ -3767,10 +3767,10 @@
                 }
 
                 const existe = registrosSilos.some((r, index) =>
-                    index !== editingIndexSilos && r.lote === lote && r.silo === silo
+                    index !== editingIndexSilos && r.lote === lote && r.silo === silo && r.maquina === maquina
                 );
                 if (existe) {
-                    mostrarAlerta('Este lote ya está registrado en el silo seleccionado.', 'warning');
+                    mostrarAlerta('Esta combinación de lote, silo y máquina ya está registrada.', 'warning');
                     return;
                 }
 
