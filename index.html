@@ -586,10 +586,6 @@
         background-color: #ef4444;
     }
 
-    .status-warning {
-        background-color: #f59e0b;
-    }
-
     .search-container {
         position: relative;
         width: 100%;
@@ -749,11 +745,7 @@
             border: 1px solid #bbf7d0;
         }
         
-        .mobile-status-badge.badge-warning {
-            background: #fef3c7;
-            color: #92400e;
-            border: 1px solid #fde68a;
-        }
+
         
         .mobile-status-badge.badge-expired {
             background: #fecaca;
@@ -939,10 +931,7 @@
         color: #065f46;
     }
 
-    .badge-warning {
-        background-color: #fef3c7;
-        color: #92400e;
-    }
+
 
     .badge-expired {
         background-color: #fee2e2;
@@ -1052,11 +1041,7 @@
         box-shadow: 0 1px 3px rgba(16, 185, 129, 0.3);
     }
 
-    .worker-badge-warning {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        color: white;
-        box-shadow: 0 1px 3px rgba(245, 158, 11, 0.3);
-    }
+
 
     .worker-badge-expired {
         background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
@@ -2215,10 +2200,9 @@
                                     <thead>
                                         <tr>
                                             <th class="text-left">Estado</th>
-                                            <th class="text-left">Lote</th>
-                                            <th class="text-left">Ubicación</th>
                                             <th class="text-left hidden sm:table-cell">Equipo</th>
-                                            <th class="text-left hidden md:table-cell">Línea</th>
+                                            <th class="text-left">Ubicación</th>
+                                            <th class="text-left">Lote</th>
                                             <th class="text-left">Hora</th>
                                             <th class="text-center">QR</th>
                                         </tr>
@@ -2281,9 +2265,9 @@
                                     <thead class="bg-gray-50">
                                         <tr class="text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             <th class="px-3 sm:px-6 py-3">Estado</th>
-                                            <th class="px-3 sm:px-6 py-3">Lote</th>
-                                            <th class="px-3 sm:px-6 py-3 hidden sm:table-cell">Silo</th>
                                             <th class="px-3 sm:px-6 py-3 hidden md:table-cell">Máquina</th>
+                                            <th class="px-3 sm:px-6 py-3 hidden sm:table-cell">Silo</th>
+                                            <th class="px-3 sm:px-6 py-3">Lote</th>
                                             <th class="px-3 sm:px-6 py-3 hidden lg:table-cell">Fecha/Hora</th>
                                             <th class="px-3 sm:px-6 py-3 hidden sm:table-cell">Código</th>
                                             <th class="px-3 sm:px-6 py-3 text-right">Acciones</th>
@@ -2838,9 +2822,9 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    // Constantes
-    const LIMITE_TIEMPO = 24 * 60 * 60 * 1000; // 24 horas en milisegundos
-    const WARNING_TIME = 12 * 60 * 60 * 1000; // 12 horas para mostrar advertencia
+    // Constantes (ya no se usa el sistema de tiempo)
+    // const LIMITE_TIEMPO = 24 * 60 * 60 * 1000; // Eliminado - ahora usamos estados por cambio de lote/producto
+    // const WARNING_TIME = 12 * 60 * 60 * 1000; // Eliminado - no hay estado intermedio
 
     // Variables globales optimizadas
     let currentView = 'silos-lotes';
@@ -3237,6 +3221,14 @@
                     registrosSilos = Object.values(data).filter(item => 
                         item && item.lote && item.silo && item.maquina && item.fecha && item.timestamp
                     );
+                    
+                    // Inicializar estados para registros existentes que no tienen el campo estado
+                    registrosSilos.forEach(registro => {
+                        if (!registro.estado) {
+                            registro.estado = 'activo'; // Por defecto, los registros existentes se marcan como activos
+                        }
+                    });
+                    
                     console.log('Registros de silos cargados desde Firebase:', registrosSilos);
                     // limpiarRegistrosExpiradosSilos();
                 } else {
@@ -3272,6 +3264,14 @@
                     registrosMaquinas = Object.values(data).filter(item => 
                         item && item.maquina && item.silo && item.operador && item.fecha && item.timestamp
                     );
+                    
+                    // Inicializar estados para registros existentes que no tienen el campo estado
+                    registrosMaquinas.forEach(registro => {
+                        if (!registro.estado) {
+                            registro.estado = 'activo'; // Por defecto, los registros existentes se marcan como activos
+                        }
+                    });
+                    
                     console.log('Registros de máquinas cargados desde Firebase:', registrosMaquinas);
                     // limpiarRegistrosExpiradosMaquinas();
                 } else {
@@ -3429,6 +3429,26 @@
         // }
     }
 
+    // Nueva función para marcar registros como expirados cuando cambia el lote en un silo
+    function marcarExpiradosPorCambioLote(siloActual, loteNuevo) {
+        registrosSilos.forEach(registro => {
+            // Si es del mismo silo pero diferente lote, y está activo, marcarlo como expirado
+            if (registro.silo === siloActual && registro.lote !== loteNuevo && registro.estado === 'activo') {
+                registro.estado = 'expirado';
+            }
+        });
+    }
+
+    // Nueva función para marcar registros como expirados cuando cambia el producto en una máquina
+    function marcarExpiradosPorCambioProducto(maquinaActual, productoNuevo) {
+        registrosMaquinas.forEach(registro => {
+            // Si es de la misma máquina pero diferente producto, y está activo, marcarlo como expirado
+            if (registro.maquina === maquinaActual && registro.producto !== productoNuevo && registro.estado === 'activo') {
+                registro.estado = 'expirado';
+            }
+        });
+    }
+
     function limpiarRegistrosExpiradosMaquinas() {
         // const ahora = new Date().getTime();
         // const registrosOriginales = registrosMaquinas.length;
@@ -3491,7 +3511,10 @@
                 });
                 const timestamp = new Date().getTime();
 
-                const registro = { lote, silo, maquina, fecha, timestamp };
+                // Marcar como expirados todos los registros anteriores del mismo silo con lote diferente
+                marcarExpiradosPorCambioLote(silo, lote);
+
+                const registro = { lote, silo, maquina, fecha, timestamp, estado: 'activo' };
                 registrosSilos.push(registro);
 
                 guardarRegistrosSilos();
@@ -3549,7 +3572,10 @@
                 });
                 const timestamp = new Date().getTime();
 
-                const registro = { maquina, silo, operador, turno, producto, fecha, timestamp };
+                // Marcar como expirados todos los registros anteriores de la misma máquina con producto diferente
+                marcarExpiradosPorCambioProducto(maquina, producto);
+
+                const registro = { maquina, silo, operador, turno, producto, fecha, timestamp, estado: 'activo' };
                 registrosMaquinas.push(registro);
 
                 guardarRegistrosMaquinas();
@@ -3960,20 +3986,15 @@
             return;
         }
 
-        const ahora = new Date().getTime();
-        const tiempoTranscurrido = ahora - registro.timestamp;
+        // Usar el nuevo sistema de estados basado en cambio de lote
         let estado = '';
         let estadoClase = '';
         let estadoBadge = '';
 
-        if (tiempoTranscurrido >= LIMITE_TIEMPO) {
+        if (registro.estado === 'expirado') {
             estado = 'Expirado';
             estadoClase = 'status-expired';
             estadoBadge = 'badge-expired';
-        } else if (tiempoTranscurrido >= WARNING_TIME) {
-            estado = 'Próximo a expirar';
-            estadoClase = 'status-warning';
-            estadoBadge = 'badge-warning';
         } else {
             estado = 'Activo';
             estadoClase = 'status-active';
@@ -3990,12 +4011,12 @@
                     <span class="sm:hidden">${estado.charAt(0)}</span>
                 </span>
             </td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap hidden md:table-cell">${registro.maquina}</td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap hidden sm:table-cell">${registro.silo}</td>
             <td class="px-3 sm:px-6 py-4 whitespace-nowrap font-medium text-gray-900">
                 <div class="text-sm">${registro.lote}</div>
                 <div class="text-xs text-gray-500 sm:hidden">${registro.silo} • ${registro.maquina}</div>
             </td>
-            <td class="px-3 sm:px-6 py-4 whitespace-nowrap hidden sm:table-cell">${registro.silo}</td>
-            <td class="px-3 sm:px-6 py-4 whitespace-nowrap hidden md:table-cell">${registro.maquina}</td>
             <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-600 hidden lg:table-cell">${registro.fecha}</td>
             <td class="px-3 sm:px-6 py-4 whitespace-nowrap hidden sm:table-cell">
                 <button class="view-barcode action-btn action-btn-view text-xs">
@@ -4032,17 +4053,21 @@
             
             card.innerHTML = `
                 <div class="mobile-card-header">
-                    <div class="mobile-card-title">${registro.lote}</div>
+                    <div class="mobile-card-title">${registro.maquina} - ${registro.silo} - ${registro.lote}</div>
                     <span class="mobile-status-badge ${estadoBadge}">${estado}</span>
                 </div>
                 <div class="mobile-card-body">
+                    <div class="mobile-field">
+                        <div class="mobile-field-label">Máquina</div>
+                        <div class="mobile-field-value">${registro.maquina}</div>
+                    </div>
                     <div class="mobile-field">
                         <div class="mobile-field-label">Silo</div>
                         <div class="mobile-field-value">${registro.silo}</div>
                     </div>
                     <div class="mobile-field">
-                        <div class="mobile-field-label">Máquina</div>
-                        <div class="mobile-field-value">${registro.maquina}</div>
+                        <div class="mobile-field-label">Lote</div>
+                        <div class="mobile-field-value">${registro.lote}</div>
                     </div>
                     <div class="mobile-field">
                         <div class="mobile-field-label">Hora</div>
@@ -4304,20 +4329,15 @@
             return;
         }
 
-        const ahora = new Date().getTime();
-        const tiempoTranscurrido = ahora - registro.timestamp;
+        // Usar el nuevo sistema de estados basado en cambio de producto
         let estado = '';
         let estadoClase = '';
         let estadoBadge = '';
 
-        if (tiempoTranscurrido >= LIMITE_TIEMPO) {
+        if (registro.estado === 'expirado') {
             estado = 'Expirado';
             estadoClase = 'status-expired';
             estadoBadge = 'badge-expired';
-        } else if (tiempoTranscurrido >= WARNING_TIME) {
-            estado = 'Próximo a expirar';
-            estadoClase = 'status-warning';
-            estadoBadge = 'badge-warning';
         } else {
             estado = 'Activo';
             estadoClase = 'status-active';
@@ -4501,20 +4521,15 @@
             return;
         }
 
-        const ahora = new Date().getTime();
-        const tiempoTranscurrido = ahora - registro.timestamp;
+        // Usar el nuevo sistema de estados basado en cambio de lote
         let estado = '';
         let estadoClase = '';
         let prioridad = '';
 
-        if (tiempoTranscurrido >= LIMITE_TIEMPO) {
+        if (registro.estado === 'expirado') {
             estado = 'FINALIZADO';
             estadoClase = 'worker-badge-expired';
             prioridad = 'priority-high';
-        } else if (tiempoTranscurrido >= WARNING_TIME) {
-            estado = 'PRÓXIMO VENC.';
-            estadoClase = 'worker-badge-warning';
-            prioridad = 'priority-medium';
         } else {
             estado = 'OPERATIVO';
             estadoClase = 'worker-badge-active';
@@ -4533,9 +4548,9 @@
             <td>
                 <span class="worker-badge ${estadoClase}">${estado}</span>
             </td>
-            <td class="font-bold text-gray-900">${registro.lote}</td>
+            <td class="hidden sm:table-cell">${registro.maquina}</td>
             <td>${registro.silo}</td>
-            <td>${registro.maquina}</td>
+            <td class="font-bold text-gray-900">${registro.lote}</td>
             <td>${horaRegistro}</td>
             <td class="text-center">
                 <button class="worker-code-btn worker-view-code" data-codigo="${registro.lote}-${registro.silo}">
@@ -4556,19 +4571,22 @@
             
             card.innerHTML = `
                 <div class="mobile-card-header">
-                    <div class="mobile-card-title">${registro.lote}</div>
+                    <div class="mobile-card-title">${registro.maquina} - ${registro.silo} - ${registro.lote}</div>
                     <span class="mobile-status-badge worker-badge ${estadoClase}">${estado}</span>
                 </div>
                 <div class="mobile-card-body">
+                    <div class="mobile-field">
+                        <div class="mobile-field-label">Equipo</div>
+                        <div class="mobile-field-value">${registro.maquina}</div>
+                    </div>
                     <div class="mobile-field">
                         <div class="mobile-field-label">Ubicación</div>
                         <div class="mobile-field-value">${registro.silo}</div>
                     </div>
                     <div class="mobile-field">
-                        <div class="mobile-field-label">Equipo</div>
-                        <div class="mobile-field-value">${registro.maquina}</div>
+                        <div class="mobile-field-label">Lote</div>
+                        <div class="mobile-field-value">${registro.lote}</div>
                     </div>
-
                     <div class="mobile-field">
                         <div class="mobile-field-label">Hora</div>
                         <div class="mobile-field-value">${horaRegistro}</div>
@@ -4644,20 +4662,15 @@
             return;
         }
 
-        const ahora = new Date().getTime();
-        const tiempoTranscurrido = ahora - registro.timestamp;
+        // Usar el nuevo sistema de estados basado en cambio de producto
         let estado = '';
         let estadoClase = '';
         let prioridad = '';
 
-        if (tiempoTranscurrido >= LIMITE_TIEMPO) {
+        if (registro.estado === 'expirado') {
             estado = 'FINALIZADO';
             estadoClase = 'worker-badge-expired';
             prioridad = 'priority-high';
-        } else if (tiempoTranscurrido >= WARNING_TIME) {
-            estado = 'PRÓXIMO VENC.';
-            estadoClase = 'worker-badge-warning';
-            prioridad = 'priority-medium';
         } else {
             estado = 'OPERATIVO';
             estadoClase = 'worker-badge-active';
@@ -5029,8 +5042,7 @@
     }
 
     function actualizarEstadisticasSilos() {
-        const ahora = new Date().getTime();
-        const registrosActivos = registrosSilos.filter(r => (ahora - r.timestamp) < LIMITE_TIEMPO);
+        const registrosActivos = registrosSilos.filter(r => r.estado === 'activo' || !r.estado); // Incluye registros sin estado (por compatibilidad)
         const silosUnicos = new Set(registrosActivos.map(r => r.silo));
         const ultimoRegistro = registrosSilos.length > 0 ? 
             registrosSilos.sort((a, b) => b.timestamp - a.timestamp)[0] : null;
@@ -5053,8 +5065,7 @@
     }
 
     function actualizarEstadisticasMaquinas() {
-        const ahora = new Date().getTime();
-        const registrosActivos = registrosMaquinas.filter(r => (ahora - r.timestamp) < LIMITE_TIEMPO);
+        const registrosActivos = registrosMaquinas.filter(r => r.estado === 'activo' || !r.estado); // Incluye registros sin estado (por compatibilidad)
         const maquinasUnicas = new Set(registrosActivos.map(r => r.maquina));
         const ultimoRegistro = registrosMaquinas.length > 0 ? 
             registrosMaquinas.sort((a, b) => b.timestamp - a.timestamp)[0] : null;
@@ -5087,27 +5098,24 @@
         }
 
         try {
-            const headers = ['Estado', 'Lote', 'Silo', 'Máquina', 'Fecha/Hora', 'Código'];
+            const headers = ['Estado', 'Máquina', 'Silo', 'Lote', 'Fecha/Hora', 'Código'];
             const csvContent = [headers.join(',')];
 
-            const ahora = new Date().getTime();
             registrosSilos.forEach((registro, index) => {
                 console.log(`[EXPORT] Procesando registro ${index + 1}:`, registro);
                 
-                const tiempoTranscurrido = ahora - registro.timestamp;
+                // Usar el nuevo sistema de estados
                 let estado = 'Activo';
-                if (tiempoTranscurrido >= LIMITE_TIEMPO) {
+                if (registro.estado === 'expirado') {
                     estado = 'Expirado';
-                } else if (tiempoTranscurrido >= WARNING_TIME) {
-                    estado = 'Próximo a expirar';
                 }
 
                 const codigo = registro.lote + '-' + registro.silo;
                 const row = [
                     estado,
-                    `"${registro.lote || 'N/A'}"`,
-                    `"${registro.silo || 'N/A'}"`,
                     `"${registro.maquina || 'N/A'}"`,
+                    `"${registro.silo || 'N/A'}"`,
+                    `"${registro.lote || 'N/A'}"`,
                     `"${registro.fecha || 'N/A'}"`,
                     `"${codigo}"`
                 ];
@@ -5171,16 +5179,13 @@
             const headers = ['Estado', 'Máquina', 'Silo', 'Operador', 'Turno', 'Producto', 'Fecha/Hora', 'Código'];
             const csvContent = [headers.join(',')];
 
-            const ahora = new Date().getTime();
             registrosMaquinas.forEach((registro, index) => {
                 console.log(`[EXPORT] Procesando registro de máquina ${index + 1}:`, registro);
                 
-                const tiempoTranscurrido = ahora - registro.timestamp;
+                // Usar el nuevo sistema de estados
                 let estado = 'Activo';
-                if (tiempoTranscurrido >= LIMITE_TIEMPO) {
+                if (registro.estado === 'expirado') {
                     estado = 'Expirado';
-                } else if (tiempoTranscurrido >= WARNING_TIME) {
-                    estado = 'Próximo a expirar';
                 }
 
                 const codigo = registro.maquina + '-' + registro.silo + '-' + registro.operador;
@@ -5267,7 +5272,7 @@
                             <div style="font-size: 12px; color: #666; margin-top: 5px;">Silos en Uso</div>
                         </div>
                         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 24px; font-weight: bold; color: #f59e0b;">${registrosSilos.filter(r => (ahora - r.timestamp) < LIMITE_TIEMPO).length}</div>
+                            <div style="font-size: 24px; font-weight: bold; color: #f59e0b;">${registrosSilos.filter(r => r.estado === 'activo' || !r.estado).length}</div>
                             <div style="font-size: 12px; color: #666; margin-top: 5px;">Registros Activos</div>
                         </div>
                     </div>
@@ -5277,9 +5282,9 @@
                     <thead>
                         <tr style="background-color: #f8f9fa;">
                             <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Estado</th>
-                            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Lote</th>
-                            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Silo</th>
                             <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Máquina</th>
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Silo</th>
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Lote</th>
                             <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Fecha/Hora</th>
                             <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Código</th>
                         </tr>
@@ -5288,16 +5293,13 @@
         `;
 
         registrosSilos.sort((a, b) => b.timestamp - a.timestamp).forEach(registro => {
-            const tiempoTranscurrido = ahora - registro.timestamp;
+            // Usar el nuevo sistema de estados
             let estado = 'Activo';
             let colorEstado = '#10b981';
             
-            if (tiempoTranscurrido >= LIMITE_TIEMPO) {
+            if (registro.estado === 'expirado') {
                 estado = 'Expirado';
                 colorEstado = '#ef4444';
-            } else if (tiempoTranscurrido >= WARNING_TIME) {
-                estado = 'Próximo a expirar';
-                colorEstado = '#f59e0b';
             }
 
             const codigo = registro.lote + '-' + registro.silo;
@@ -5306,9 +5308,9 @@
                     <td style="border: 1px solid #ddd; padding: 8px;">
                         <span style="color: ${colorEstado}; font-weight: bold;">${estado}</span>
                     </td>
-                    <td style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">${registro.lote}</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">${registro.silo}</td>
                     <td style="border: 1px solid #ddd; padding: 8px;">${registro.maquina}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${registro.silo}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">${registro.lote}</td>
                     <td style="border: 1px solid #ddd; padding: 8px;">${registro.fecha}</td>
                     <td style="border: 1px solid #ddd; padding: 8px; font-family: monospace;">${codigo}</td>
                 </tr>
@@ -5322,8 +5324,8 @@
                 <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ccc; font-size: 10px; color: #666;">
                     <p><strong>Notas:</strong></p>
                     <ul style="margin: 5px 0; padding-left: 20px;">
-                        <li>Los registros se eliminan automáticamente después de 24 horas</li>
-                        <li>Los registros próximos a expirar se marcan después de 12 horas</li>
+                        <li>Los registros se marcan como expirados cuando cambia el lote en el mismo silo</li>
+                        <li>Solo puede haber un lote activo por silo simultáneamente</li>
                         <li>Este reporte fue generado automáticamente por el Sistema de Gestión Industrial</li>
                     </ul>
                     <p style="text-align: center; margin-top: 15px;">
@@ -5383,7 +5385,7 @@
                             <div style="font-size: 12px; color: #666; margin-top: 5px;">Máquinas en Uso</div>
                         </div>
                         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 24px; font-weight: bold; color: #f59e0b;">${registrosMaquinas.filter(r => (ahora - r.timestamp) < LIMITE_TIEMPO).length}</div>
+                            <div style="font-size: 24px; font-weight: bold; color: #f59e0b;">${registrosMaquinas.filter(r => r.estado === 'activo' || !r.estado).length}</div>
                             <div style="font-size: 12px; color: #666; margin-top: 5px;">Operaciones Activas</div>
                         </div>
                     </div>
@@ -5406,16 +5408,13 @@
         `;
 
         registrosMaquinas.sort((a, b) => b.timestamp - a.timestamp).forEach(registro => {
-            const tiempoTranscurrido = ahora - registro.timestamp;
+            // Usar el nuevo sistema de estados
             let estado = 'Activo';
             let colorEstado = '#10b981';
             
-            if (tiempoTranscurrido >= LIMITE_TIEMPO) {
+            if (registro.estado === 'expirado') {
                 estado = 'Expirado';
                 colorEstado = '#ef4444';
-            } else if (tiempoTranscurrido >= WARNING_TIME) {
-                estado = 'Próximo a expirar';
-                colorEstado = '#f59e0b';
             }
 
             const codigo = registro.maquina + '-' + registro.silo + '-' + registro.operador;
@@ -5502,15 +5501,11 @@
                             <div style="font-size: 11px; color: #64748b; margin-top: 3px; font-weight: 600;">OPERACIONES TOTALES</div>
                         </div>
                         <div style="background: white; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #cbd5e1;">
-                            <div style="font-size: 20px; font-weight: bold; color: #10b981;">${registrosSilos.filter(r => (ahora - r.timestamp) < LIMITE_TIEMPO).length}</div>
+                            <div style="font-size: 20px; font-weight: bold; color: #10b981;">${registrosSilos.filter(r => r.estado === 'activo' || !r.estado).length}</div>
                             <div style="font-size: 11px; color: #64748b; margin-top: 3px; font-weight: 600;">OPERACIONES ACTIVAS</div>
                         </div>
                         <div style="background: white; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #cbd5e1;">
-                            <div style="font-size: 20px; font-weight: bold; color: #f59e0b;">${registrosSilos.filter(r => (ahora - r.timestamp) >= WARNING_TIME && (ahora - r.timestamp) < LIMITE_TIEMPO).length}</div>
-                            <div style="font-size: 11px; color: #64748b; margin-top: 3px; font-weight: 600;">PRÓXIMAS A VENCER</div>
-                        </div>
-                        <div style="background: white; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #cbd5e1;">
-                            <div style="font-size: 20px; font-weight: bold; color: #ef4444;">${registrosSilos.filter(r => (ahora - r.timestamp) >= LIMITE_TIEMPO).length}</div>
+                            <div style="font-size: 20px; font-weight: bold; color: #ef4444;">${registrosSilos.filter(r => r.estado === 'expirado').length}</div>
                             <div style="font-size: 11px; color: #64748b; margin-top: 3px; font-weight: 600;">FINALIZADAS</div>
                         </div>
                     </div>
@@ -5523,7 +5518,6 @@
                             <th style="padding: 10px 8px; text-align: left; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 10px;">CÓDIGO DE LOTE</th>
                             <th style="padding: 10px 8px; text-align: left; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 10px;">UBICACIÓN</th>
                             <th style="padding: 10px 8px; text-align: left; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 10px;">EQUIPO ASIGNADO</th>
-                            <th style="padding: 10px 8px; text-align: left; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 10px;">LÍNEA DE PRODUCCIÓN</th>
                             <th style="padding: 10px 8px; text-align: left; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 10px;">HORA DE REGISTRO</th>
                             <th style="padding: 10px 8px; text-align: center; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 10px;">CÓDIGO QR</th>
                         </tr>
@@ -5532,22 +5526,17 @@
         `;
 
         registrosSilos.sort((a, b) => b.timestamp - a.timestamp).forEach((registro, index) => {
-            const tiempoTranscurrido = ahora - registro.timestamp;
+            // Usar el nuevo sistema de estados
             let estado = 'OPERATIVO';
             let colorEstado = '#10b981';
             let bgColor = '#f0fdf4';
             let borderColor = '#10b981';
             
-            if (tiempoTranscurrido >= LIMITE_TIEMPO) {
+            if (registro.estado === 'expirado') {
                 estado = 'FINALIZADO';
                 colorEstado = '#ef4444';
                 bgColor = '#fef2f2';
                 borderColor = '#ef4444';
-            } else if (tiempoTranscurrido >= WARNING_TIME) {
-                estado = 'PRÓXIMO VENC.';
-                colorEstado = '#f59e0b';
-                bgColor = '#fffbeb';
-                borderColor = '#f59e0b';
             }
 
             const horaRegistro = new Date(registro.timestamp).toLocaleTimeString('es-ES', {
@@ -5581,9 +5570,8 @@
                 <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); border-radius: 12px; border: 2px solid #cbd5e1;">
                     <h4 style="color: #1e293b; margin: 0 0 10px 0; font-size: 14px; font-weight: 600;">INSTRUCCIONES OPERATIVAS:</h4>
                     <ul style="margin: 0; padding-left: 20px; font-size: 10px; color: #475569; line-height: 1.4;">
-                        <li><strong>OPERATIVO:</strong> Operación en curso normal. Continuar con el proceso asignado.</li>
-                        <li><strong>PRÓXIMO VENC.:</strong> Operación próxima a finalizar. Preparar para cierre de proceso.</li>
-                        <li><strong>FINALIZADO:</strong> Operación completada. Proceder con limpieza y preparación para siguiente lote.</li>
+                        <li><strong>OPERATIVO:</strong> Lote activo en proceso. Continuar con las operaciones normales.</li>
+                        <li><strong>FINALIZADO:</strong> Lote completado (se cambió por otro lote). Proceder con limpieza y cierre de registro.</li>
                         <li><strong>Código QR:</strong> Utilizar para identificación rápida y trazabilidad del lote.</li>
                     </ul>
                     
@@ -5644,15 +5632,11 @@
                             <div style="font-size: 11px; color: #16a34a; margin-top: 3px; font-weight: 600;">OPERACIONES TOTALES</div>
                         </div>
                         <div style="background: white; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #bbf7d0;">
-                            <div style="font-size: 20px; font-weight: bold; color: #10b981;">${registrosMaquinas.filter(r => (ahora - r.timestamp) < LIMITE_TIEMPO).length}</div>
+                            <div style="font-size: 20px; font-weight: bold; color: #10b981;">${registrosMaquinas.filter(r => r.estado === 'activo' || !r.estado).length}</div>
                             <div style="font-size: 11px; color: #16a34a; margin-top: 3px; font-weight: 600;">OPERACIONES ACTIVAS</div>
                         </div>
                         <div style="background: white; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #bbf7d0;">
-                            <div style="font-size: 20px; font-weight: bold; color: #f59e0b;">${registrosMaquinas.filter(r => (ahora - r.timestamp) >= WARNING_TIME && (ahora - r.timestamp) < LIMITE_TIEMPO).length}</div>
-                            <div style="font-size: 11px; color: #16a34a; margin-top: 3px; font-weight: 600;">PRÓXIMAS A VENCER</div>
-                        </div>
-                        <div style="background: white; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #bbf7d0;">
-                            <div style="font-size: 20px; font-weight: bold; color: #ef4444;">${registrosMaquinas.filter(r => (ahora - r.timestamp) >= LIMITE_TIEMPO).length}</div>
+                            <div style="font-size: 20px; font-weight: bold; color: #ef4444;">${registrosMaquinas.filter(r => r.estado === 'expirado').length}</div>
                             <div style="font-size: 11px; color: #16a34a; margin-top: 3px; font-weight: 600;">FINALIZADAS</div>
                         </div>
                     </div>
@@ -5675,22 +5659,17 @@
         `;
 
         registrosMaquinas.sort((a, b) => b.timestamp - a.timestamp).forEach((registro, index) => {
-            const tiempoTranscurrido = ahora - registro.timestamp;
+            // Usar el nuevo sistema de estados
             let estado = 'OPERATIVO';
             let colorEstado = '#10b981';
             let bgColor = '#f0fdf4';
             let borderColor = '#10b981';
             
-            if (tiempoTranscurrido >= LIMITE_TIEMPO) {
+            if (registro.estado === 'expirado') {
                 estado = 'FINALIZADO';
                 colorEstado = '#ef4444';
                 bgColor = '#fef2f2';
                 borderColor = '#ef4444';
-            } else if (tiempoTranscurrido >= WARNING_TIME) {
-                estado = 'PRÓXIMO VENC.';
-                colorEstado = '#f59e0b';
-                bgColor = '#fffbeb';
-                borderColor = '#f59e0b';
             }
 
             const horaRegistro = new Date(registro.timestamp).toLocaleTimeString('es-ES', {
@@ -5726,9 +5705,8 @@
                 <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 12px; border: 2px solid #bbf7d0;">
                     <h4 style="color: #166534; margin: 0 0 10px 0; font-size: 14px; font-weight: 600;">INSTRUCCIONES OPERATIVAS:</h4>
                     <ul style="margin: 0; padding-left: 20px; font-size: 10px; color: #15803d; line-height: 1.4;">
-                        <li><strong>OPERATIVO:</strong> Máquina en funcionamiento normal. Continuar con la operación asignada.</li>
-                        <li><strong>PRÓXIMO VENC.:</strong> Operación próxima a finalizar. Preparar para cambio de turno o mantenimiento.</li>
-                        <li><strong>FINALIZADO:</strong> Operación completada. Proceder con limpieza y preparación para siguiente operación.</li>
+                        <li><strong>OPERATIVO:</strong> Producto activo en máquina. Continuar con la operación asignada.</li>
+                        <li><strong>FINALIZADO:</strong> Producto completado (se cambió por otro producto). Proceder con limpieza y preparación para siguiente operación.</li>
                         <li><strong>Código QR:</strong> Utilizar para identificación rápida y trazabilidad de la operación.</li>
                     </ul>
                     
