@@ -3449,6 +3449,23 @@
         });
     }
 
+    // Nueva función para marcar registros como expirados cuando una máquina cambia de silo
+    function marcarExpiradosPorCambioSiloEnMaquina(maquinaActual, siloNuevo) {
+        let registrosExpirados = 0;
+        registrosSilos.forEach(registro => {
+            // Si es de la misma máquina pero diferente silo, y está activo, marcarlo como expirado
+            if (registro.maquina === maquinaActual && registro.silo !== siloNuevo && registro.estado === 'activo') {
+                registro.estado = 'expirado';
+                registrosExpirados++;
+                console.log(`Marcando como expirado: Máquina ${maquinaActual} cambió del Silo ${registro.silo} al Silo ${siloNuevo} (Lote: ${registro.lote})`);
+            }
+        });
+        
+        if (registrosExpirados > 0) {
+            console.log(`Total registros expirados por cambio de silo en Máquina ${maquinaActual}: ${registrosExpirados}`);
+        }
+    }
+
     function limpiarRegistrosExpiradosMaquinas() {
         // const ahora = new Date().getTime();
         // const registrosOriginales = registrosMaquinas.length;
@@ -3513,6 +3530,9 @@
 
                 // Marcar como expirados todos los registros anteriores del mismo silo con lote diferente
                 marcarExpiradosPorCambioLote(silo, lote);
+                
+                // Marcar como expirados todos los registros anteriores de la misma máquina en diferente silo
+                marcarExpiradosPorCambioSiloEnMaquina(maquina, silo);
 
                 const registro = { lote, silo, maquina, fecha, timestamp, estado: 'activo' };
                 registrosSilos.push(registro);
@@ -3801,6 +3821,27 @@
                 }
 
                 if (editingIndexSilos >= 0 && editingIndexSilos < registrosSilos.length) {
+                    // Obtener valores anteriores para comparar cambios
+                    const registroAnterior = registrosSilos[editingIndexSilos];
+                    const loteAnterior = registroAnterior.lote;
+                    const siloAnterior = registroAnterior.silo;
+                    const maquinaAnterior = registroAnterior.maquina;
+                    
+                    // Si cambió el lote en el mismo silo, marcar otros lotes como expirados
+                    if (siloAnterior === silo && loteAnterior !== lote) {
+                        marcarExpiradosPorCambioLote(silo, lote);
+                    }
+                    
+                    // Si cambió la máquina o el silo de la máquina, marcar registros anteriores como expirados
+                    if (maquinaAnterior !== maquina || (maquinaAnterior === maquina && siloAnterior !== silo)) {
+                        if (maquinaAnterior !== maquina) {
+                            // Si cambió de máquina, marcar expirados los del silo anterior
+                            marcarExpiradosPorCambioLote(siloAnterior, '');
+                        }
+                        // Marcar expirados los registros de la nueva máquina en otros silos
+                        marcarExpiradosPorCambioSiloEnMaquina(maquina, silo);
+                    }
+                    
                     registrosSilos[editingIndexSilos].lote = lote;
                     registrosSilos[editingIndexSilos].silo = silo;
                     registrosSilos[editingIndexSilos].maquina = maquina;
