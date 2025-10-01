@@ -6889,7 +6889,7 @@
 
     // Función para verificar permisos de usuario
     function isAdmin() {
-        return currentUser && currentUser.type === 'administrador';
+        return currentUser && currentUser.type === 'administrador' && currentUser.authenticated === true;
     }
 
     function isWorker() {
@@ -7230,6 +7230,26 @@
                     console.log('[LOGIN] No hay usuario seleccionado');
                     return;
                 }
+                
+                // Si es administrador, pedir contraseña
+                if (selectedUser === 'administrador') {
+                    const password = prompt('🔐 Acceso de Administrador\n\nPor favor, introduce la contraseña de administrador:');
+                    
+                    if (password === null) {
+                        console.log('[LOGIN] Login cancelado por el usuario');
+                        return;
+                    }
+                    
+                    if (password !== 'kira2025') {
+                        alert('❌ Contraseña incorrecta. Acceso denegado.');
+                        console.warn('[SECURITY] Intento de acceso fallido a cuenta de administrador');
+                        console.log('[LOGIN] Contraseña incorrecta para administrador');
+                        return;
+                    }
+                    
+                    console.log('[LOGIN] Contraseña de administrador correcta');
+                }
+                
                 console.log('[LOGIN] Iniciando proceso de login para:', selectedUser);
 
                 // Mostrar loading
@@ -7293,12 +7313,18 @@
     function performLogin(userType) {
         console.log('[LOGIN] Ejecutando login para:', userType);
         
+        // Mensaje especial para administrador autenticado
+        if (userType === 'administrador') {
+            console.log('[SECURITY] Acceso de administrador autorizado con contraseña');
+        }
+        
         currentUser = {
             type: userType,
             name: userType === 'administrador' ? 'Administrador' : 'Trabajador',
             role: userType === 'administrador' ? 'Administrador del Sistema' : 'Operador de Planta',
             icon: userType === 'administrador' ? 'fa-user-shield' : 'fa-hard-hat',
-            loginTime: new Date().toISOString() // Agregar timestamp del login
+            loginTime: new Date().toISOString(), // Agregar timestamp del login
+            authenticated: userType === 'administrador' ? true : false // Flag de autenticación
         };
 
         // Guardar sesión en localStorage
@@ -7346,7 +7372,7 @@
         setTimeout(() => {
             if (typeof mostrarAlerta === 'function') {
                 if (isAdmin()) {
-                    mostrarAlerta(`¡Bienvenido, ${currentUser.name}! Tienes acceso completo al sistema de gestión.`, 'success');
+                    mostrarAlerta(`🔐 ¡Acceso autorizado, ${currentUser.name}! Tienes control completo del sistema.`, 'success');
                 } else if (isWorker()) {
                     mostrarAlerta(`¡Bienvenido, ${currentUser.name}! Puedes registrar nuevos lotes desde aquí.`, 'success');
                 } else {
