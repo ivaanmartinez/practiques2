@@ -2330,9 +2330,14 @@
                                 <h3 class="text-lg font-semibold text-red-600">
                                     <i class="fas fa-archive mr-2"></i>Registros Expirados - Silos y Lotes
                                 </h3>
-                                <button id="hide-expired-silos" class="action-btn bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1">
-                                    <i class="fas fa-eye-slash"></i> Ocultar
-                                </button>
+                                <div class="flex gap-2">
+                                    <button id="delete-all-expired-silos" class="action-btn bg-red-700 hover:bg-red-800 text-white text-xs px-3 py-1">
+                                        <i class="fas fa-trash-alt"></i> Eliminar Todos
+                                    </button>
+                                    <button id="hide-expired-silos" class="action-btn bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1">
+                                        <i class="fas fa-eye-slash"></i> Ocultar
+                                    </button>
+                                </div>
                             </div>
 
                             <!-- Búsqueda para expirados -->
@@ -2681,9 +2686,14 @@
                                 <h3 class="text-lg font-semibold text-red-600">
                                     <i class="fas fa-archive mr-2"></i>Registros Expirados - Máquinas y Silos
                                 </h3>
-                                <button id="hide-expired-maquinas" class="action-btn bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1">
-                                    <i class="fas fa-eye-slash"></i> Ocultar
-                                </button>
+                                <div class="flex gap-2">
+                                    <button id="delete-all-expired-maquinas" class="action-btn bg-red-700 hover:bg-red-800 text-white text-xs px-3 py-1">
+                                        <i class="fas fa-trash-alt"></i> Eliminar Todos
+                                    </button>
+                                    <button id="hide-expired-maquinas" class="action-btn bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1">
+                                        <i class="fas fa-eye-slash"></i> Ocultar
+                                    </button>
+                                </div>
                             </div>
 
                             <!-- Búsqueda para expirados -->
@@ -3095,6 +3105,7 @@
         elements.printReportSilos = document.getElementById('print-report-silos');
         elements.showExpiredSilos = document.getElementById('show-expired-silos');
         elements.hideExpiredSilos = document.getElementById('hide-expired-silos');
+        elements.deleteAllExpiredSilos = document.getElementById('delete-all-expired-silos');
         elements.expiredPanelSilos = document.getElementById('expired-panel-silos');
         elements.registrosTableExpiredSilos = document.getElementById('registrosTableExpiredSilos');
         elements.searchInputExpiredSilos = document.getElementById('searchInputExpiredSilos');
@@ -3121,6 +3132,7 @@
         elements.printReportMaquinas = document.getElementById('print-report-maquinas');
         elements.showExpiredMaquinas = document.getElementById('show-expired-maquinas');
         elements.hideExpiredMaquinas = document.getElementById('hide-expired-maquinas');
+        elements.deleteAllExpiredMaquinas = document.getElementById('delete-all-expired-maquinas');
         elements.expiredPanelMaquinas = document.getElementById('expired-panel-maquinas');
         elements.registrosTableExpiredMaquinas = document.getElementById('registrosTableExpiredMaquinas');
         elements.searchInputExpiredMaquinas = document.getElementById('searchInputExpiredMaquinas');
@@ -4174,6 +4186,41 @@
             });
         }
 
+        if (elements.deleteAllExpiredSilos) {
+            elements.deleteAllExpiredSilos.addEventListener('click', function() {
+                console.log('[EVENT] Eliminar todos los expirados silos');
+                const expiradosCount = registrosSilos.filter(r => r.estado === 'expirado').length;
+                
+                if (expiradosCount === 0) {
+                    mostrarAlerta('No hay registros expirados para eliminar.', 'warning');
+                    return;
+                }
+                
+                mostrarConfirmacion(
+                    '¿Está seguro de eliminar TODOS los registros expirados?',
+                    `Se eliminarán ${expiradosCount} registros expirados de forma permanente. Esta acción no se puede deshacer.`,
+                    function() {
+                        // Filtrar solo registros activos
+                        registrosSilos = registrosSilos.filter(registro => registro.estado !== 'expirado');
+                        guardarRegistrosSilos();
+                        
+                        // Actualizar todas las tablas
+                        actualizarTablaSilos();
+                        actualizarTablaExpiredSilos();
+                        actualizarTablaWorkersSilos();
+                        actualizarEstadisticasSilos();
+                        
+                        mostrarAlerta(`✅ Se eliminaron ${expiradosCount} registros expirados correctamente.`, 'success');
+                        
+                        // Ocultar panel si ya no hay expirados
+                        if (registrosSilos.filter(r => r.estado === 'expirado').length === 0) {
+                            elements.expiredPanelSilos.style.display = 'none';
+                        }
+                    }
+                );
+            });
+        }
+
         if (elements.exportCsvMaquinas) {
             elements.exportCsvMaquinas.addEventListener('click', function() {
                 console.log('[EVENT] Botón exportar CSV máquinas clickeado');
@@ -4195,6 +4242,41 @@
             elements.hideExpiredMaquinas.addEventListener('click', function() {
                 console.log('[EVENT] Ocultar panel expirados máquinas');
                 elements.expiredPanelMaquinas.style.display = 'none';
+            });
+        }
+
+        if (elements.deleteAllExpiredMaquinas) {
+            elements.deleteAllExpiredMaquinas.addEventListener('click', function() {
+                console.log('[EVENT] Eliminar todos los expirados máquinas');
+                const expiradosCount = registrosMaquinas.filter(r => r.estado === 'expirado').length;
+                
+                if (expiradosCount === 0) {
+                    mostrarAlerta('No hay registros expirados para eliminar.', 'warning');
+                    return;
+                }
+                
+                mostrarConfirmacion(
+                    '¿Está seguro de eliminar TODOS los registros expirados?',
+                    `Se eliminarán ${expiradosCount} registros expirados de forma permanente. Esta acción no se puede deshacer.`,
+                    function() {
+                        // Filtrar solo registros activos
+                        registrosMaquinas = registrosMaquinas.filter(registro => registro.estado !== 'expirado');
+                        guardarRegistrosMaquinas();
+                        
+                        // Actualizar todas las tablas
+                        actualizarTablaMaquinas();
+                        actualizarTablaExpiredMaquinas();
+                        actualizarTablaWorkersMaquinas();
+                        actualizarEstadisticasMaquinas();
+                        
+                        mostrarAlerta(`✅ Se eliminaron ${expiradosCount} registros expirados correctamente.`, 'success');
+                        
+                        // Ocultar panel si ya no hay expirados
+                        if (registrosMaquinas.filter(r => r.estado === 'expirado').length === 0) {
+                            elements.expiredPanelMaquinas.style.display = 'none';
+                        }
+                    }
+                );
             });
         }
 
