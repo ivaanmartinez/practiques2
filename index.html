@@ -570,6 +570,25 @@
         transform: translateY(-1px);
     }
 
+    .toggle-expired-btn {
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .toggle-expired-btn:hover {
+        opacity: 0.9;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        transform: translateY(-1px);
+    }
+
     .status-indicator {
         width: 10px;
         height: 10px;
@@ -2256,6 +2275,10 @@
                                             <i class="fas fa-times"></i>
                                         </button>
                                     </div>
+                                    <button id="show-expired-silos" class="action-btn bg-red-500 hover:bg-red-600 text-white py-2.5 px-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center whitespace-nowrap text-sm">
+                                        <i class="fas fa-archive mr-2"></i> 
+                                        <span class="hidden sm:inline">Ver </span>Expirados
+                                    </button>
                                     <button id="clearStorageSilos" class="btn-danger text-white py-2.5 px-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center whitespace-nowrap text-sm">
                                         <i class="fas fa-trash-alt mr-2"></i> 
                                         <span class="hidden sm:inline">Limpiar </span>Todo
@@ -2291,9 +2314,76 @@
                                 <div class="flex flex-wrap gap-2">
                                     <button id="export-csv-silos" class="export-btn text-xs px-3 py-2">
                                         <i class="fas fa-file-csv"></i> 
-                                        <span class="hidden sm:inline">Exportar </span>CSV
+                                        <span class="hidden sm:inline">Exportar </span>CSV Activos
                                     </button>
                                     <button id="print-report-silos" class="export-btn text-xs px-3 py-2">
+                                        <i class="fas fa-print"></i> 
+                                        <span class="hidden sm:inline">Imprimir</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel de Registros Expirados - Silos -->
+                        <div id="expired-panel-silos" class="card bg-white border border-red-200" style="display: none; margin-top: 20px;">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-semibold text-red-600">
+                                    <i class="fas fa-archive mr-2"></i>Registros Expirados - Silos y Lotes
+                                </h3>
+                                <button id="hide-expired-silos" class="action-btn bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1">
+                                    <i class="fas fa-eye-slash"></i> Ocultar
+                                </button>
+                            </div>
+
+                            <!-- Búsqueda para expirados -->
+                            <div class="mb-4 flex flex-col sm:flex-row gap-3">
+                                <div class="search-container">
+                                    <i class="fas fa-search search-icon"></i>
+                                    <input 
+                                        type="text" 
+                                        id="searchInputExpiredSilos" 
+                                        placeholder="Buscar en expirados..." 
+                                        class="search-input pl-10 pr-10 py-2 w-full text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                    >
+                                    <button id="clearSearchExpiredSilos" class="clear-search-btn" style="display: none;">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Tabla desktop para expirados -->
+                            <div class="desktop-table-container">
+                                <table class="min-w-full">
+                                    <thead>
+                                        <tr>
+                                            <th class="table-header">Estado</th>
+                                            <th class="table-header">Máquina</th>
+                                            <th class="table-header">Silo</th>
+                                            <th class="table-header">Lote</th>
+                                            <th class="table-header">Fecha/Hora</th>
+                                            <th class="table-header">Código</th>
+                                            <th class="table-header">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="registrosTableExpiredSilos">
+                                        <!-- Los registros se añadirán aquí dinámicamente -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Contenedor móvil para tarjetas de expirados -->
+                            <div id="registrosCardsExpiredSilos" class="mobile-cards-container space-y-3">
+                                <!-- Las tarjetas móviles se añadirán aquí dinámicamente -->
+                            </div>
+                            
+                            <div class="mt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-sm text-gray-600">
+                                <div id="table-info-expired-silos">Mostrando 0 registros expirados</div>
+                                <div class="flex flex-wrap gap-2">
+                                    <button id="export-csv-expired-silos" class="export-btn text-xs px-3 py-2" style="background: #ef4444; color: white; border-color: #ef4444;">
+                                        <i class="fas fa-file-csv"></i> 
+                                        <span class="hidden sm:inline">Exportar </span>CSV Expirados
+                                    </button>
+                                    <button id="print-report-expired-silos" class="export-btn text-xs px-3 py-2" style="background: #ef4444; color: white; border-color: #ef4444;">
                                         <i class="fas fa-print"></i> 
                                         <span class="hidden sm:inline">Imprimir</span>
                                     </button>
@@ -2534,6 +2624,10 @@
                                             <i class="fas fa-times"></i>
                                         </button>
                                     </div>
+                                    <button id="show-expired-maquinas" class="action-btn bg-red-500 hover:bg-red-600 text-white py-2.5 px-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center whitespace-nowrap text-sm">
+                                        <i class="fas fa-archive mr-2"></i> 
+                                        <span class="hidden sm:inline">Ver </span>Expirados
+                                    </button>
                                     <button id="clearStorageMaquinas" class="btn-danger text-white py-2.5 px-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center whitespace-nowrap text-sm">
                                         <i class="fas fa-trash-alt mr-2"></i> 
                                         <span class="hidden sm:inline">Limpiar </span>Todo
@@ -2571,9 +2665,78 @@
                                 <div class="flex flex-wrap gap-2">
                                     <button id="export-csv-maquinas" class="export-btn text-xs px-3 py-2">
                                         <i class="fas fa-file-csv"></i> 
-                                        <span class="hidden sm:inline">Exportar </span>CSV
+                                        <span class="hidden sm:inline">Exportar </span>CSV Activos
                                     </button>
                                     <button id="print-report-maquinas" class="export-btn text-xs px-3 py-2">
+                                        <i class="fas fa-print"></i> 
+                                        <span class="hidden sm:inline">Imprimir</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel de Registros Expirados - Máquinas -->
+                        <div id="expired-panel-maquinas" class="card bg-white border border-red-200" style="display: none; margin-top: 20px;">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-semibold text-red-600">
+                                    <i class="fas fa-archive mr-2"></i>Registros Expirados - Máquinas y Silos
+                                </h3>
+                                <button id="hide-expired-maquinas" class="action-btn bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1">
+                                    <i class="fas fa-eye-slash"></i> Ocultar
+                                </button>
+                            </div>
+
+                            <!-- Búsqueda para expirados -->
+                            <div class="mb-4 flex flex-col sm:flex-row gap-3">
+                                <div class="search-container">
+                                    <i class="fas fa-search search-icon"></i>
+                                    <input 
+                                        type="text" 
+                                        id="searchInputExpiredMaquinas" 
+                                        placeholder="Buscar en expirados..." 
+                                        class="search-input pl-10 pr-10 py-2 w-full text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                    >
+                                    <button id="clearSearchExpiredMaquinas" class="clear-search-btn" style="display: none;">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Tabla desktop para expirados -->
+                            <div class="desktop-table-container">
+                                <table class="min-w-full">
+                                    <thead>
+                                        <tr>
+                                            <th class="table-header">Estado</th>
+                                            <th class="table-header">Máquina</th>
+                                            <th class="table-header">Silo</th>
+                                            <th class="table-header">Operador</th>
+                                            <th class="table-header">Turno</th>
+                                            <th class="table-header">Producto</th>
+                                            <th class="table-header">Fecha/Hora</th>
+                                            <th class="table-header">Código</th>
+                                            <th class="table-header">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="registrosTableExpiredMaquinas">
+                                        <!-- Los registros se añadirán aquí dinámicamente -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Contenedor móvil para tarjetas de expirados -->
+                            <div id="registrosCardsExpiredMaquinas" class="mobile-cards-container space-y-3">
+                                <!-- Las tarjetas móviles se añadirán aquí dinámicamente -->
+                            </div>
+                            
+                            <div class="mt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-sm text-gray-600">
+                                <div id="table-info-expired-maquinas">Mostrando 0 registros expirados</div>
+                                <div class="flex flex-wrap gap-2">
+                                    <button id="export-csv-expired-maquinas" class="export-btn text-xs px-3 py-2" style="background: #ef4444; color: white; border-color: #ef4444;">
+                                        <i class="fas fa-file-csv"></i> 
+                                        <span class="hidden sm:inline">Exportar </span>CSV Expirados
+                                    </button>
+                                    <button id="print-report-expired-maquinas" class="export-btn text-xs px-3 py-2" style="background: #ef4444; color: white; border-color: #ef4444;">
                                         <i class="fas fa-print"></i> 
                                         <span class="hidden sm:inline">Imprimir</span>
                                     </button>
@@ -2843,6 +3006,8 @@
     let registrosMaquinas = [];
     let editingIndexSilos = -1;
     let editingIndexMaquinas = -1;
+    let showExpiredSilos = false;
+    let showExpiredMaquinas = false;
 
     // Variables para control de limpieza automática
     // let intervalLimpiezaSilos = null;
@@ -2928,6 +3093,15 @@
         elements.tableInfoSilos = document.getElementById('table-info-silos');
         elements.exportCsvSilos = document.getElementById('export-csv-silos');
         elements.printReportSilos = document.getElementById('print-report-silos');
+        elements.showExpiredSilos = document.getElementById('show-expired-silos');
+        elements.hideExpiredSilos = document.getElementById('hide-expired-silos');
+        elements.expiredPanelSilos = document.getElementById('expired-panel-silos');
+        elements.registrosTableExpiredSilos = document.getElementById('registrosTableExpiredSilos');
+        elements.searchInputExpiredSilos = document.getElementById('searchInputExpiredSilos');
+        elements.clearSearchExpiredSilos = document.getElementById('clearSearchExpiredSilos');
+        elements.tableInfoExpiredSilos = document.getElementById('table-info-expired-silos');
+        elements.exportCsvExpiredSilos = document.getElementById('export-csv-expired-silos');
+        elements.printReportExpiredSilos = document.getElementById('print-report-expired-silos');
         elements.workerTableSilos = document.getElementById('workerTableSilos');
         elements.workerTableInfoSilos = document.getElementById('worker-table-info-silos');
         elements.refreshWorkerDataSilos = document.getElementById('refresh-worker-data-silos');
@@ -2945,6 +3119,15 @@
         elements.tableInfoMaquinas = document.getElementById('table-info-maquinas');
         elements.exportCsvMaquinas = document.getElementById('export-csv-maquinas');
         elements.printReportMaquinas = document.getElementById('print-report-maquinas');
+        elements.showExpiredMaquinas = document.getElementById('show-expired-maquinas');
+        elements.hideExpiredMaquinas = document.getElementById('hide-expired-maquinas');
+        elements.expiredPanelMaquinas = document.getElementById('expired-panel-maquinas');
+        elements.registrosTableExpiredMaquinas = document.getElementById('registrosTableExpiredMaquinas');
+        elements.searchInputExpiredMaquinas = document.getElementById('searchInputExpiredMaquinas');
+        elements.clearSearchExpiredMaquinas = document.getElementById('clearSearchExpiredMaquinas');
+        elements.tableInfoExpiredMaquinas = document.getElementById('table-info-expired-maquinas');
+        elements.exportCsvExpiredMaquinas = document.getElementById('export-csv-expired-maquinas');
+        elements.printReportExpiredMaquinas = document.getElementById('print-report-expired-maquinas');
         elements.workerTableMaquinas = document.getElementById('workerTableMaquinas');
         elements.workerTableInfoMaquinas = document.getElementById('worker-table-info-maquinas');
         elements.refreshWorkerDataMaquinas = document.getElementById('refresh-worker-data-maquinas');
@@ -3975,11 +4158,43 @@
             });
         }
 
+        // Mostrar/Ocultar Expirados Silos
+        if (elements.showExpiredSilos) {
+            elements.showExpiredSilos.addEventListener('click', function() {
+                console.log('[EVENT] Mostrar panel expirados silos');
+                elements.expiredPanelSilos.style.display = 'block';
+                actualizarTablaExpiredSilos();
+            });
+        }
+
+        if (elements.hideExpiredSilos) {
+            elements.hideExpiredSilos.addEventListener('click', function() {
+                console.log('[EVENT] Ocultar panel expirados silos');
+                elements.expiredPanelSilos.style.display = 'none';
+            });
+        }
+
         if (elements.exportCsvMaquinas) {
             elements.exportCsvMaquinas.addEventListener('click', function() {
                 console.log('[EVENT] Botón exportar CSV máquinas clickeado');
                 console.log('[EVENT] Registros máquinas disponibles:', registrosMaquinas ? registrosMaquinas.length : 'undefined');
                 exportarCSVMaquinas();
+            });
+        }
+
+        // Mostrar/Ocultar Expirados Máquinas
+        if (elements.showExpiredMaquinas) {
+            elements.showExpiredMaquinas.addEventListener('click', function() {
+                console.log('[EVENT] Mostrar panel expirados máquinas');
+                elements.expiredPanelMaquinas.style.display = 'block';
+                actualizarTablaExpiredMaquinas();
+            });
+        }
+
+        if (elements.hideExpiredMaquinas) {
+            elements.hideExpiredMaquinas.addEventListener('click', function() {
+                console.log('[EVENT] Ocultar panel expirados máquinas');
+                elements.expiredPanelMaquinas.style.display = 'none';
             });
         }
 
@@ -3993,6 +4208,21 @@
         if (elements.printReportMaquinas) {
             elements.printReportMaquinas.addEventListener('click', function() {
                 imprimirReporteMaquinas();
+            });
+        }
+
+        // Exportar CSV de expirados
+        if (elements.exportCsvExpiredSilos) {
+            elements.exportCsvExpiredSilos.addEventListener('click', function() {
+                console.log('[EVENT] Botón exportar CSV expirados silos clickeado');
+                exportarCSVExpiredSilos();
+            });
+        }
+
+        if (elements.exportCsvExpiredMaquinas) {
+            elements.exportCsvExpiredMaquinas.addEventListener('click', function() {
+                console.log('[EVENT] Botón exportar CSV expirados máquinas clickeado');
+                exportarCSVExpiredMaquinas();
             });
         }
 
@@ -4275,6 +4505,115 @@
 
         row.querySelector('.print-btn').addEventListener('click', function() {
             imprimirCodigoIndividualSilo(registro);
+        });
+    }
+
+    function mostrarRegistroSiloExpired(registro, index) {
+        // Mostrar en tabla desktop de expirados
+        if (!elements.registrosTableExpiredSilos) {
+            console.error('registrosTableExpiredSilos no está disponible');
+            return;
+        }
+
+        const codigo = registro.lote + '-' + registro.silo;
+        
+        const row = document.createElement('tr');
+        row.className = 'hover:bg-gray-50';
+        row.innerHTML = `
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
+                <span class="badge-expired badge text-xs">
+                    <span class="status-indicator status-expired"></span>
+                    <span>Expirado</span>
+                </span>
+            </td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${registro.maquina}</td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${registro.silo}</td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap font-medium text-gray-900">${registro.lote}</td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-600">${registro.fecha}</td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-600">${codigo}</td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-right">
+                <button class="view-barcode action-btn action-btn-view text-xs mr-2">
+                    <i class="fas fa-eye"></i> <span class="hidden md:inline">Ver</span>
+                </button>
+                <button class="print-btn action-btn action-btn-print text-xs">
+                    <i class="fas fa-print"></i> <span class="hidden md:inline">Imprimir</span>
+                </button>
+            </td>
+        `;
+
+        elements.registrosTableExpiredSilos.appendChild(row);
+
+        // Eventos para los botones
+        row.querySelector('.view-barcode').addEventListener('click', function() {
+            try {
+                if (typeof JsBarcode !== 'undefined' && elements.modalBarcode) {
+                    JsBarcode(elements.modalBarcode, codigo, {
+                        format: "CODE128",
+                        width: 2,
+                        height: 60,
+                        displayValue: false,
+                        fontSize: 14,
+                        margin: 15,
+                        background: "#ffffff",
+                        lineColor: "#000000"
+                    });
+                    elements.barcodeModal.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error al generar código de barras:', error);
+                mostrarAlerta('Error al generar el código de barras', 'error');
+            }
+        });
+
+        row.querySelector('.print-btn').addEventListener('click', function() {
+            imprimirCodigoIndividualSilo(registro);
+        });
+    }
+
+    function mostrarRegistroMaquinaExpired(registro, index) {
+        // Mostrar en tabla desktop de expirados
+        if (!elements.registrosTableExpiredMaquinas) {
+            console.error('registrosTableExpiredMaquinas no está disponible');
+            return;
+        }
+
+        const codigo = registro.maquina + '-' + registro.silo + '-' + registro.operador;
+        
+        const row = document.createElement('tr');
+        row.className = 'hover:bg-gray-50';
+        row.innerHTML = `
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
+                <span class="badge-expired badge text-xs">
+                    <span class="status-indicator status-expired"></span>
+                    <span>Expirado</span>
+                </span>
+            </td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${registro.maquina}</td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${registro.silo}</td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${registro.operador}</td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${registro.turno}</td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap">${registro.producto}</td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-600">${registro.fecha}</td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-600">${codigo}</td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-right">
+                <button class="view-barcode action-btn action-btn-view text-xs mr-2">
+                    <i class="fas fa-eye"></i> <span class="hidden md:inline">Ver</span>
+                </button>
+                <button class="print-btn action-btn action-btn-print text-xs">
+                    <i class="fas fa-print"></i> <span class="hidden md:inline">Imprimir</span>
+                </button>
+            </td>
+        `;
+
+        elements.registrosTableExpiredMaquinas.appendChild(row);
+
+        // Eventos para los botones
+        row.querySelector('.view-barcode').addEventListener('click', function() {
+            generarQRMaquina(registro);
+        });
+
+        row.querySelector('.print-btn').addEventListener('click', function() {
+            imprimirCodigoIndividualMaquina(registro);
         });
     }
 
@@ -4837,8 +5176,13 @@
         const searchTerm = elements.searchInputSilos ? elements.searchInputSilos.value.toLowerCase().trim() : '';
         let registrosFiltrados = registrosSilos;
 
+        // Filtrar por estado (activos/expirados)
+        if (!showExpiredSilos) {
+            registrosFiltrados = registrosFiltrados.filter(registro => registro.estado !== 'expirado');
+        }
+
         if (searchTerm) {
-            registrosFiltrados = registrosSilos.filter(registro => 
+            registrosFiltrados = registrosFiltrados.filter(registro => 
                 registro.lote.toLowerCase().includes(searchTerm) ||
                 registro.silo.toLowerCase().includes(searchTerm) ||
                 registro.maquina.toLowerCase().includes(searchTerm)
@@ -4883,10 +5227,70 @@
 
         const totalRegistros = registrosSilos.length;
         const visibleCount = registrosFiltrados.length;
+        const expiradosCount = registrosSilos.filter(r => r.estado === 'expirado').length;
+        const activosCount = totalRegistros - expiradosCount;
+        
         if (elements.tableInfoSilos) {
-            elements.tableInfoSilos.textContent = searchTerm ?
-                `Mostrando ${visibleCount} de ${totalRegistros} registros` :
-                `Mostrando ${totalRegistros} registros`;
+            if (searchTerm) {
+                elements.tableInfoSilos.textContent = `Mostrando ${visibleCount} de ${totalRegistros} registros`;
+            } else {
+                elements.tableInfoSilos.textContent = `Mostrando ${activosCount} registros activos (${expiradosCount} expirados disponibles)`;
+            }
+        }
+    }
+
+    function actualizarTablaExpiredSilos() {
+        console.log('Actualizando tabla de silos expirados');
+        
+        if (!elements.registrosTableExpiredSilos) {
+            console.error('Elemento registrosTableExpiredSilos no encontrado');
+            return;
+        }
+
+        // Limpiar tabla
+        elements.registrosTableExpiredSilos.innerHTML = '';
+        
+        // Limpiar tarjetas móviles
+        const mobileCardsContainer = document.getElementById('registrosCardsExpiredSilos');
+        if (mobileCardsContainer) {
+            mobileCardsContainer.innerHTML = '';
+        }
+
+        const searchTerm = elements.searchInputExpiredSilos ? elements.searchInputExpiredSilos.value.toLowerCase().trim() : '';
+        let registrosExpirados = registrosSilos.filter(registro => registro.estado === 'expirado');
+
+        if (searchTerm) {
+            registrosExpirados = registrosExpirados.filter(registro => 
+                registro.lote.toLowerCase().includes(searchTerm) ||
+                registro.silo.toLowerCase().includes(searchTerm) ||
+                registro.maquina.toLowerCase().includes(searchTerm)
+            );
+        }
+
+        if (registrosExpirados.length === 0) {
+            elements.registrosTableExpiredSilos.innerHTML = `
+                <tr>
+                    <td colspan="7" class="text-center py-8">
+                        <div class="text-gray-400">
+                            <i class="fas fa-archive fa-2x mb-2"></i>
+                            <p class="font-medium text-sm">No hay registros expirados</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        } else {
+            const registrosOrdenados = registrosExpirados.sort((a, b) => {
+                return (b.timestamp || 0) - (a.timestamp || 0);
+            });
+            
+            registrosOrdenados.forEach((registro, index) => {
+                const originalIndex = registrosSilos.findIndex(r => r.timestamp === registro.timestamp);
+                mostrarRegistroSiloExpired(registro, originalIndex);
+            });
+        }
+
+        if (elements.tableInfoExpiredSilos) {
+            elements.tableInfoExpiredSilos.textContent = `Mostrando ${registrosExpirados.length} registros expirados`;
         }
     }
 
@@ -4910,8 +5314,13 @@
         const searchTerm = elements.searchInputMaquinas ? elements.searchInputMaquinas.value.toLowerCase().trim() : '';
         let registrosFiltrados = registrosMaquinas;
 
+        // Filtrar por estado (activos/expirados)
+        if (!showExpiredMaquinas) {
+            registrosFiltrados = registrosFiltrados.filter(registro => registro.estado !== 'expirado');
+        }
+
         if (searchTerm) {
-            registrosFiltrados = registrosMaquinas.filter(registro => 
+            registrosFiltrados = registrosFiltrados.filter(registro => 
                 registro.maquina.toLowerCase().includes(searchTerm) ||
                 registro.silo.toLowerCase().includes(searchTerm) ||
                 registro.operador.toLowerCase().includes(searchTerm) ||
@@ -4958,10 +5367,72 @@
 
         const totalRegistros = registrosMaquinas.length;
         const visibleCount = registrosFiltrados.length;
+        const expiradosCount = registrosMaquinas.filter(r => r.estado === 'expirado').length;
+        const activosCount = totalRegistros - expiradosCount;
+        
         if (elements.tableInfoMaquinas) {
-            elements.tableInfoMaquinas.textContent = searchTerm ?
-                `Mostrando ${visibleCount} de ${totalRegistros} registros` :
-                `Mostrando ${totalRegistros} registros`;
+            if (searchTerm) {
+                elements.tableInfoMaquinas.textContent = `Mostrando ${visibleCount} de ${totalRegistros} registros`;
+            } else {
+                elements.tableInfoMaquinas.textContent = `Mostrando ${activosCount} registros activos (${expiradosCount} expirados disponibles)`;
+            }
+        }
+    }
+
+    function actualizarTablaExpiredMaquinas() {
+        console.log('Actualizando tabla de máquinas expiradas');
+        
+        if (!elements.registrosTableExpiredMaquinas) {
+            console.error('Elemento registrosTableExpiredMaquinas no encontrado');
+            return;
+        }
+
+        // Limpiar tabla
+        elements.registrosTableExpiredMaquinas.innerHTML = '';
+        
+        // Limpiar tarjetas móviles
+        const mobileCardsContainer = document.getElementById('registrosCardsExpiredMaquinas');
+        if (mobileCardsContainer) {
+            mobileCardsContainer.innerHTML = '';
+        }
+
+        const searchTerm = elements.searchInputExpiredMaquinas ? elements.searchInputExpiredMaquinas.value.toLowerCase().trim() : '';
+        let registrosExpirados = registrosMaquinas.filter(registro => registro.estado === 'expirado');
+
+        if (searchTerm) {
+            registrosExpirados = registrosExpirados.filter(registro => 
+                registro.maquina.toLowerCase().includes(searchTerm) ||
+                registro.silo.toLowerCase().includes(searchTerm) ||
+                registro.operador.toLowerCase().includes(searchTerm) ||
+                registro.turno.toLowerCase().includes(searchTerm) ||
+                registro.producto.toLowerCase().includes(searchTerm)
+            );
+        }
+
+        if (registrosExpirados.length === 0) {
+            elements.registrosTableExpiredMaquinas.innerHTML = `
+                <tr>
+                    <td colspan="9" class="text-center py-8">
+                        <div class="text-gray-400">
+                            <i class="fas fa-archive fa-2x mb-2"></i>
+                            <p class="font-medium text-sm">No hay registros expirados</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        } else {
+            const registrosOrdenados = registrosExpirados.sort((a, b) => {
+                return (b.timestamp || 0) - (a.timestamp || 0);
+            });
+            
+            registrosOrdenados.forEach((registro, index) => {
+                const originalIndex = registrosMaquinas.findIndex(r => r.timestamp === registro.timestamp);
+                mostrarRegistroMaquinaExpired(registro, originalIndex);
+            });
+        }
+
+        if (elements.tableInfoExpiredMaquinas) {
+            elements.tableInfoExpiredMaquinas.textContent = `Mostrando ${registrosExpirados.length} registros expirados`;
         }
     }
 
@@ -5291,6 +5762,146 @@
             }
         } catch (error) {
             console.error('[EXPORT] Error durante la exportación de máquinas:', error);
+            mostrarAlerta('Error al exportar el archivo CSV.', 'error');
+        }
+    }
+
+    function exportarCSVExpiredSilos() {
+        console.log('[EXPORT] Iniciando exportación CSV de silos expirados...');
+        
+        const registrosExpirados = registrosSilos.filter(registro => registro.estado === 'expirado');
+        console.log('[EXPORT] Registros expirados disponibles:', registrosExpirados.length);
+        
+        if (registrosExpirados.length === 0) {
+            mostrarAlerta('No hay registros expirados para exportar.', 'warning');
+            console.log('[EXPORT] No hay registros expirados de silos para exportar');
+            return;
+        }
+
+        try {
+            const headers = ['Estado', 'Máquina', 'Silo', 'Lote', 'Fecha/Hora', 'Código'];
+            const csvContent = [headers.join(',')];
+
+            registrosExpirados.forEach((registro, index) => {
+                console.log(`[EXPORT] Procesando registro expirado ${index + 1}:`, registro);
+                
+                const codigo = registro.lote + '-' + registro.silo;
+                const row = [
+                    'Expirado',
+                    `"${registro.maquina || 'N/A'}"`,
+                    `"${registro.silo || 'N/A'}"`,
+                    `"${registro.lote || 'N/A'}"`,
+                    `"${registro.fecha || 'N/A'}"`,
+                    `"${codigo}"`
+                ];
+                csvContent.push(row.join(','));
+            });
+
+            const csvString = csvContent.join('\n');
+            console.log('[EXPORT] CSV de expirados generado, tamaño:', csvString.length, 'caracteres');
+            
+            // Añadir BOM para compatibilidad con Excel
+            const BOM = '\uFEFF';
+            const blob = new Blob([BOM + csvString], { type: 'text/csv;charset=utf-8;' });
+            
+            const fechaHora = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 19);
+            const fileName = `silos_expirados_${fechaHora}.csv`;
+            
+            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                // Para Internet Explorer
+                window.navigator.msSaveOrOpenBlob(blob, fileName);
+            } else {
+                // Para otros navegadores
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.style.display = 'none';
+                link.href = url;
+                link.download = fileName;
+                
+                document.body.appendChild(link);
+                link.click();
+                
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                }, 100);
+                
+                mostrarAlerta(`✅ Archivo CSV exportado: ${fileName}`, 'success');
+                console.log('[EXPORT] Exportación de silos expirados completada exitosamente');
+            }
+        } catch (error) {
+            console.error('[EXPORT] Error durante la exportación de silos expirados:', error);
+            mostrarAlerta('Error al exportar el archivo CSV.', 'error');
+        }
+    }
+
+    function exportarCSVExpiredMaquinas() {
+        console.log('[EXPORT] Iniciando exportación CSV de máquinas expiradas...');
+        
+        const registrosExpirados = registrosMaquinas.filter(registro => registro.estado === 'expirado');
+        console.log('[EXPORT] Registros expirados disponibles:', registrosExpirados.length);
+        
+        if (registrosExpirados.length === 0) {
+            mostrarAlerta('No hay registros expirados para exportar.', 'warning');
+            console.log('[EXPORT] No hay registros expirados de máquinas para exportar');
+            return;
+        }
+
+        try {
+            const headers = ['Estado', 'Máquina', 'Silo', 'Operador', 'Turno', 'Producto', 'Fecha/Hora', 'Código'];
+            const csvContent = [headers.join(',')];
+
+            registrosExpirados.forEach((registro, index) => {
+                console.log(`[EXPORT] Procesando registro expirado ${index + 1}:`, registro);
+                
+                const codigo = registro.maquina + '-' + registro.silo + '-' + registro.operador;
+                const row = [
+                    'Expirado',
+                    `"${registro.maquina || 'N/A'}"`,
+                    `"${registro.silo || 'N/A'}"`,
+                    `"${registro.operador || 'N/A'}"`,
+                    `"${registro.turno || 'N/A'}"`,
+                    `"${registro.producto || 'N/A'}"`,
+                    `"${registro.fecha || 'N/A'}"`,
+                    `"${codigo}"`
+                ];
+                csvContent.push(row.join(','));
+            });
+
+            const csvString = csvContent.join('\n');
+            console.log('[EXPORT] CSV de expirados generado, tamaño:', csvString.length, 'caracteres');
+            
+            // Añadir BOM para compatibilidad con Excel
+            const BOM = '\uFEFF';
+            const blob = new Blob([BOM + csvString], { type: 'text/csv;charset=utf-8;' });
+            
+            const fechaHora = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 19);
+            const fileName = `maquinas_expiradas_${fechaHora}.csv`;
+            
+            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                // Para Internet Explorer
+                window.navigator.msSaveOrOpenBlob(blob, fileName);
+            } else {
+                // Para otros navegadores
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.style.display = 'none';
+                link.href = url;
+                link.download = fileName;
+                
+                document.body.appendChild(link);
+                link.click();
+                
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                }, 100);
+                
+                mostrarAlerta(`✅ Archivo CSV exportado: ${fileName}`, 'success');
+                console.log('[EXPORT] Exportación de máquinas expiradas completada exitosamente');
+            }
+        } catch (error) {
+            console.error('[EXPORT] Error durante la exportación de máquinas expiradas:', error);
             mostrarAlerta('Error al exportar el archivo CSV.', 'error');
         }
     }
