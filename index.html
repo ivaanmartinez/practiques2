@@ -7076,6 +7076,21 @@
     document.addEventListener('DOMContentLoaded', function() {
         console.log('[INIT] Iniciando aplicación...');
         
+        // Limpiar sesiones de administrador por seguridad al cargar la página
+        const savedUser = localStorage.getItem('currentUser');
+        if (savedUser) {
+            try {
+                const userData = JSON.parse(savedUser);
+                if (userData.type === 'administrador') {
+                    console.log('[SECURITY] Limpiando sesión de administrador al iniciar');
+                    localStorage.removeItem('currentUser');
+                }
+            } catch (e) {
+                console.warn('[INIT] Error al verificar sesión guardada:', e);
+                localStorage.removeItem('currentUser'); // Limpiar datos corruptos
+            }
+        }
+        
         // Mostrar información de depuración
         debugLocalStorage();
         
@@ -7140,18 +7155,27 @@
         
         if (savedUser) {
             try {
-                currentUser = JSON.parse(savedUser);
-                console.log('[LOGIN] Datos de usuario encontrados:', currentUser);
+                const userData = JSON.parse(savedUser);
+                console.log('[LOGIN] Datos de usuario encontrados:', userData);
                 
-                // Verificar que los datos son válidos
-                if (currentUser.type && currentUser.name && currentUser.loginTime) {
-                    // Verificar si la sesión no ha expirado (24 horas)
-                    const loginTime = new Date(currentUser.loginTime);
+                // NUNCA auto-login para administradores por seguridad
+                if (userData.type === 'administrador') {
+                    console.log('[SECURITY] Sesión de administrador encontrada - requiere nueva autenticación');
+                    localStorage.removeItem('currentUser'); // Limpiar sesión de admin
+                    currentUser = null;
+                    return; // Forzar login manual con contraseña
+                }
+                
+                // Solo auto-login para trabajadores
+                if (userData.type === 'trabajador' && userData.name && userData.loginTime) {
+                    // Verificar que la sesión no ha expirado (24 horas)
+                    const loginTime = new Date(userData.loginTime);
                     const now = new Date();
                     const hoursDiff = (now - loginTime) / (1000 * 60 * 60);
                     
                     if (hoursDiff < 24) {
-                        console.log('[LOGIN] Sesión válida, cargando sistema principal...');
+                        console.log('[LOGIN] Sesión de trabajador válida, cargando sistema principal...');
+                        currentUser = userData;
                         // Cargar directamente el sistema principal
                         loadMainSystemDirectly();
                         return;
@@ -7327,12 +7351,19 @@
             authenticated: userType === 'administrador' ? true : false // Flag de autenticación
         };
 
-        // Guardar sesión en localStorage
+        // Guardar sesión en localStorage SOLO para trabajadores
+        // Los administradores deben autenticarse en cada sesión por seguridad
         try {
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            console.log('[LOGIN] Sesión guardada en localStorage');
+            if (userType === 'trabajador') {
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                console.log('[LOGIN] Sesión de trabajador guardada en localStorage');
+            } else {
+                console.log('[SECURITY] Sesión de administrador NO guardada por seguridad');
+                // Limpiar cualquier sesión anterior de admin
+                localStorage.removeItem('currentUser');
+            }
         } catch (error) {
-            console.error('[LOGIN] Error al guardar en localStorage:', error);
+            console.error('[LOGIN] Error al manejar localStorage:', error);
         }
 
         // Verificar que los elementos existen antes de actualizar
