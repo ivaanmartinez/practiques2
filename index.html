@@ -3293,6 +3293,13 @@
     }
 
     function switchView(view) {
+        // Verificar permisos antes de cambiar vista
+        if (isWorker() && view === 'maquinas-silos') {
+            console.log('[PERMISOS] Trabajador intenta acceder a gestión de máquinas - DENEGADO');
+            showNotification('Acceso denegado. Los trabajadores solo pueden registrar lotes en silos.', 'error');
+            return;
+        }
+        
         // Actualizar pestañas activas
         document.querySelectorAll('.nav-tab').forEach(tab => {
             tab.classList.remove('active');
@@ -3323,6 +3330,13 @@
     }
 
     function switchSubView(section, subView) {
+        // Verificar permisos para trabajadores en cambio de sub-vista
+        if (isWorker() && subView === 'panel') {
+            console.log('[PERMISOS] Trabajador intenta acceder al panel de gestión - DENEGADO');
+            showNotification('Acceso denegado. Los trabajadores solo pueden registrar lotes.', 'error');
+            return;
+        }
+        
         if (section === 'silos') {
             // Actualizar pestañas de sub-navegación principal
             document.querySelectorAll('#sub-tab-silos-form, #sub-tab-silos-panel').forEach(tab => {
@@ -3898,6 +3912,10 @@
         // Limpiar almacenamiento
         if (elements.clearStorageSilos) {
             elements.clearStorageSilos.addEventListener('click', function() {
+                if (!hasPermission('delete_records')) {
+                    mostrarAlerta('No tienes permisos para eliminar todos los registros.', 'error');
+                    return;
+                }
                 mostrarConfirmacion(
                     '¿Está seguro de borrar todos los registros de silos?',
                     'Esta acción no se puede deshacer y eliminará todos los datos de silos almacenados.',
@@ -3915,6 +3933,10 @@
 
         if (elements.clearStorageMaquinas) {
             elements.clearStorageMaquinas.addEventListener('click', function() {
+                if (!hasPermission('delete_records')) {
+                    mostrarAlerta('No tienes permisos para eliminar todos los registros.', 'error');
+                    return;
+                }
                 mostrarConfirmacion(
                     '¿Está seguro de borrar todos los registros de máquinas?',
                     'Esta acción no se puede deshacer y eliminará todos los datos de máquinas almacenados.',
@@ -4173,6 +4195,10 @@
         // Mostrar/Ocultar Expirados Silos
         if (elements.showExpiredSilos) {
             elements.showExpiredSilos.addEventListener('click', function() {
+                if (!hasPermission('view_expired')) {
+                    mostrarAlerta('No tienes permisos para ver registros expirados.', 'error');
+                    return;
+                }
                 console.log('[EVENT] Mostrar panel expirados silos');
                 elements.expiredPanelSilos.style.display = 'block';
                 actualizarTablaExpiredSilos();
@@ -4188,6 +4214,10 @@
 
         if (elements.deleteAllExpiredSilos) {
             elements.deleteAllExpiredSilos.addEventListener('click', function() {
+                if (!hasPermission('delete_expired')) {
+                    mostrarAlerta('No tienes permisos para eliminar registros expirados.', 'error');
+                    return;
+                }
                 console.log('[EVENT] Eliminar todos los expirados silos');
                 const expiradosCount = registrosSilos.filter(r => r.estado === 'expirado').length;
                 
@@ -4232,6 +4262,10 @@
         // Mostrar/Ocultar Expirados Máquinas
         if (elements.showExpiredMaquinas) {
             elements.showExpiredMaquinas.addEventListener('click', function() {
+                if (!hasPermission('view_expired')) {
+                    mostrarAlerta('No tienes permisos para ver registros expirados.', 'error');
+                    return;
+                }
                 console.log('[EVENT] Mostrar panel expirados máquinas');
                 elements.expiredPanelMaquinas.style.display = 'block';
                 actualizarTablaExpiredMaquinas();
@@ -4247,6 +4281,10 @@
 
         if (elements.deleteAllExpiredMaquinas) {
             elements.deleteAllExpiredMaquinas.addEventListener('click', function() {
+                if (!hasPermission('delete_expired')) {
+                    mostrarAlerta('No tienes permisos para eliminar registros expirados.', 'error');
+                    return;
+                }
                 console.log('[EVENT] Eliminar todos los expirados máquinas');
                 const expiradosCount = registrosMaquinas.filter(r => r.estado === 'expirado').length;
                 
@@ -6849,6 +6887,139 @@
     let loginInitialized = false; // Prevenir inicialización múltiple
     let mainSystemInitialized = false; // Prevenir inicialización múltiple del sistema principal
 
+    // Función para verificar permisos de usuario
+    function isAdmin() {
+        return currentUser && currentUser.type === 'administrador';
+    }
+
+    function isWorker() {
+        return currentUser && currentUser.type === 'trabajador';
+    }
+
+    function hasPermission(action) {
+        if (!currentUser) return false;
+        
+        switch (action) {
+            case 'view_expired':
+            case 'delete_expired':
+            case 'manage_system':
+            case 'export_all':
+            case 'delete_records':
+                return isAdmin();
+            case 'register_records':
+            case 'view_active':
+                return true; // Tanto admin como trabajador
+            default:
+                return false;
+        }
+    }
+
+    // Función para aplicar permisos UI
+    function applyUserPermissions() {
+        if (!currentUser) return;
+        
+        console.log('[PERMISOS] Aplicando permisos para:', currentUser.type);
+        
+        // Elementos solo para administradores (botones y controles, NO paneles)
+        const adminOnlyElements = [
+            elements.showExpiredSilos,
+            elements.showExpiredMaquinas,
+            elements.deleteAllExpiredSilos,
+            elements.deleteAllExpiredMaquinas,
+            elements.clearStorageSilos,
+            elements.clearStorageMaquinas
+        ];
+        
+        adminOnlyElements.forEach(element => {
+            if (element) {
+                if (isAdmin()) {
+                    element.style.display = '';
+                    element.style.visibility = 'visible';
+                } else {
+                    element.style.display = 'none';
+                    element.style.visibility = 'hidden';
+                }
+            }
+        });
+        
+        // Los paneles de expirados siempre deben estar ocultos por defecto
+        // Solo se muestran cuando el admin presiona "Mostrar Expirados"
+        if (elements.expiredPanelSilos) {
+            elements.expiredPanelSilos.style.display = 'none';
+        }
+        if (elements.expiredPanelMaquinas) {
+            elements.expiredPanelMaquinas.style.display = 'none';
+        }
+        
+        // Restricciones completas para trabajadores (solo registro de silos)
+        if (isWorker()) {
+            // Ocultar pestaña principal de máquinas para trabajadores
+            const tabMaquinasSilos = document.getElementById('tab-maquinas-silos');
+            if (tabMaquinasSilos) {
+                tabMaquinasSilos.style.display = 'none';
+            }
+            
+            // Ocultar sub-navegación de panel para trabajadores
+            const subTabSilosPanel = document.getElementById('sub-tab-silos-panel');
+            const subTabMaquinasPanel = document.getElementById('sub-tab-maquinas-panel');
+            
+            if (subTabSilosPanel) {
+                subTabSilosPanel.style.display = 'none';
+            }
+            if (subTabMaquinasPanel) {
+                subTabMaquinasPanel.style.display = 'none';
+            }
+            
+            // Forzar a los trabajadores solo a vista de silos y solo formulario
+            currentView = 'silos-lotes';
+            currentSubViewSilos = 'form';
+            showMainView('silos-lotes');
+            showSubViewSilos('form');
+            
+            // Cambiar el título de la página para trabajadores
+            const pageTitle = document.querySelector('title');
+            if (pageTitle) {
+                pageTitle.textContent = 'Sistema de Registro de Lotes - Trabajador';
+            }
+            
+            // Ocultar navegación principal de vista trabajadores para evitar confusión
+            const workerTabs = document.querySelectorAll('#tab-silos-workers, #tab-maquinas-workers');
+            workerTabs.forEach(tab => {
+                if (tab) tab.style.display = 'none';
+            });
+        } else if (isAdmin()) {
+            // Mostrar todos los elementos para administradores
+            const tabMaquinasSilos = document.getElementById('tab-maquinas-silos');
+            if (tabMaquinasSilos) {
+                tabMaquinasSilos.style.display = '';
+            }
+            
+            const subTabSilosPanel = document.getElementById('sub-tab-silos-panel');
+            const subTabMaquinasPanel = document.getElementById('sub-tab-maquinas-panel');
+            
+            if (subTabSilosPanel) {
+                subTabSilosPanel.style.display = '';
+            }
+            if (subTabMaquinasPanel) {
+                subTabMaquinasPanel.style.display = '';
+            }
+            
+            // Mostrar navegación completa para administradores
+            const workerTabs = document.querySelectorAll('#tab-silos-workers, #tab-maquinas-workers');
+            workerTabs.forEach(tab => {
+                if (tab) tab.style.display = '';
+            });
+            
+            // Título completo para administradores
+            const pageTitle = document.querySelector('title');
+            if (pageTitle) {
+                pageTitle.textContent = 'Sistema de Gestión Industrial Integrado - Administrador';
+            }
+        }
+        
+        console.log('[PERMISOS] Permisos aplicados correctamente');
+    }
+
     // Función de depuración para mostrar el estado del localStorage
     function debugLocalStorage() {
         console.log('=== DEPURACIÓN LOCALSTORAGE ===');
@@ -6956,6 +7127,9 @@
 
         // Configurar el botón de logout
         setupLogoutButton();
+
+        // Aplicar permisos específicos del usuario
+        applyUserPermissions();
 
         console.log('[LOGIN] Sesión restaurada automáticamente para:', currentUser.name);
     }
@@ -7165,10 +7339,19 @@
             mainSystemInitialized = true;
         }
 
+        // Aplicar permisos específicos del usuario
+        applyUserPermissions();
+
         // Mostrar mensaje de bienvenida
         setTimeout(() => {
             if (typeof mostrarAlerta === 'function') {
-                mostrarAlerta(`¡Bienvenido, ${currentUser.name}!`, 'success');
+                if (isAdmin()) {
+                    mostrarAlerta(`¡Bienvenido, ${currentUser.name}! Tienes acceso completo al sistema de gestión.`, 'success');
+                } else if (isWorker()) {
+                    mostrarAlerta(`¡Bienvenido, ${currentUser.name}! Puedes registrar nuevos lotes desde aquí.`, 'success');
+                } else {
+                    mostrarAlerta(`¡Bienvenido, ${currentUser.name}!`, 'success');
+                }
             }
         }, 500);
 
