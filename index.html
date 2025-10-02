@@ -3730,9 +3730,17 @@
                     return;
                 }
 
-                const existe = registrosSilos.some(r => r.lote === lote && r.silo === silo && r.maquina === maquina);
-                if (existe) {
-                    mostrarAlerta('Esta combinación de lote, silo y máquina ya está registrada.', 'warning');
+                // Validar si el lote ya está activo en un silo DIFERENTE
+                const loteActivoEnOtroSilo = registrosSilos.find(r => r.lote === lote && r.estado === 'activo' && r.silo !== silo);
+                if (loteActivoEnOtroSilo) {
+                    mostrarAlerta(`El lote ${lote} ya está activo en el silo ${loteActivoEnOtroSilo.silo} con la máquina ${loteActivoEnOtroSilo.maquina}. Un lote no puede estar activo en múltiples silos simultáneamente.`, 'warning');
+                    return;
+                }
+
+                // Validar combinación exacta activa (evitar duplicados activos)
+                const existeActivo = registrosSilos.some(r => r.lote === lote && r.silo === silo && r.maquina === maquina && r.estado === 'activo');
+                if (existeActivo) {
+                    mostrarAlerta('Esta combinación de lote, silo y máquina ya está activa.', 'warning');
                     return;
                 }
 
